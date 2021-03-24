@@ -115,6 +115,82 @@ export default Auth = () => {
       callBack();
     };
   };
+// Handles creation of account
+  const handleSignUp = async (username, password, email) => {
+    try {
+      // Encode username, password & email they may have special symbols
+      username = encodeURIComponent(username);
+      password = encodeURIComponent(password);
+      email = encodeURIComponent(email);
+
+      // Check if username is taken and email is valid then add to Datastore
+      const response = await axios.post(
+              `/sign-up?username=${username}
+              &password=${password}&email=${email}`);
+
+      if (response.status === 200) {
+        // Direct user to next page
+      } else {
+        // Inform user of error
+      };
+    } catch (err) {
+      // If error occurs notify user
+      if (err) {
+        setUsernameError(true);
+        setUsernameErrorMsg(err.message);
+        setPasswordError(true);
+        setPasswordErrorMsg(err.message);
+      };
+    };
+  };
+  
+  // Handles account login
+  const handleSignIn = async (username: string, password: string) => {
+    // Encode username and password - it may have # $ & + ,  / : ; = ? @ [ ]
+    username = encodeURIComponent(username);
+    password = encodeURIComponent(password);
+
+    try {
+      // Get information from datastore about user
+      const response = await axios.get(`/sign-in?username=${username}&password=${password}`);
+      if (response.status === 200) {
+        // Redirect user to next page
+      } else {
+        // If error occurs notify user
+      }
+    } catch (err) {
+      if (err) {
+        setUsernameError(true);
+        setUsernameErrorMsg(err.message);
+        setPasswordError(true);
+        setPasswordErrorMsg(err.message);
+      };
+    };
+  };
+  
+  // Handles account login
+  const handleSignIn = async (username: string, password: string) => {
+    // Encode username and password - it may have # $ & + ,  / : ; = ? @ [ ]
+    username = encodeURIComponent(username);
+    password = encodeURIComponent(password);
+
+    try {
+      // Get information from datastore about user
+      const response = await axios.get(`/sign-in?username=${username}&password=${password}`);
+      if (response.status === 200) {
+        // Redirect user to next page
+      } else {
+        // If error occurs notify user
+      }
+    } catch (err) {
+      if (err) {
+        setUsernameError(true);
+        setUsernameErrorMsg(err.message);
+        setPasswordError(true);
+        setPasswordErrorMsg(err.message);
+      };
+    };
+  };
 
   return (
     <div className="auth-wrapper">
