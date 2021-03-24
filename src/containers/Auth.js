@@ -383,6 +383,9 @@ export default Auth = () => {
   return (
     <div className="auth-wrapper">
       <Paper className="container-prompt">
+        {renderMain()}
+        {renderCreateAccount()}
+        {renderLoginAccount()}
       </Paper>
     </div>
   );
