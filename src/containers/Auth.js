@@ -191,6 +191,194 @@ export default Auth = () => {
       };
     };
   };
+  
+  // Render options to sign-up or sign-in
+  const renderMain = () => {
+    return (
+      <Grid container spacing={1} justify="center" alignItems="center">
+        <Grid item sm={12} xs={12}>
+          <Typography variant="h5" color="primary" align="center">
+            Collaborative Coding
+          </Typography>
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <Card className="grid-card">
+            <CardActionArea onClick={() => showSignUp()}>
+              <Typography variant="h5" color="primary" gutterBottom>
+                Sign Up
+              </Typography>
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <Card className="grid-card">
+            <CardActionArea onClick={() => showSignIn()}>
+              <Typography variant="h5" color="primary" gutterBottom>
+                Sign In
+              </Typography>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      </Grid>
+    );
+  }
+  
+   // Render signup modal with input fields for user
+  const renderSignUp = () => {
+    return (
+      <Slide direction={signUpDirection} in={signUpVisible} timeout={350}
+            mountOnEnter unmountOnExit>
+        <Grid container spacing={1} justify="center" alignItems="center">
+          <Grid item xs={12}>
+            <IconButton onClick={showMain}>
+              <ArrowBack />
+            </IconButton>
+            <Typography variant="h5" color="primary" align="center">
+              Sign Up
+            </Typography>
+          </Grid>
+          <Grid item xs={12} className="grid-textfield">
+            <TextField
+              id="username"
+              label="Username"
+              value={username}
+              error={usernameError}
+              helperText={usernameErrorMsg}
+              onChange={e => setUsername(e.target.value)}
+              margin="dense"
+              autoComplete="off"
+              variant="outlined"
+              onKeyPress={e =>
+                handleKeyPress(e, () =>
+                  handleOnSignUpSubmit(username, password, email,
+                          () => handleSignUp(username, password, email))
+                )
+              }
+            />
+          </Grid>
+		  <Grid item xs={12} className="grid-textfield">
+            <TextField
+              id="password"
+              label="Password"
+              type="password"
+              value={password}
+              error={passwordError}
+              helperText={passwordErrorMsg}
+              onChange={e => setUserPass(e.target.value)}
+              margin="dense"
+              autoComplete="off"
+              variant="outlined"
+              onKeyPress={e =>
+                handleKeyPress(e, () =>
+                  handleOnCreateSubmit(username, password, email,
+                          () => handleCreateAccount(username, password, email))
+                )
+              }
+            />
+          </Grid>
+		  <Grid item xs={12} className="grid-textfield">
+            <TextField
+              id="email"
+              label="Email"
+              type="email"
+              value={email}
+              error={emailError}
+              helperText={emailErrorMsg}
+              onChange={e => setEmail(e.target.value)}
+              margin="dense"
+              autoComplete="off"
+              variant="outlined"
+              onKeyPress={e =>
+                handleKeyPress(e, () =>
+                  handleOnCreateSubmit(username, password, email,
+                          () => handleCreateAccount(username, password, email))
+                )
+              }
+            />
+          </Grid>
+          <Grid item xs={12} className="grid-button">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOnSubmit(username, password,
+                      () => handleCreateAccount(username, password, email))}
+            >
+              Sign Up
+            </Button>
+          </Grid>
+        </Grid>
+      </Slid>
+    );
+  }
+  
+  // Render sign in Modal with input fields
+  const renderSignIn = () => {
+    return (
+      <Slide direction={signInDirection} in={signInVisible} timeout={350}
+            mountOnEnter unmountOnExit>
+        <Grid container spacing={2} justify="center" alignItems="center">
+          <Grid item xs={12}>
+            <IconButton onClick={showMain}>
+              <ArrowBack />
+            </IconButton>
+            <Typography variant="h5" color="primary" align="center">
+              Sign In
+            </Typography>
+          </Grid>
+          <Grid item xs={12} className="grid-textfield">
+            <TextField
+              id="username"
+              label="Username"
+              value={username}
+              error={usernameError}
+              helperText={usernameErrorMsg}
+              onChange={e => setUsername(e.target.value)}
+              margin="dense"
+              autoComplete="off"
+              variant="outlined"
+              onKeyPress={e =>
+                handleKeyPress(e, () =>
+                  handleOnSubmit(username, password,
+                          () => handleLoginAccount(username, password))
+                )
+              }
+            />
+          </Grid>
+		  <Grid item xs={12} className="grid-textfield">
+            <TextField
+              id="password"
+              label="Password"
+              type="password"
+              value={password}
+              error={passwordError}
+              helperText={passwordErrorMsg}
+              onChange={e => setPassword(e.target.value)}
+              margin="dense"
+              autoComplete="off"
+              variant="outlined"
+              onKeyPress={e =>
+                handleKeyPress(e, () =>
+                  handleOnSubmit(username, password,
+                          () => handleLoginAccount(username, password))
+                )
+              }
+            />
+          </Grid>
+          <Grid item xs={12} className="grid-button">
+            <Button
+              className="modal-login-button"
+              variant="contained"
+              color="primary"
+              onClick={() => handleOnSubmit(username, password,
+                      () => handleLoginAccount(username, password))}
+            >
+              Sign In
+            </Button>
+          </Grid>
+        </Grid>
+      </Slide>
+    );
+  };
 
   return (
     <div className="auth-wrapper">
