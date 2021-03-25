@@ -35,4 +35,4 @@ const theme = createMuiTheme({
     fontWeightRegular: 500,
     fontWeightMedium: 600
   }
-})
+});
