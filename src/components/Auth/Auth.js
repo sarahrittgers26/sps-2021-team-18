@@ -1,11 +1,9 @@
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Card,
-  CardContent,
   Typography,
   CardActionArea,
-  CardMedia,
   Slide,
   TextField,
   Grid,
@@ -88,6 +86,17 @@ export default function Auth() {
     };
   };
 
+  // Checks that email is in a valid email address form
+  // Code Reference: 
+  // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  const validateEmail = (email) => {
+    // Breaks regex expression into strings to remain under 80 characters
+    var re = new RegExp(['^(([^<>()[\\]\\\\.,;:\\s@"]+(\\.[^<>()[\\]\\\\.,;:\\s',
+	    '@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]',
+	    '{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$']);
+    return re.test(String(email).toLowerCase());
+  }
+
   // Validates user entered sign up information correctly
   const handleOnSignUpSubmit = (username, password, email, callBack) => {
     let error = false;
@@ -95,18 +104,27 @@ export default function Auth() {
       setUsernameError(true);
       setUsernameErrorMsg('Username cannot be empty');
       error = true;
-    } else setUsernameError(false);
+    } else { 
+      setUsernameError(false);
+      setUsernameErrorMsg('');
+    }
     if (password.length < 8 || password.length > 60) {
       setPasswordError(true);
       setPasswordErrorMsg('Password must be greater than 8 characters' 
 	     + ' and less than 60 characters');
       error = true;
-    } else setPasswordError(false);
-    if (email === '') {
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMsg('');
+    }
+    if (email === '' || !validateEmail(email)) {
       setEmailError(true);
-      setEmailErrorMsg('Email cannot be empty');
+      setEmailErrorMsg('Please enter a valid email address format');
       error = true;
-    } else setEmailError(false);
+    } else {
+      setEmailError(false);
+      setEmailErrorMsg('');
+    }
 
     if (!error) {
       callBack();
