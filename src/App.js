@@ -4,13 +4,15 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
 import Auth from './components/Auth/Auth';
+import Editor from './components/Editor/Editor'
+
 import './App.css';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <HashRouter>
-        <Route path="/" exact component={Auth} />
+        <Route path="/" exact component={Editor} />
       </HashRouter>
     </ThemeProvider>
   );
