@@ -13,7 +13,7 @@ import {
 import { ArrowBack } from '@material-ui/icons';
 //import { useDispatch } from 'react-redux';
 import createHashHistory from '../../history';
-import axios from '../Api/Api';
+// import axios from '../Api/Api';
 
 export default function Auth() {
   // Dispatch for react-redux store
