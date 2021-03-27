@@ -12,7 +12,8 @@ import {
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 //import { useDispatch } from 'react-redux';
-//import axios from '../Api/Api';
+import createHashHistory from '../../history';
+// import axios from '../Api/Api';
 
 export default function Auth() {
   // Dispatch for react-redux store
@@ -160,16 +161,38 @@ export default function Auth() {
       email = encodeURIComponent(email);
 
       // Check if username is taken and email is valid then add to Datastore
-      // const response = await axios.post(
-      //         `/sign-up?username=${username}
-      //        &password=${password}&email=${email}`);
-
-      //if (response.status === 200) {
+     /* const response = await axios.post(
+               `/sign-up?username=${username}
+              &password=${password}&email=${email}`);
+      if (response.status === 200) {
         // Direct user to next page
-      //} else {
-        // Inform user of error
-      //};
-      console.log(username, password, email)
+        const errors = response.data;
+	const usernameExists = errors[0];
+	const emailExists = errors[1];
+	if (emailExists || usernameExists) {
+	  setUsernameError(usernameExists);
+	  setEmailError(emailExists);
+	  if (usernameError) {
+            setUsernameErrorMsg('Username is already taken');
+	  }
+	  if (emailError) {
+	    setEmailErrorMsg('Email address has already been used');
+	  }
+	} else {
+	  //dispatch(signIn({ username: username, email: email })
+	  createHashHistory.push('/editor');
+	  console.log(response.data);
+	}
+      } else {
+        setUsernameError(true);
+        setUsernameErrorMsg('Unable to sign up at this time please try again');
+        setPasswordError(true);
+        setPasswordErrorMsg('Unable to sign up at this time please try again');
+        setEmailError(true);
+        setEmailErrorMsg('Unable to sign up at this time please try again');
+      }*/
+      //dispatch(signIn({ username: username, email: email })
+      createHashHistory.push('/editor');
     } catch (err) {
       // If error occurs notify user
       if (err) {
@@ -188,14 +211,30 @@ export default function Auth() {
     password = encodeURIComponent(password);
 
     try {
-      // Get information from datastore about user
-      // const response = await axios.get(`/sign-in?username=${username}&password=${password}`);
-      //if (response.status === 200) {
-        // Redirect user to next page
-      //} else {
-        // If error occurs notify user
-      //}
-      console.log(username, password)
+      /*const response = await axios.post(
+               `/sign-in?username=${username}
+              &password=${password}`);
+
+      if (response.status === 200) {
+        // Direct user to next page
+	const errorAndEmail = response.data
+	const userExists = errorAndEmail[0] == 'true' ? true : false;
+	if (!userExists) {
+	  setUsernameError(true);
+	  setUsernameErrorMsg('Username or password entered incorrectly');
+	  setPasswordError(true);
+	  setPasswordErrorMsg('Username or password entered incorrectly');
+	} else {
+	  //dispatch(signIn({ username: username, email: errorAndEmail[1] })
+	  createHashHistory.push('/editor'); 
+	}
+      } else {
+        setUsernameError(true);
+        setUsernameErrorMsg('Unable to sign in at this time please try again');
+        setPasswordError(true);
+        setPasswordErrorMsg('Unable to sign in at this time please try again');
+      }*/
+      createHashHistory.push('/editor');
     } catch (err) {
       if (err) {
         setUsernameError(true);
