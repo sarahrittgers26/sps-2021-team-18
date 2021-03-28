@@ -14,10 +14,12 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
  */
 public class ServerMain {
 
+  final Server server;
+  
   public static void main(String[] args) throws Exception {
 
     // Create a server that listens on port 8080.
-    Server server = new Server(8080);
+    server = new Server(8080);
     WebAppContext webAppContext = new WebAppContext();
     server.setHandler(webAppContext);
 
