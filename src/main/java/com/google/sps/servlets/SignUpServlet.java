@@ -24,6 +24,24 @@ import org.jsoup.safety.Whitelist;
 @WebServlet("/sign-up")
 public class SignUpServlet extends HttpServlet {
 
+	// Check if user with specified field exists
+	static private boolean checkIfFieldExists(String field, String value) {
+
+		 // Check if value already exists within Datastore
+		 Query<Entity> fieldQuery = Query.newEntityQueryBuilder()
+			 .setKind("User")
+			 .setFilter(PropertyFilter.eq(field, value))
+			 .build();
+		 QueryResults<Entity> entities = datastore.run(fieldQuery);
+		 boolean fieldExists = false;
+
+		 while(entities.hasNext() && !fieldExists){
+			 fieldExists = true;
+		 }
+
+		 return fieldExists;
+	}
+
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {		    
@@ -34,31 +52,13 @@ public class SignUpServlet extends HttpServlet {
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
-		 // Check if username already exists within Datastore
-		 Query<Entity> usernameQuery = Query.newEntityQueryBuilder()
-			 .setKind("User")
-			 .setFilter(PropertyFilter.eq("username", username))
-			 .build();
-		 QueryResults<Entity> usernames = datastore.run(usernameQuery);
-		 boolean usernameExists = false;
-
-		 while(usernames.hasNext() && !usernameExists){
-			 usernameExists = true;
-		 }
-
-		 // Check if email already exists within Datastore
-		 Query<Entity> emailQuery = Query.newEntityQueryBuilder()
-			 .setKind("User")
-			 .setFilter(PropertyFilter.eq("email", email))
-			 .build();
-		 QueryResults<Entity> emails = datastore.run(emailQuery);
-		 boolean emailExists = false;
-
-		 while(emails.hasNext() && !emailExists){
-			 emailExists = true;
-		 }
+		 // Check if username or email have already been used
+		 boolean usernameExists = checkIfFieldExists("username", email);
+		 boolean emailExists = checkIfFieldExists("email", email);
 		
+		 // Store whether username or email has already been used in array
 		 Boolean[] errors = new Boolean[] {usernameExists, emailExists};
+
 		 if (!usernameExists && !emailExists) {
 			 // Add new user to datastore with information
 			 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
@@ -83,6 +83,7 @@ public class SignUpServlet extends HttpServlet {
 		response.getWriter().println("You submitted " + username 
 						+ " successfully!");
 		Gson gson = new Gson();	
+
 		// Let frontend know whether there were errors adding user to datastore
 		response.setContentType("application/json");
 		response.getWriter().println(gson.toJson(errors));

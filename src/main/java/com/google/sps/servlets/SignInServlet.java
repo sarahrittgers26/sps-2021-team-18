@@ -48,7 +48,7 @@ public class SignInServlet extends HttpServlet {
 		 boolean userExists = false;
 	         String userEmail = "";	 
 
-		 while(users.hasNext() && !userExists){
+		 while (users.hasNext() && !userExists) {
 			 Entity user = users.next();
 			 if (userExists) {
 				 // Add new user to datastore with information
@@ -72,15 +72,18 @@ public class SignInServlet extends HttpServlet {
 		 }
 		 
 		
-		String error = userExists ? "true" : "false";
 		
-		// Store error and user email in array to send in response
-		String[] errorAndEmail = new String[] {error, userEmail};
 
 		// Print that user was added successfully
 		response.getWriter().println(username + " logged in successfully!");
 		
 		Gson gson = new Gson();
+
+		// Convert boolean to string to it can be included in String array
+		String error = userExists ? "true" : "false";
+
+		// Store error and user email in array to send in response
+		String[] errorAndEmail = new String[] {error, userEmail};
 
 		// Let frontend know whether there were errors adding user to datastore
 		response.setContentType("application/json");
