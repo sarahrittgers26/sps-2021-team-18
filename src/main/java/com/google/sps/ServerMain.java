@@ -14,7 +14,7 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
  */
 public class ServerMain {
 
-  final Server server;
+  static Server server;
   
   public static void main(String[] args) throws Exception {
 
