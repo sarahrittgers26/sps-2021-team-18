@@ -27,8 +27,15 @@ public class SignUpServlet extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws IOException {		    
-		// Get the username, password and email from user
+			throws IOException {
+    		 // Allow CORS so frontend can access it			
+		 response.addHeader("Access-Control-Allow-Origin", "*");
+		 response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		 response.addHeader("Access-Control-Allow-Credentials", "true");
+		 response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		 
+		 // Get the username, password and email from user
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		 String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
 		 String email = Jsoup.clean(request.getParameter("email"), Whitelist.none());
@@ -63,8 +70,6 @@ public class SignUpServlet extends HttpServlet {
 			 datastore.put(user);
 		 }
 		// Print that user was added successfully
-		response.getWriter().println("You submitted " + username 
-						+ " successfully!");
 		Gson gson = new Gson();	
 
 		// Let frontend know whether there were errors adding user to datastore

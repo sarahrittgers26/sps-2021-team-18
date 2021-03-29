@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router } from "react-router"; 
+import { createHashHistory } from "history";
 import './index.css';
 import App from './main/webapp/App.js';
 
+const history = createHashHistory();
+
 ReactDOM.render(
-  <React.StrictMode>
+  <Router history={history}>
     <App />
-  </React.StrictMode>,
+  </Router>,
   document.getElementById('root')
 );
 
