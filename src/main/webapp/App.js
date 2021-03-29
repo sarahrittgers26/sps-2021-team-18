@@ -3,14 +3,16 @@ import { HashRouter, Route } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 
-import Auth from './components/Auth/Auth';
-import './App.css';
+import Auth from './main/webapp/components/Auth/Auth';
+import Editor from './main/webapp/components/Editor/Editor'
+
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <HashRouter>
         <Route path="/" exact component={Auth} />
+        <Route path="/editor" exact component={Editor} />
       </HashRouter>
     </ThemeProvider>
   );
