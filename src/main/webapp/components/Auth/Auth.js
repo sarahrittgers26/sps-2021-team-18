@@ -161,7 +161,7 @@ export default function Auth() {
       email = encodeURIComponent(email);
 
       // Check if username is taken and email is valid then add to Datastore
-     /* const response = await axios.post(
+      const response = await axios.post(
                `/sign-up?username=${username}
               &password=${password}&email=${email}`);
       if (response.status === 200) {
@@ -179,9 +179,10 @@ export default function Auth() {
 	    setEmailErrorMsg('Email address has already been used');
 	  }
 	} else {
-	  //dispatch(signIn({ username: username, email: email })
+	  const signInInfo = { username: username, email: email };
+	  console.log(signInInfo);
+	  //dispatch(signIn(signInInfo));
 	  createHashHistory.push('/editor');
-	  console.log(response.data);
 	}
       } else {
         setUsernameError(true);
@@ -190,7 +191,7 @@ export default function Auth() {
         setPasswordErrorMsg('Unable to sign up at this time please try again');
         setEmailError(true);
         setEmailErrorMsg('Unable to sign up at this time please try again');
-      }*/
+      }
       //dispatch(signIn({ username: username, email: email })
       createHashHistory.push('/editor');
     } catch (err) {
@@ -211,7 +212,7 @@ export default function Auth() {
     password = encodeURIComponent(password);
 
     try {
-      /*const response = await axios.post(
+      const response = await axios.post(
                `/sign-in?username=${username}
               &password=${password}`);
 
@@ -225,7 +226,9 @@ export default function Auth() {
 	  setPasswordError(true);
 	  setPasswordErrorMsg('Username or password entered incorrectly');
 	} else {
-	  //dispatch(signIn({ username: username, email: errorAndEmail[1] })
+	  const signInInfo = { username: username, email: errorAndEmail[1] };
+	  console.log(signInInfo);
+	  //dispatch(signIn(signInInfo));
 	  createHashHistory.push('/editor'); 
 	}
       } else {
@@ -233,8 +236,7 @@ export default function Auth() {
         setUsernameErrorMsg('Unable to sign in at this time please try again');
         setPasswordError(true);
         setPasswordErrorMsg('Unable to sign in at this time please try again');
-      }*/
-      createHashHistory.push('/editor');
+      }
     } catch (err) {
       if (err) {
         setUsernameError(true);
