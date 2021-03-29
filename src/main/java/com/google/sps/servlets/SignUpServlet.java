@@ -25,7 +25,7 @@ import org.jsoup.safety.Whitelist;
 public class SignUpServlet extends HttpServlet {
 
 	// Check if user with specified field exists
-	static private boolean checkIfFieldExists(String field, String value, Datastore datastore) {
+	private boolean checkIfFieldExists(String field, String value, Datastore datastore) {
 
 		 // Check if value already exists within Datastore
 		 Query<Entity> fieldQuery = Query.newEntityQueryBuilder()
