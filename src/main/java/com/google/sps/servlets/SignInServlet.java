@@ -14,6 +14,7 @@ import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
 import javax.servlet.annotation.WebServlet;
@@ -30,12 +31,37 @@ public class SignInServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {		    
 		// Get the username and password from user
-		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
-		 String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
+		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
+		String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
 
-		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		 
+		// Get user email from server
+	        String userEmail = getUserEmail(username, password, datastore);
 
-		 // Check if user already exists within Datastore
+		// If user exists than userEmail should be an address otherwise empty	 
+		String userExists = !userEmail.isEmpty() ? "true" : "false";
+		 
+		// Print that user was added successfully
+		response.getWriter().println(username + " logged in successfully!");
+		
+		Gson gson = new Gson();
+
+		// Store error and user email in array to send in response
+		String[] errorAndEmail = new String[] {userExists, userEmail};
+
+		// Let frontend know whether there were errors adding user to datastore
+		response.setContentType("application/json");
+		response.getWriter().println(gson.toJson(errorAndEmail));
+	}
+
+	// Check if user exists in datastore and retrieve their email
+	private String getUserEmail(String username, String password, 
+			Datastore datastore) throws DatastoreException {
+	         // Email will remain empty string if user does not exist
+		 String userEmail = "";	 
+
+		 // Check if username/password combination is correct
 		 Query<Entity> usernameQuery = Query.newEntityQueryBuilder()
 			 .setKind("User")
 			 .setFilter(CompositeFilter.and(
@@ -43,15 +69,11 @@ public class SignInServlet extends HttpServlet {
 				PropertyFilter.eq("password", password)))
 			 .build();
 
-		 // Get users from datastore that match that username
+		 // Run query and retrieve user from datastore
 		 QueryResults<Entity> users = datastore.run(usernameQuery);
-		 boolean userExists = users.hasNext();
-	         String userEmail = "";	 
 
-		 if (userExists) {
+		 if (users.hasNext()) {
 			 Entity user = users.next();
-
-			 // Add new user to datastore with information
 			 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
 			 // Get user's email address
@@ -69,20 +91,8 @@ public class SignInServlet extends HttpServlet {
 				 .set("lastLogin", login).build(); 
 			 datastore.update(loggedInUser);
 		 }
-		 
-		// Print that user was added successfully
-		response.getWriter().println(username + " logged in successfully!");
-		
-		Gson gson = new Gson();
 
-		// Convert boolean to string to it can be included in String array
-		String error = userExists ? "true" : "false";
-
-		// Store error and user email in array to send in response
-		String[] errorAndEmail = new String[] {error, userEmail};
-
-		// Let frontend know whether there were errors adding user to datastore
-		response.setContentType("application/json");
-		response.getWriter().println(gson.toJson(errorAndEmail));
+		 return userEmail;
 	}
+
 }

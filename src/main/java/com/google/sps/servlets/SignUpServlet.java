@@ -20,23 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+import com.google.cloud.datastore.DatastoreException;
 		
 @WebServlet("/sign-up")
 public class SignUpServlet extends HttpServlet {
-
-	// Check if user with specified field exists
-	private boolean checkIfFieldExists(String field, String value, Datastore datastore) {
-
-		 // Check if value already exists within Datastore
-		 Query<Entity> fieldQuery = Query.newEntityQueryBuilder()
-			 .setKind("User")
-			 .setFilter(PropertyFilter.eq(field, value))
-			 .build();
-		 QueryResults<Entity> entities = datastore.run(fieldQuery);
-		 boolean fieldExists = entities.hasNext();
-
-		 return fieldExists;
-	}
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -83,5 +70,17 @@ public class SignUpServlet extends HttpServlet {
 		// Let frontend know whether there were errors adding user to datastore
 		response.setContentType("application/json");
 		response.getWriter().println(gson.toJson(errors));
+	}
+
+	// Check if user with specified field exists
+	private boolean checkIfFieldExists(String field, String value, Datastore datastore) 
+			throws DatastoreException {
+		 // Check if value already exists within Datastore
+		 Query<Entity> fieldQuery = Query.newEntityQueryBuilder()
+			 .setKind("User")
+			 .setFilter(PropertyFilter.eq(field, value))
+			 .build();
+		 QueryResults<Entity> entities = datastore.run(fieldQuery);
+		 return entities.hasNext();
 	}
 }
