@@ -33,11 +33,7 @@ public class SignUpServlet extends HttpServlet {
 			 .setFilter(PropertyFilter.eq(field, value))
 			 .build();
 		 QueryResults<Entity> entities = datastore.run(fieldQuery);
-		 boolean fieldExists = false;
-
-		 while(entities.hasNext() && !fieldExists){
-			 fieldExists = true;
-		 }
+		 boolean fieldExists = entities.hasNext();
 
 		 return fieldExists;
 	}
