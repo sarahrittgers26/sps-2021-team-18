@@ -45,35 +45,31 @@ public class SignInServlet extends HttpServlet {
 
 		 // Get users from datastore that match that username
 		 QueryResults<Entity> users = datastore.run(usernameQuery);
-		 boolean userExists = false;
+		 boolean userExists = users.hasNext();
 	         String userEmail = "";	 
 
-		 while (users.hasNext() && !userExists) {
+		 if (userExists) {
 			 Entity user = users.next();
-			 if (userExists) {
-				 // Add new user to datastore with information
-				 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
-				 // Get user's email address
-				 userEmail = user.getString("email");
-				 
-				 // Log last login time as current time
-				 LocalDateTime now = LocalDateTime.now();
-				 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-				 String login = now.format(formatter);
+			 // Add new user to datastore with information
+			 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
-				 Key thisUser = datastore.newKeyFactory()
-					.setKind("User")
-					.newKey(username);
-				 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-					 .set("lastLogin", login).build(); 
-				 datastore.update(loggedInUser);
-			 }
+			 // Get user's email address
+			 userEmail = user.getString("email");
+			 
+			 // Log last login time as current time
+			 LocalDateTime now = LocalDateTime.now();
+			 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+			 String login = now.format(formatter);
+
+			 Key thisUser = datastore.newKeyFactory()
+				.setKind("User")
+				.newKey(username);
+			 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
+				 .set("lastLogin", login).build(); 
+			 datastore.update(loggedInUser);
 		 }
 		 
-		
-		
-
 		// Print that user was added successfully
 		response.getWriter().println(username + " logged in successfully!");
 		
