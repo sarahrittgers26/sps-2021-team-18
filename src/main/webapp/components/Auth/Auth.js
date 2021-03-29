@@ -18,6 +18,7 @@ import axios from '../Api/Api';
 export default function Auth() {
   // Dispatch for react-redux store
   // const dispatch = useDispatch();
+	
   // Local state control of displaying sign-in or sign-up info
   const [mainVisible, setMainVisible] = useState(true);
   const [mainDirection, setMainDirection] = useState('left');
@@ -170,17 +171,16 @@ export default function Auth() {
 	const usernameExists = errors[0];
 	const emailExists = errors[1];
 	if (emailExists || usernameExists) {
-	  setUsernameError(usernameExists);
-	  setEmailError(emailExists);
-	  if (usernameError) {
+	  if (usernameExists) {
+	    setUsernameError(true);	  
             setUsernameErrorMsg('Username is already taken');
 	  }
-	  if (emailError) {
+	  if (emailExists) {
+	    setEmailError(true);
 	    setEmailErrorMsg('Email address has already been used');
 	  }
 	} else {
 	  const signInInfo = { username: username, email: email };
-	  console.log(signInInfo);
 	  //dispatch(signIn(signInInfo));
 	  createHashHistory.push('/editor');
 	}
@@ -192,8 +192,6 @@ export default function Auth() {
         setEmailError(true);
         setEmailErrorMsg('Unable to sign up at this time please try again');
       }
-      //dispatch(signIn({ username: username, email: email })
-      createHashHistory.push('/editor');
     } catch (err) {
       // If error occurs notify user
       if (err) {
@@ -226,8 +224,11 @@ export default function Auth() {
 	  setPasswordError(true);
 	  setPasswordErrorMsg('Username or password entered incorrectly');
 	} else {
+	  setUsernameError(false);
+	  setUsernameErrorMsg('');
+	  setPasswordError(false);
+	  setPasswordErrorMsg('');
 	  const signInInfo = { username: username, email: errorAndEmail[1] };
-	  console.log(signInInfo);
 	  //dispatch(signIn(signInInfo));
 	  createHashHistory.push('/editor'); 
 	}
