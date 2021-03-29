@@ -15,7 +15,7 @@ import { ArrowBack } from '@material-ui/icons';
 import createHashHistory from '../../history';
 import axios from '../Api/Api';
 
-export default function Auth() {
+const Auth = ({ history }) => {
   // Dispatch for react-redux store
   // const dispatch = useDispatch();
 	
@@ -182,7 +182,7 @@ export default function Auth() {
 	} else {
 	  const signInInfo = { username: username, email: email };
 	  //dispatch(signIn(signInInfo));
-	  createHashHistory.push('/editor');
+	  history.push('/editor');
 	}
       } else {
         setUsernameError(true);
@@ -230,7 +230,7 @@ export default function Auth() {
 	  setPasswordErrorMsg('');
 	  const signInInfo = { username: username, email: errorAndEmail[1] };
 	  //dispatch(signIn(signInInfo));
-	  createHashHistory.push('/editor'); 
+	  history.push('/editor'); 
 	}
       } else {
         setUsernameError(true);
@@ -446,3 +446,5 @@ export default function Auth() {
     </div>
   );
 }
+
+export default Auth;
