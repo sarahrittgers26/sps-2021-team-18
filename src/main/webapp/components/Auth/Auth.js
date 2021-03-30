@@ -80,7 +80,6 @@ const Auth = ({ history }) => {
     setEmailError(false);
   };
 
-
   // Handles and checks keypress and calls the callback method
   const handleKeyPress = (e, callBack) => {
     if (e.key === 'Enter') {
@@ -141,12 +140,18 @@ const Auth = ({ history }) => {
       setUsernameError(true);
       setUsernameErrorMsg('Username cannot be empty');
       error = true;
-    } else setUsernameError(false);
+    } else {
+      setUsernameError(false);
+      setUsernameErrorMsg('');
+    }
     if (password === '') {
       setPasswordError(true);
       setPasswordErrorMsg('Password cannot be empty');
       error = true;
-    } else setPasswordError(false);
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMsg('');
+    }
 
     if (!error) {
       callBack();
@@ -165,33 +170,36 @@ const Auth = ({ history }) => {
       const response = await axios.post(
                `/sign-up?username=${username}
               &password=${password}&email=${email}`);
-      if (response.status === 200) {
-        // Direct user to next page
-        const errors = response.data;
-	const usernameExists = errors[0];
-	const emailExists = errors[1];
-	if (emailExists || usernameExists) {
-	  if (usernameExists) {
-	    setUsernameError(true);	  
-            setUsernameErrorMsg('Username is already taken');
-	  }
-	  if (emailExists) {
-	    setEmailError(true);
-	    setEmailErrorMsg('Email address has already been used');
-	  }
-	} else {
-	  const signInInfo = { username: username, email: email };
-	  //dispatch(signIn(signInInfo));
-	  history.push('/editor');
-	}
-      } else {
+
+      if (response.status != 200) {
         setUsernameError(true);
         setUsernameErrorMsg('Unable to sign up at this time please try again');
         setPasswordError(true);
         setPasswordErrorMsg('Unable to sign up at this time please try again');
         setEmailError(true);
         setEmailErrorMsg('Unable to sign up at this time please try again');
+	return;
       }
+	    
+      // Get information about whether username or email is taken from response
+      const errors = response.data;
+      const usernameExists = errors[0];
+      const emailExists = errors[1];
+
+      // Let user known what type of error occurred
+      if (usernameExists) {
+	  setUsernameError(true);	  
+          setUsernameErrorMsg('Username is already taken');
+      }
+      if (emailExists) {
+	  setEmailError(true);
+	  setEmailErrorMsg('Email address has already been used');
+      }
+      if (usernameExists || emailExists) return;
+
+      const signInInfo = { username: username, email: email };
+      //dispatch(signIn(signInInfo));
+      history.push('/editor');
     } catch (err) {
       // If error occurs notify user
       if (err) {
@@ -224,10 +232,6 @@ const Auth = ({ history }) => {
 	  setPasswordError(true);
 	  setPasswordErrorMsg('Username or password entered incorrectly');
 	} else {
-	  setUsernameError(false);
-	  setUsernameErrorMsg('');
-	  setPasswordError(false);
-	  setPasswordErrorMsg('');
 	  const signInInfo = { username: username, email: errorAndEmail[1] };
 	  //dispatch(signIn(signInInfo));
 	  history.push('/editor'); 
