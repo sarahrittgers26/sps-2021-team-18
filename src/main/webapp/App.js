@@ -2,17 +2,18 @@ import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-
+import { createHashHistory } from "history";
 import Auth from './components/Auth/Auth';
 import Editor from './components/Editor/Editor'
 
+const history = createHashHistory();
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <HashRouter>
-        <Route path="/" exact component={Auth} />
+      <HashRouter history={history}>
         <Route path="/editor" exact component={Editor} />
+        <Route path="/" exact component={Auth} />
       </HashRouter>
     </ThemeProvider>
   );

@@ -30,6 +30,13 @@ public class SignInServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {		    
+    		// Allow CORS so frontend can access it			
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Credentials", "true");
+		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		
 		// Get the username and password from user
 		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
@@ -42,9 +49,6 @@ public class SignInServlet extends HttpServlet {
 		// If user exists than userEmail should be an address otherwise empty	 
 		String userExists = !userEmail.isEmpty() ? "true" : "false";
 		 
-		// Print that user was added successfully
-		response.getWriter().println(username + " logged in successfully!");
-		
 		Gson gson = new Gson();
 
 		// Store error and user email in array to send in response
