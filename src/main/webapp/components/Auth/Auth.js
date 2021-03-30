@@ -188,12 +188,12 @@ const Auth = ({ history }) => {
 
       // Let user known what type of error occurred
       if (usernameExists) {
-	  setUsernameError(true);	  
-          setUsernameErrorMsg('Username is already taken');
+	setUsernameError(true);	  
+        setUsernameErrorMsg('Username is already taken');
       }
       if (emailExists) {
-	  setEmailError(true);
-	  setEmailErrorMsg('Email address has already been used');
+	setEmailError(true);
+	setEmailErrorMsg('Email address has already been used');
       }
       if (usernameExists || emailExists) return;
 
