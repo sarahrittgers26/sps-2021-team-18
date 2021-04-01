@@ -12,12 +12,13 @@ import {
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 //import { useDispatch } from 'react-redux';
-//import createHashHistory from '../../history';
+import createHashHistory from '../../history';
 import axios from '../Api/Api';
 
-export default function Auth() {
+const Auth = ({ history }) => {
   // Dispatch for react-redux store
   // const dispatch = useDispatch();
+	
   // Local state control of displaying sign-in or sign-up info
   const [mainVisible, setMainVisible] = useState(true);
   const [mainDirection, setMainDirection] = useState('left');
@@ -79,7 +80,6 @@ export default function Auth() {
     setEmailError(false);
   };
 
-
   // Handles and checks keypress and calls the callback method
   const handleKeyPress = (e, callBack) => {
     if (e.key === 'Enter') {
@@ -140,12 +140,18 @@ export default function Auth() {
       setUsernameError(true);
       setUsernameErrorMsg('Username cannot be empty');
       error = true;
-    } else setUsernameError(false);
+    } else {
+      setUsernameError(false);
+      setUsernameErrorMsg('');
+    }
     if (password === '') {
       setPasswordError(true);
       setPasswordErrorMsg('Password cannot be empty');
       error = true;
-    } else setPasswordError(false);
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMsg('');
+    }
 
     if (!error) {
       callBack();
@@ -164,33 +170,36 @@ export default function Auth() {
       const response = await axios.post(
                `/sign-up?username=${username}
               &password=${password}&email=${email}`);
-      if (response.status === 200) {
-        // Direct user to next page
-        const errors = response.data;
-	const usernameExists = errors[0];
-	const emailExists = errors[1];
-	if (emailExists || usernameExists) {
-	  setUsernameError(usernameExists);
-	  setEmailError(emailExists);
-	  if (usernameError) {
-            setUsernameErrorMsg('Username is already taken');
-	  }
-	  if (emailError) {
-	    setEmailErrorMsg('Email address has already been used');
-	  }
-	} else {
-	  //dispatch(signIn({ username: username, email: email })
-	  createHashHistory.push('/editor');
-	  console.log(response.data);
-	}
-      } else {
+
+      if (response.status != 200) {
         setUsernameError(true);
         setUsernameErrorMsg('Unable to sign up at this time please try again');
         setPasswordError(true);
         setPasswordErrorMsg('Unable to sign up at this time please try again');
         setEmailError(true);
         setEmailErrorMsg('Unable to sign up at this time please try again');
+	return;
       }
+	    
+      // Get information about whether username or email is taken from response
+      const errors = response.data;
+      const usernameExists = errors[0];
+      const emailExists = errors[1];
+
+      // Let user known what type of error occurred
+      if (usernameExists) {
+	setUsernameError(true);	  
+        setUsernameErrorMsg('Username is already taken');
+      }
+      if (emailExists) {
+	setEmailError(true);
+	setEmailErrorMsg('Email address has already been used');
+      }
+      if (usernameExists || emailExists) return;
+
+      const signInInfo = { username: username, email: email };
+      //dispatch(signIn(signInInfo));
+      history.push('/editor');
     } catch (err) {
       // If error occurs notify user
       if (err) {
@@ -216,15 +225,16 @@ export default function Auth() {
       if (response.status === 200) {
         // Direct user to next page
 	const errorAndEmail = response.data
-	const userExists = errorAndEmail[0] == 'true' ? true : false;
+	const userExists = errorAndEmail[0] === 'true' ? true : false;
 	if (!userExists) {
 	  setUsernameError(true);
 	  setUsernameErrorMsg('Username or password entered incorrectly');
 	  setPasswordError(true);
 	  setPasswordErrorMsg('Username or password entered incorrectly');
 	} else {
-	  //dispatch(signIn({ username: username, email: errorAndEmail[1] })
-	  createHashHistory.push('/editor'); 
+	  const signInInfo = { username: username, email: errorAndEmail[1] };
+	  //dispatch(signIn(signInInfo));
+	  history.push('/editor'); 
 	}
       } else {
         setUsernameError(true);
@@ -440,3 +450,5 @@ export default function Auth() {
     </div>
   );
 }
+
+export default Auth;
