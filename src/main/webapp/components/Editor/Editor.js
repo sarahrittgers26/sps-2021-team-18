@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Pane from './Pane.js'
+import Navbar from "./Navbar.js"
 import './Editor.css'
 
 function Editor() {
@@ -8,6 +9,7 @@ function Editor() {
   const [css, setCss] = useState("");
   const [js, setJs] = useState("");
   const [srcDoc, setSrcDoc] = useState("");
+  const [projectName, setProjectName] = useState("");
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -25,6 +27,9 @@ function Editor() {
 
   return (
     <>
+      <Navbar
+        updateName={setProjectName}/>
+
       <div className="Editor_pane Editor_top_pane">
         <Pane 
          language="xml"

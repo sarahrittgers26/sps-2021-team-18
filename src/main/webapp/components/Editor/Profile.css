@@ -1,0 +1,47 @@
+.Profile_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Profile_image {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  background-color: red;
+  position: relative;
+  display: flex;
+}
+
+.Profile_flipped {
+  flex-direction: row-reverse;
+}
+
+.Profile_name {
+  font-size: 1.1rem;
+  padding: 8px 16px;
+}
+
+.Profile_activity {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  border-radius: 50%;
+  bottom: -4px;
+}
+
+.left {
+  right: -4px;
+}
+
+.right {
+  left: -4px;
+}
+
+.active {
+  background: green;
+}
+
+.inactive {
+  background-color: gray;
+}

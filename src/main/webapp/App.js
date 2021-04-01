@@ -12,8 +12,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <HashRouter history={history}>
-        <Route path="/editor" exact component={Editor} />
-        <Route path="/" exact component={Auth} />
+        <Route path="/" exact component={Editor} />
+        {/* <Route path="/" exact component={Auth} /> */}
       </HashRouter>
     </ThemeProvider>
   );
