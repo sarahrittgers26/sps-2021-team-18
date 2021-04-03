@@ -1,0 +1,10 @@
+.Users_container {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.Users_status {
+  font-size: 1.1em;
+  text-transform: capitalize;
+}
