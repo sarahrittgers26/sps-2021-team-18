@@ -17,12 +17,12 @@ function ConnectedUsers(props) {
     <User
       key={`User_obj_${user.id}`}
       name={user.name}
-      active={true}
+      active={false}
       onClick={() => onInactiveUserClick(user.id)}/>
   ));
 
   return (
-    <div className="ConnectedUsers_containter">
+    <div className="ConnectedUsers_container">
       {ActiveUsers}
       {InactiveUsers}
     </div>

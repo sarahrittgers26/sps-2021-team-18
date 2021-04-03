@@ -4,7 +4,7 @@ import ConnectedUsers from './ConnectedUsers.js'
 
 
 const active = [
-  {name: "Mufaro Makiwa", id: 0},
+  {name: "Mufaro Emmanuel Manue Makiwa", id: 0},
   {name: "Cynthia Enofe", id: 1},
   {name: "Michael Lawes", id: 2},
   {name: "Sarah Rittgers", id: 3},
