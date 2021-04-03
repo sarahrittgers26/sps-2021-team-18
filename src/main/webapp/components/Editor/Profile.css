@@ -20,6 +20,7 @@
 .Profile_name {
   font-size: 1.1rem;
   padding: 8px 16px;
+  text-transform: uppercase;
 }
 
 .Profile_activity {
