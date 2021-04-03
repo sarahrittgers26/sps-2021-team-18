@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 //import { useDispatch } from 'react-redux';
-import createHashHistory from '../../history';
 import axios from '../Api/Api';
 
 const Auth = ({ history }) => {
@@ -171,7 +170,7 @@ const Auth = ({ history }) => {
                `/sign-up?username=${username}
               &password=${password}&email=${email}`);
 
-      if (response.status != 200) {
+      if (response.status !== 200) {
         setUsernameError(true);
         setUsernameErrorMsg('Unable to sign up at this time please try again');
         setPasswordError(true);
