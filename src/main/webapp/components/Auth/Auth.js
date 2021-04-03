@@ -171,7 +171,7 @@ const Auth = ({ history }) => {
                `/sign-up?username=${username}
               &password=${password}&email=${email}`);
 
-      if (response.status != 200) {
+      if (response.status !== 200) {
         setUsernameError(true);
         setUsernameErrorMsg('Unable to sign up at this time please try again');
         setPasswordError(true);
