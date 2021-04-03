@@ -15,7 +15,7 @@ function Navbar(props) {
     <div>
       <div className="Navbar_container">
         <Profile
-          name="Mufaro"
+          name="Mufaro Makiwa"
           side="L"
           active={true}/>
 
@@ -32,7 +32,7 @@ function Navbar(props) {
         </div>
         
         <Profile
-          name="Cynthia"
+          name="Cynthia Enofe"
           side="R"
           active={false}/>
       </div>
