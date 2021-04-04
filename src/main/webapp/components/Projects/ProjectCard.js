@@ -1,11 +1,11 @@
-import React, {useRef, useEffect} from 'react'
+import React from 'react'
 import './ProjectCard.css'
 import AspectRatio from './AspectRatio.js'
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 function ProjectCard(props) {
-  const {title, collaborator} = props;
+  const {title, collaborator, downloadProject, continueProject} = props;
 
   return (
   
@@ -15,12 +15,12 @@ function ProjectCard(props) {
       <span className="Project_collaborator">{`Collaborator: ${collaborator}`}</span>
 
       <div className="Project_options">
-        <button className="download">
+        <button className="download" onClick={downloadProject}>
           <GetAppIcon />
           <span className="button_text">Download</span>
         </button>
 
-        <button className="continue">
+        <button className="continue" onClick={continueProject}>
           <PlayArrowIcon />
           <span className="button_text">Continue</span>
         </button>
