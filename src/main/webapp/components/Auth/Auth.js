@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 //import { useDispatch } from 'react-redux';
-import createHashHistory from '../../history';
 import axios from '../Api/Api';
 
 const Auth = ({ history }) => {
