@@ -1,19 +1,18 @@
 .Project_container {
-  width: 200px;
+  flex-grow: 1;
   height: 100%;
   border-radius: 8px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   background-color: white;
-  transition: all 0.3s;
   position: relative;
   overflow: hidden;
-}
-
-.Project_container:hover {
-  transform: scale(1.02);
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .Project_icon {
@@ -48,12 +47,51 @@
   overflow: hidden;
 }
 
-.Project_container:hover > .marquee {
-  color: red;
+.Project_options {
   position: absolute;
+  top: 0;
+  right: 0;
   bottom: 0;
-  padding-bottom: 16px;
-  text-align: center;
-  margin-left: 48px;
-  animation: scroll_out 2.5s linear, scroll-left 5s linear infinite 2.5s;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  transition: 0.3s;
+}
+
+.Project_container:hover > .Project_options {
+  display: flex;
+}
+
+.Project_options button {
+  outline: none;
+  border: none;
+  padding: 12px;
+  border-radius: 16px;
+  background-color: var(--profile_background);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.Project_options button:hover {
+  cursor: pointer;
+  background-color: rgb(213, 217, 223);
+  transition: all 0.3s;
+}
+
+.button_text {
+  margin-left: 8px;
+}
+
+.download {
+  margin-right: 16px;
+}
+
+.continue {
+  margin-left: 16px;
 }
