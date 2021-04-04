@@ -3,6 +3,7 @@ import './Projects.css'
 import ConnectedUsers from './ConnectedUsers.js'
 import Searchbar from './Searchbar.js'
 import Header from './Header.js'
+import ProjectCard from './ProjectCard.js'
 
 
 const active = [
@@ -46,6 +47,17 @@ function Projects() {
           <Searchbar
             query={searchQuery}
             onChange={setSearchQuery}/>
+
+          <div className="dummies">
+            <ProjectCard
+              title="First task"
+              collaborator="Mufaro Makiwa"/>
+
+            {/* <ProjectCard
+              title="Second task"
+              collaborator="Emmanuel Makiwa"/> */}
+          </div>
+          
         </div>
 
         <ConnectedUsers 

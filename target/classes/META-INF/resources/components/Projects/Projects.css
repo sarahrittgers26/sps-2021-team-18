@@ -20,3 +20,8 @@
   height: 100%;
   padding-right: 24px;
 }
+
+.dummies {
+  display: flex;
+  flex-direction: row;
+}
