@@ -18,13 +18,50 @@ const inactive = [
   {name: "Andreea Lovan", id: 1}
 ]
 
+const dummyProjects = [
+  {
+    projectId: 0,
+    title: "Simple HTML",
+    collaborator: "Mufaro Makiwa"
+  },
+  {
+    projectId: 1,
+    title: "Basic CSS",
+    collaborator: "Mufaro Makiwa"
+  },
+  {
+    projectId: 2,
+    title: "Basic JS",
+    collaborator: "Mufaro Makiwa"
+  },
+  {
+    projectId: 3,
+    title: "Basic Coding",
+    collaborator: "Mufaro Makiwa"
+  },
+  {
+    projectId: 4,
+    title: "Basic basic hahaha",
+    collaborator: "Mufaro Makiwa"
+  },
+  {
+    projectId: 5,
+    title: "Another basic HTML",
+    collaborator: "Mufaro Makiwa"
+  },
+  {
+    projectId: 6,
+    title: "Another hahaha",
+    collaborator: "Mufaro Makiwa"
+  }
+]
+
 function Projects() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const onActiveUserClick = (id) => {
     alert("Active user clicked: " + id);
   }
-  
   
   const onInactiveUserClick = (id) => {
     alert("Inactive user clicked: " + id);
@@ -37,6 +74,22 @@ function Projects() {
   const displaySettings =() => {
     alert("Display settings dialog")
   }
+
+  const downloadProject = (projectId) => {
+    alert("Downloading project: " + projectId);
+  }
+
+  const continueProject = (projectId) => {
+    alert("Continuing project: " + projectId);
+  }
+
+  const projects = dummyProjects.map((project) => (
+    <ProjectCard
+      key={`Project_${project.projectId}`}
+      title={project.title}
+      collaborator={project.collaborator}/>
+  ));
+
 
   useEffect(() => {
 
@@ -61,33 +114,7 @@ function Projects() {
         <span className="Projects_label">Recent Projects</span>
 
         <div className="Projects_recent">
-          <ProjectCard
-              title="1"
-              collaborator="Mufaro Makiwa"/>
-
-            <ProjectCard
-              title="2"
-              collaborator="Mufaro Makiwa"/>
-
-            <ProjectCard
-              title="3"
-              collaborator="Mufaro Makiwa"/>
-
-            <ProjectCard
-              title="4"
-              collaborator="Mufaro Makiwa"/>
-
-            <ProjectCard
-              title="5"
-              collaborator="Mufaro Makiwa"/>
-
-            <ProjectCard
-              title="6"
-              collaborator="Mufaro Makiwa"/>
-
-            <ProjectCard
-              title="7"
-              collaborator="Mufaro Makiwa"/>
+          {projects}
           </div>      
         </div>
 
