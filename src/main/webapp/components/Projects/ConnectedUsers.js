@@ -5,7 +5,7 @@ import User from './User.js'
 function ConnectedUsers(props) {
   
   const {active, inactive, onActiveUserClick, onInactiveUserClick} = props;
-  const ActiveUsers = active.map((user) => (
+  const activeUsers = active.map((user) => (
     <User
       key={`User_obj_${user.id}`}
       name={user.name}
@@ -13,7 +13,7 @@ function ConnectedUsers(props) {
       onClick={() => onActiveUserClick(user.id)}/>
   ));
 
-  const InactiveUsers = inactive.map((user) => (
+  const inactiveUsers = inactive.map((user) => (
     <User
       key={`User_obj_${user.id}`}
       name={user.name}
@@ -23,8 +23,8 @@ function ConnectedUsers(props) {
 
   return (
     <div className="ConnectedUsers_container">
-      {ActiveUsers}
-      {InactiveUsers}
+      {activeUsers}
+      {inactiveUsers}
     </div>
   )
 }

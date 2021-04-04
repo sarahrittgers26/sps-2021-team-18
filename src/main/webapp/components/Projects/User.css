@@ -54,7 +54,7 @@
 }
 
 .inactive {
-  background-color: gray;
+  background-color: red;
 }
 
 .User_container:hover > .marquee {
