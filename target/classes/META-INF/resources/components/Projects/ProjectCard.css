@@ -1,5 +1,5 @@
 .Project_container {
-  width: 200px;
+  flex-grow: 1;
   height: 100%;
   border-radius: 8px;
   padding: 16px;
@@ -12,10 +12,6 @@
   -moz-box-shadow: 0 0 3px #ccc;
   -webkit-box-shadow: 0 0 3px #ccc;
   box-shadow: 0 0 3px #ccc;
-}
-
-.Project_container:hover {
-  transform: scale(1.02);
   cursor: pointer;
 }
 
