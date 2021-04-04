@@ -1,18 +1,30 @@
-import React, {useRef} from 'react'
+import React, {useRef, useEffect} from 'react'
 import './ProjectCard.css'
 import AspectRatio from './AspectRatio.js'
+import GetAppIcon from '@material-ui/icons/GetApp';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 function ProjectCard(props) {
   const {title, collaborator} = props;
-  const titleRef = useRef();
-  const collaboratorRef = useRef();
 
   return (
   
     <div className="Project_container">
       {AspectRatio(<div className="Project_icon"></div>)}    
-      <span className="Project_title" ref={titleRef}>{title}</span>
-      <span className="Project_collaborator" ref={collaboratorRef}>{`Collaborator: ${collaborator}`}</span>
+      <span className="Project_title">{title}</span>
+      <span className="Project_collaborator">{`Collaborator: ${collaborator}`}</span>
+
+      <div className="Project_options">
+        <button className="download">
+          <GetAppIcon />
+          <span className="button_text">Download</span>
+        </button>
+
+        <button className="continue">
+          <PlayArrowIcon />
+          <span className="button_text">Continue</span>
+        </button>
+      </div>
        
     </div>
   )

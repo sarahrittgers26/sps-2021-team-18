@@ -6,6 +6,8 @@
   align-items: center;
   background-color: var(--profile_background);
   margin-top: var(--header_height);
+  position: relative;
+  transition: all 0.3s;
 }
 
 .Projects_main {
@@ -25,7 +27,8 @@
 .Projects_label {
   font-weight: bold;
   font-size: 2em;
-  padding: 16px 0;
+  display: flex;
+  margin-top: 32px;
 }
 
 .Projects_recent {
