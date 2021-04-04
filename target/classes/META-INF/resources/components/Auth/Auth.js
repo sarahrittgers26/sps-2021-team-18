@@ -199,7 +199,7 @@ const Auth = ({ history }) => {
 
       const signInInfo = { username: username, email: email };
       //dispatch(signIn(signInInfo));
-      history.push('/editor');
+      history.push('/projects');
     } catch (err) {
       // If error occurs notify user
       if (err) {
@@ -234,7 +234,7 @@ const Auth = ({ history }) => {
 	} else {
 	  const signInInfo = { username: username, email: errorAndEmail[1] };
 	  //dispatch(signIn(signInInfo));
-	  history.push('/editor'); 
+	  history.push('/projects'); 
 	}
       } else {
         setUsernameError(true);
