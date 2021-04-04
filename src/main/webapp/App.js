@@ -17,7 +17,7 @@ function App() {
         <Route path="/editor" exact component={Editor} />
         <Route path="/projects" exact component={Projects} /> */}
 
-        <Route path="/" exact component={Editor} />
+        <Route path="/" exact component={Projects} />
       </HashRouter>
     </ThemeProvider>
   );

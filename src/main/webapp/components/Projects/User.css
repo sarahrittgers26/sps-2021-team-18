@@ -4,7 +4,6 @@
   align-items: center;
   padding: 12px 16px 12px 0;
   justify-content: flex-start;
-  transition: all 0.3s;
   border-radius: 8px;
   cursor: pointer;
   position: relative;
@@ -27,7 +26,7 @@
   min-width: 40px;
   min-height: 40px;
   border-radius: 50%;
-  background-color: white;
+  background-color: var(--profile_background);
   position: relative;
   display: flex;
 }
@@ -62,38 +61,23 @@
   position: absolute;
   text-align: center;
   margin-left: 48px;
-  -moz-animation: scroll-left 5s linear infinite;
-  -webkit-animation: scroll-left 5s linear infinite;
-  animation: scroll-left 5s linear infinite;
+  animation: scroll_out 2.5s linear, scroll-left 5s linear infinite 2.5s;
 }
 
-@-moz-keyframes scroll-left {
+@keyframes scroll_out {
   0% {
-    -moz-transform: translateX(100%);
+    transform: translateX(0);
   }
   100% {
-    -moz-transform: translateX(-100%);
-  }
-}
-
-@-webkit-keyframes scroll-left {
-  0% {
-    -webkit-transform: translateX(100%);
-  }
-  100% {
-    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
   }
 }
 
 @keyframes scroll-left {
   0% {
-    -moz-transform: translateX(100%);
-    -webkit-transform: translateX(100%);
     transform: translateX(100%);
   }
   100% {
-    -moz-transform: translateX(-100%);
-    -webkit-transform: translateX(-100%);
     transform: translateX(-100%);
   }
 }
