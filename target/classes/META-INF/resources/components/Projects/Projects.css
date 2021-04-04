@@ -3,12 +3,11 @@
   height: 100vh;
   display: flex;
   flex-direction: row;
+  background-color: rgb(238, 240, 244);
 }
 
 .Projects_content {
   flex-grow: 1;
   height: 100%;
-}
-
-.Projects_active {
+  padding: 24px;
 }
