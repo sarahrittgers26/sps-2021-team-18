@@ -5,6 +5,10 @@ import SearchIcon from '@material-ui/icons/Search';
 function Searchbar(props) {
   const {query, onChange} = props;
 
+  const handleChange = elt => {
+    onChange(elt.target.value);
+  }
+
   return (
     <div className="Searchbar_container">
 
@@ -15,7 +19,7 @@ function Searchbar(props) {
       <input 
         type="text"
         value={query}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder="Search for a project"
         className="Searchbar_input"/>
     </div>

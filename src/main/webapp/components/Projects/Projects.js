@@ -36,13 +36,14 @@ function Projects() {
   return (
     <div className="Projects_container">
 
+      
+
       <div className="Projects_content">
         <Searchbar
           query={searchQuery}
           onChange={setSearchQuery}/>
       </div>
 
-      
       <ConnectedUsers 
         active={active}
         inactive={inactive}
