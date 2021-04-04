@@ -12,7 +12,7 @@ public final class FormattedProject {
 		this.user1 = user1;
 		this.user2 = user2;
 		this.projectid = projectid;
-		this.botherActive = bothActive;
+		this.bothActive = bothActive;
 		this.title = title;
 	}
 }

@@ -38,7 +38,7 @@ public class UserOnlineServlet extends HttpServlet {
 
 		 // Return whether use is online to frontend
 		 response.setContentType("application/json");
-		 response.getWriter().println(gson.toJson(userIsActive(username, datastore));
+		 response.getWriter().println(gson.toJson(userIsActive(username, datastore)));
 	}
 
 	// Check if user is active
