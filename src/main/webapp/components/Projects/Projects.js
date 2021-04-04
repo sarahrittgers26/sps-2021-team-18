@@ -87,9 +87,10 @@ function Projects() {
     <ProjectCard
       key={`Project_${project.projectId}`}
       title={project.title}
-      collaborator={project.collaborator}/>
+      collaborator={project.collaborator}
+      downloadProject={() => downloadProject(project.projectId)}
+      continueProject={() => continueProject(project.projectId)}/>
   ));
-
 
   useEffect(() => {
 
