@@ -11,8 +11,4 @@
 }
 
 .Projects_active {
-  width: 300px;
-  height: 100%;
-  flex-shrink: 0;
-  border-left: 1px solid #4b4b4b;
 }

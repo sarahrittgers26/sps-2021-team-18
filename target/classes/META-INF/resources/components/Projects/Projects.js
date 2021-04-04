@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import './Projects.css'
 import ConnectedUsers from './ConnectedUsers.js'
+import Searchbar from './Searchbar.js'
 
 
 const active = [
@@ -17,6 +18,7 @@ const inactive = [
 
 function Projects() {
 
+  const [searchQuery, setSearchQuery] = useState("");
   const onActiveUserClick = (id) => {
     console.log("Active user clicked: " + id);
   }
@@ -26,19 +28,27 @@ function Projects() {
     console.log("Inactive user clicked: " + id);
   }
 
+  useEffect(() => {
+
+  });
+
 
   return (
     <div className="Projects_container">
 
-      <div className="Projects_content"></div>
-
-      <div className="Projects_active">
-        <ConnectedUsers 
-          active={active}
-          inactive={inactive}
-          onActiveUserClick={onActiveUserClick}
-          onInactiveUserClick={onInactiveUserClick}/>
+      <div className="Projects_content">
+        <Searchbar
+          query={searchQuery}
+          onChange={setSearchQuery}/>
       </div>
+
+      
+      <ConnectedUsers 
+        active={active}
+        inactive={inactive}
+        onActiveUserClick={onActiveUserClick}
+        onInactiveUserClick={onInactiveUserClick}/>
+      
     </div>
   )
 }

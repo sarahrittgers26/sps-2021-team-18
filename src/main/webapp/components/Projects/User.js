@@ -3,7 +3,7 @@ import './User.css'
 
 function User(props) {
 
-  const {name, active} = props;
+  const {name, active, onClick} = props;
   const nameRef = useRef();
 
 
@@ -19,7 +19,7 @@ function User(props) {
   });
 
   return (
-    <div className="User_container">
+    <div className="User_container" onClick={onClick}>
       <div className="User_image_container">
         <div className="User_image">
           <div className={`User_activity ${active ? "active" : "inactive"}`}></div>
