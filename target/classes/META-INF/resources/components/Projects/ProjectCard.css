@@ -9,6 +9,9 @@
   transition: all 0.3s;
   position: relative;
   overflow: hidden;
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
 }
 
 .Project_container:hover {
@@ -46,14 +49,4 @@
   white-space: nowrap;
   width: 100%;
   overflow: hidden;
-}
-
-.Project_container:hover > .marquee {
-  color: red;
-  position: absolute;
-  bottom: 0;
-  padding-bottom: 16px;
-  text-align: center;
-  margin-left: 48px;
-  animation: scroll_out 2.5s linear, scroll-left 5s linear infinite 2.5s;
 }

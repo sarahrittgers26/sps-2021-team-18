@@ -30,6 +30,14 @@ function Projects() {
     console.log("Inactive user clicked: " + id);
   }
 
+  const handleLogout = () => {
+    alert("Handle logout");
+  }
+
+  const displaySettings =() => {
+    alert("Display settings dialog")
+  }
+
   useEffect(() => {
 
   });
@@ -40,7 +48,9 @@ function Projects() {
 
       <Header 
         name="Mufaro Makiwa"
-        email="mufaroemakiwa@gmail.com"/>
+        email="mufaroemakiwa@gmail.com"
+        handleLogout={handleLogout}
+        displaySettings={displaySettings}/>
 
       <div className="Projects_main">
         <div className="Projects_content">
