@@ -1,10 +1,29 @@
 :root {
   --pane_background: rgb(40, 44, 52);
   --pane_title_background: rgb(33, 37, 43);
+  --profile_background: rgb(238, 240, 244);
 }
 
 * {
   margin: 0;
   border: 0;
   box-sizing: border-box;
+}
+
+@keyframes scroll_out {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }

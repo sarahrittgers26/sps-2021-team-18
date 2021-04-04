@@ -1,0 +1,27 @@
+.Projects_container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--profile_background);
+}
+
+.Projects_main {
+  display: flex;
+  flex-direction: row;
+  max-width: 1500px;
+  width: 100%;
+  padding: 24px;
+}
+
+.Projects_content {
+  flex-grow: 1;
+  height: 100%;
+  padding-right: 24px;
+}
+
+.dummies {
+  display: flex;
+  flex-direction: row;
+}

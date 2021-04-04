@@ -1,0 +1,59 @@
+.Project_container {
+  width: 200px;
+  height: 100%;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.Project_container:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}
+
+.Project_icon {
+  width: 100%;
+  height: 100%;
+  background-color: var(--profile_background);
+  border-radius: 8px;
+}
+
+.Project_details {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.Project_title {
+  margin-top: 8px;
+  padding: 8px 0;
+  font-size: 1.1em;
+  font-weight: bold;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+}
+
+.Project_collaborator {
+  color: gray;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+}
+
+.Project_container:hover > .marquee {
+  color: red;
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 16px;
+  text-align: center;
+  margin-left: 48px;
+  animation: scroll_out 2.5s linear, scroll-left 5s linear infinite 2.5s;
+}

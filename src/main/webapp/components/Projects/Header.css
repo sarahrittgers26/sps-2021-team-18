@@ -1,0 +1,63 @@
+.Header_container {
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(
+    to bottom,
+    rgb(63, 74, 97),
+    var(--profile_background)
+  );
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.Header_title {
+  z-index: 1;
+  height: 100%;
+  width: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: bold;
+  font-size: 2em;
+  color: white;
+}
+
+.Header_user_details {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+.Header_user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+}
+
+.Header_user_icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  background-color: white;
+  position: relative;
+  display: flex;
+  cursor: pointer;
+}
+
+.Header_user_name {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  color: rgb(207, 207, 207);
+}
+
+.Header_user_email {
+  font-style: italic;
+  color: black;
+}
