@@ -18,7 +18,7 @@ import org.jsoup.safety.Whitelist;
 import com.google.cloud.datastore.DatastoreException;
 		
 @WebServlet("/not-active")
-public class UpdateActiveServlet extends HttpServlet {
+public class NotActiveServlet extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
