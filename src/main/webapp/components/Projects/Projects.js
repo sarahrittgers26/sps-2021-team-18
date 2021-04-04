@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import './Projects.css'
 import ConnectedUsers from './ConnectedUsers.js'
 import Searchbar from './Searchbar.js'
+import Header from './Header.js'
 
 
 const active = [
@@ -36,19 +37,23 @@ function Projects() {
   return (
     <div className="Projects_container">
 
-      
+      <Header 
+        name="Mufaro Makiwa"
+        email="mufaroemakiwa@gmail.com"/>
 
-      <div className="Projects_content">
-        <Searchbar
-          query={searchQuery}
-          onChange={setSearchQuery}/>
+      <div className="Projects_main">
+        <div className="Projects_content">
+          <Searchbar
+            query={searchQuery}
+            onChange={setSearchQuery}/>
+        </div>
+
+        <ConnectedUsers 
+          active={active}
+          inactive={inactive}
+          onActiveUserClick={onActiveUserClick}
+          onInactiveUserClick={onInactiveUserClick}/>
       </div>
-
-      <ConnectedUsers 
-        active={active}
-        inactive={inactive}
-        onActiveUserClick={onActiveUserClick}
-        onInactiveUserClick={onInactiveUserClick}/>
       
     </div>
   )
