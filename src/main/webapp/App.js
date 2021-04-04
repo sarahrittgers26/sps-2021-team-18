@@ -5,6 +5,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { createHashHistory } from "history";
 import Auth from './components/Auth/Auth';
 import Editor from './components/Editor/Editor'
+import Projects from './components/Projects/Projects'
 
 const history = createHashHistory();
 
@@ -12,8 +13,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <HashRouter history={history}>
+        {/* <Route path="/" exact component={Auth} />
         <Route path="/editor" exact component={Editor} />
-        <Route path="/" exact component={Auth} />
+        <Route path="/projects" exact component={Projects} /> */}
+
+        <Route path="/" exact component={Projects} />
       </HashRouter>
     </ThemeProvider>
   );
