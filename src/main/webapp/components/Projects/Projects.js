@@ -22,12 +22,12 @@ function Projects() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const onActiveUserClick = (id) => {
-    console.log("Active user clicked: " + id);
+    alert("Active user clicked: " + id);
   }
   
   
   const onInactiveUserClick = (id) => {
-    console.log("Inactive user clicked: " + id);
+    alert("Inactive user clicked: " + id);
   }
 
   const handleLogout = () => {
@@ -58,16 +58,37 @@ function Projects() {
             query={searchQuery}
             onChange={setSearchQuery}/>
 
-          <div className="dummies">
-            <ProjectCard
-              title="First task"
+        <span className="Projects_label">Recent Projects</span>
+
+        <div className="Projects_recent">
+          <ProjectCard
+              title="1"
               collaborator="Mufaro Makiwa"/>
 
-            {/* <ProjectCard
-              title="Second task"
-              collaborator="Emmanuel Makiwa"/> */}
-          </div>
-          
+            <ProjectCard
+              title="2"
+              collaborator="Mufaro Makiwa"/>
+
+            <ProjectCard
+              title="3"
+              collaborator="Mufaro Makiwa"/>
+
+            <ProjectCard
+              title="4"
+              collaborator="Mufaro Makiwa"/>
+
+            <ProjectCard
+              title="5"
+              collaborator="Mufaro Makiwa"/>
+
+            <ProjectCard
+              title="6"
+              collaborator="Mufaro Makiwa"/>
+
+            <ProjectCard
+              title="7"
+              collaborator="Mufaro Makiwa"/>
+          </div>      
         </div>
 
         <ConnectedUsers 
