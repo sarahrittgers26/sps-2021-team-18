@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import './Projects.css'
 import ConnectedUsers from './ConnectedUsers.js'
 import Searchbar from './Searchbar.js'
@@ -63,6 +63,7 @@ function Projects() {
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState("");
   const [displayedProjects, setDisplayedProjects] = useState("");
+  const projectsRef = useRef();
 
   const onActiveUserClick = (id) => {
     alert("Active user clicked: " + id);
@@ -107,11 +108,21 @@ function Projects() {
     ));
     setDisplayedProjects(projects);
 
+    // disable flickering behavious on window resize
+    let resizeTimer;
+    projectsRef.current.addEventListener("resize", () => {
+      projectsRef.body.classList.add("resize-animation-stopper");
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        projectsRef.current.body.classList.remove("resize-animation-stopper");
+      }, 400);
+  });
+
   }, [openConnectionDialog, searchQuery]);
 
 
   return (
-    <div className="Projects_container">
+    <div className="Projects_container" ref={projectsRef}>
 
       <Header 
         name="Mufaro Makiwa"
