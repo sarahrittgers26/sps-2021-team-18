@@ -3,12 +3,7 @@
   flex-direction: row;
   align-items: center;
   flex-grow: 1;
-  border-radius: 8px;
-  background-color: white;
   margin-bottom: 24px;
-  -moz-box-shadow: 0 0 3px #ccc;
-  -webkit-box-shadow: 0 0 3px #ccc;
-  box-shadow: 0 0 3px #ccc;
   border: 1px solid white;
 }
 

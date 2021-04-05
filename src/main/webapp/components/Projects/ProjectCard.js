@@ -8,7 +8,7 @@ function ProjectCard(props) {
   const {title, collaborator, downloadProject, continueProject} = props;
 
   return (
-    <div className="Project_container">
+    <div className="Project_container card">
       {AspectRatio(<div className="Project_icon"></div>)}    
       <span className="Project_title">
         {title}

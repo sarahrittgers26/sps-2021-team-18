@@ -22,7 +22,7 @@ function ConnectedUsers(props) {
   ));
 
   return (
-    <div className="ConnectedUsers_container">
+    <div className="ConnectedUsers_container card">
       {activeUsers}
       {inactiveUsers}
     </div>

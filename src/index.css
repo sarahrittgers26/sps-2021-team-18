@@ -17,6 +17,14 @@ div.MuiDialogContent-root {
   margin: 0;
 }
 
+.card {
+  background-color: white;
+  border-radius: 8px;
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
+}
+
 div.MuiDialogContent-root:first-child {
   padding: 0;
 }

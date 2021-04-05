@@ -18,7 +18,7 @@ function Searchbar(props) {
   }, [focus]);
 
   return (
-    <div className="Searchbar_container" ref={searchBarRef}>
+    <div className="Searchbar_container card" ref={searchBarRef}>
 
       <div className="Searchbar_icon_container">
         <SearchIcon className="Searchbar_icon"/>

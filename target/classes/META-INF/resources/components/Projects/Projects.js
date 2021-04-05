@@ -6,6 +6,7 @@ import Header from './Header.js';
 import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import { saveAs } from 'file-saver';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 
 const active = [
@@ -13,12 +14,12 @@ const active = [
   {name: "Cynthia Enofe", id: 1},
   {name: "Michael Lawes", id: 2},
   {name: "Sarah Rittgers", id: 3},
-]
+];
 
 const inactive = [
   {name: "Emmanuel Makiwawa", id: 0},
   {name: "Andreea Lovan", id: 1}
-]
+];
 
 const allProjects = [
   {
@@ -69,7 +70,7 @@ const allProjects = [
     css: "h1 {color: red}",
     js: "console.log(\"I was just saved\")"
   }
-]
+];
 
 function Projects() {
 
@@ -146,6 +147,10 @@ function Projects() {
     setCurrentConnection(collaborator);
   }
 
+  const createNew = () => {
+    alert("Creating new project");
+  }
+
   useEffect(() => {
     const projects = allProjects.filter((project) => {
       return project.title.includes(searchQuery);
@@ -197,6 +202,17 @@ function Projects() {
         </div>
 
         <div className="Projects_sidebar">
+          <div className="Projects_create_new card" onClick={createNew}>
+            <div className="Projects_addIcon_container">
+              <AddCircleOutlineIcon 
+                style={{ fontSize: 50, color: "gray" }}/>
+            </div>
+    
+            <span className="Projects_create_span">  
+              Create new project
+            </span>
+          </div>
+
           <ConnectedUsers 
             active={active}
             inactive={inactive}

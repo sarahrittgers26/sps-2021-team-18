@@ -1,14 +1,9 @@
 .ConnectedUsers_container {
   display: flex;
   flex-direction: column;
-  padding: 24px 24px 24px 24px;
-  width: var(--sidebar_width);
+  padding: 24px;
+  width: 100%;
   height: auto;
   flex-shrink: 0;
-  background-color: white;
-  border-radius: 8px;
-  -moz-box-shadow: 0 0 3px #ccc;
-  -webkit-box-shadow: 0 0 3px #ccc;
-  box-shadow: 0 0 3px #ccc;
   transition: all 0.3s;
 }
