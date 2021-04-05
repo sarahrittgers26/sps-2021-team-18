@@ -110,11 +110,11 @@ function Projects() {
 
     // disable flickering behavious on window resize
     let resizeTimer;
-    projectsRef.current.addEventListener("resize", () => {
-      projectsRef.body.classList.add("resize-animation-stopper");
+    window.addEventListener("resize", () => {
+      document.body.classList.add("resize-animation-stopper");
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        projectsRef.current.body.classList.remove("resize-animation-stopper");
+        document.body.classList.remove("resize-animation-stopper");
       }, 400);
   });
 

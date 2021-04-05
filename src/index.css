@@ -21,12 +21,6 @@ div.MuiDialogContent-root:first-child {
   padding: 0;
 }
 
-/* Stops animations on window resize */
-.resize-animation-stopper * {
-  animation: none !important;
-  transition: none !important;
-}
-
 @keyframes scroll_out {
   0% {
     transform: translateX(0);
