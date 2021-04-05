@@ -1,0 +1,68 @@
+.Profile_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Profile_image {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  background-color: red;
+  position: relative;
+  display: flex;
+}
+
+.Profile_flipped {
+  flex-direction: row-reverse;
+}
+
+.Profile_details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.details_left {
+  align-items: flex-start;
+  margin-left: 16px;
+}
+
+.details_right {
+  align-items: flex-end;
+  margin-right: 16px;
+}
+
+.Profile_name {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+.Profile_email {
+  font-style: italic;
+  color: rgb(163, 161, 161);
+}
+
+.Profile_activity {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  border-radius: 50%;
+  bottom: -4px;
+}
+
+.left {
+  right: -4px;
+}
+
+.right {
+  left: -4px;
+}
+
+.active {
+  background: green;
+}
+
+.inactive {
+  background-color: gray;
+}
