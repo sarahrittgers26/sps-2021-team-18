@@ -1,5 +1,5 @@
-import React, {useRef, useEffect} from 'react'
-import './User.css'
+import React, {useEffect, useRef} from 'react';
+import './User.css';
 
 function User(props) {
 
@@ -25,7 +25,9 @@ function User(props) {
           <div className={`User_activity ${active ? "active" : "inactive"}`}></div>
         </div>
       </div>
-      <span className="User_name" ref={nameRef}>{name}</span>
+      <span className="User_name" ref={nameRef}>
+        {name}
+      </span>
     </div>
   )
 }

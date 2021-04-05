@@ -1,6 +1,6 @@
-import React from 'react'
-import './ConnectedUsers.css'
-import User from './User.js'
+import React from 'react';
+import './ConnectedUsers.css';
+import User from './User.js';
 
 function ConnectedUsers(props) {
   

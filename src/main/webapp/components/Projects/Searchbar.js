@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import './Searchbar.css'
+import React, { useEffect, useRef, useState } from 'react';
+import './Searchbar.css';
 import SearchIcon from '@material-ui/icons/Search';
 
 function Searchbar(props) {
@@ -12,7 +12,9 @@ function Searchbar(props) {
   }
 
   useEffect(() => {
-    focus ? searchBarRef.current.classList.add("Searchbar_container_focused") : searchBarRef.current.classList.remove("Searchbar_container_focused")
+    focus ? 
+      searchBarRef.current.classList.add("Searchbar_container_focused") : 
+      searchBarRef.current.classList.remove("Searchbar_container_focused");
   }, [focus]);
 
   return (

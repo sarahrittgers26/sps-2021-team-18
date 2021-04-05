@@ -1,6 +1,6 @@
-import React from 'react'
-import './Navbar.css'
-import './Profile.js'
+import React from 'react';
+import './Navbar.css';
+import './Profile.js';
 import Profile from './Profile.js';
 
 

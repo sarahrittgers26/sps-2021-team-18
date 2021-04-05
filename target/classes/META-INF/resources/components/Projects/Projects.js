@@ -1,10 +1,11 @@
-import React, {useEffect, useState, useRef} from 'react'
-import './Projects.css'
-import ConnectedUsers from './ConnectedUsers.js'
-import Searchbar from './Searchbar.js'
-import Header from './Header.js'
-import ProjectCard from './ProjectCard.js'
-import ConnectionDialog from './ConnectionDialog.js'
+import React, {useEffect, useState } from 'react';
+import './Projects.css';
+import ConnectedUsers from './ConnectedUsers.js';
+import Searchbar from './Searchbar.js';
+import Header from './Header.js';
+import ProjectCard from './ProjectCard.js';
+import ConnectionDialog from './ConnectionDialog.js';
+import { saveAs } from 'file-saver';
 
 
 const active = [
@@ -23,37 +24,50 @@ const allProjects = [
   {
     projectId: 0,
     title: "Simple HTML",
-    collaborator: "Mufaro Makiwa"
+    collaborator: "Mufaro Makiwa",
+    html: "<h1>This is my name</h1>",
+    css: "h1 {color: red}",
+    js: "console.log(\"I was just saved\")"
   },
   {
     projectId: 1,
     title: "Basic CSS",
-    collaborator: "Michael Lawes"
+    collaborator: "Michael Lawes",
+    html: "<h1>I just love how this is taking shape</h1>",
+    css: "h1 {color: grey}",
+    js: "console.log(\"I was just saved, damn\")"
   },
   {
     projectId: 2,
     title: "Basic JS",
-    collaborator: "Cynthia Enofe"
+    collaborator: "Cynthia Enofe",
+    html: "<h1>I dont like this project at all</h1>",
+    css: "h1 {color: red}",
+    js: "console.log(\"I was didnt want to be saved\")"
   },
   {
     projectId: 3,
     title: "Basic Coding",
-    collaborator: "Sarah Rittgers"
+    collaborator: "Sarah Rittgers",
+    html: "<h1>I am tired of being used for testing</h1>",
+    css: "h1 {color: red}",
+    js: "console.log(\"I was just saved\")"
   },
   {
     projectId: 4,
     title: "Basic basic hahaha",
-    collaborator: "Andreea Lovan"
+    collaborator: "Andreea Lovan",
+    html: "<h1>Oh yeah he got me</h1>",
+    css: "h1 {color: red}",
+    js: "console.log(\"I was just saved\")"
   },
   {
     projectId: 5,
     title: "Another basic HTML",
-    collaborator: "Emmanuel Makiwa"
-  },
-  {
-    projectId: 6,
-    title: "Another hahaha",
-    collaborator: "Manue Makiwa"
+    collaborator: "Emmanuel Makiwa",
+    html: "<h1>I am being used for testing</h1>",
+    css: "h1 {color: red}",
+    js: "console.log(\"I was just saved\")"
   }
 ]
 
@@ -63,7 +77,7 @@ function Projects() {
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState("");
   const [displayedProjects, setDisplayedProjects] = useState("");
-  const projectsRef = useRef();
+
 
   const onActiveUserClick = (id) => {
     alert("Active user clicked: " + id);
@@ -81,8 +95,45 @@ function Projects() {
     alert("Display settings dialog")
   }
 
+  // given a project id, get the project object with that id
+  const getProject = projectId => {
+    let selectedProject;
+    for (let project of allProjects) {
+      if (project.projectId === projectId) {
+        selectedProject = project;
+        break;
+      }
+    }
+    return selectedProject;
+  }
+
   const downloadProject = (projectId) => {
-    alert("Downloading project: " + projectId);
+    // get the project
+    
+    let selectedProject = getProject(projectId);
+    let folderName = getFolderName(selectedProject.title);
+    const zip = require('jszip')();
+    let folder = zip.folder(folderName);
+
+    // add the files to the folder
+    folder.file("index.js", selectedProject.js);
+    folder.file("index.css", selectedProject.css);
+    folder.file("index.html", selectedProject.html);
+
+    zip.generateAsync({type:"blob"})
+    .then(function(content) {
+        // see FileSaver.js
+        saveAs(content, `${folderName}.zip`);
+    });
+  }
+
+  // format the folder name to get rid of white spaces and add underscores
+  const getFolderName = (title) => {
+    let split = title.split(/[\s,]+/);
+    split = split.filter(item => {
+      return item !== "";
+    }).map(word => word.toLowerCase()).join("_")
+    return split;
   }
 
   const closeDialog = () => {
@@ -122,7 +173,7 @@ function Projects() {
 
 
   return (
-    <div className="Projects_container" ref={projectsRef}>
+    <div className="Projects_container">
 
       <Header 
         name="Mufaro Makiwa"
@@ -136,7 +187,9 @@ function Projects() {
             query={searchQuery}
             onChange={setSearchQuery}/>
 
-        <span className="Projects_label">Recent Projects</span>
+        <span className="Projects_label">
+          Recent Projects
+        </span>
 
         <div className="Projects_recent">
           {displayedProjects}
@@ -149,9 +202,7 @@ function Projects() {
             inactive={inactive}
             onActiveUserClick={onActiveUserClick}
             onInactiveUserClick={onInactiveUserClick}/>
-
-      </div>
-      
+        </div>   
       </div>
       
       <ConnectionDialog

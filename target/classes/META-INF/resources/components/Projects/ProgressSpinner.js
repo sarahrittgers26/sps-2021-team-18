@@ -1,5 +1,5 @@
-import React from 'react'
-import './ProgressSpinner.css'
+import React from 'react';
+import './ProgressSpinner.css';
 
 function ProgressSpinner() {
   return (

@@ -33,22 +33,49 @@
 @keyframes slide {
   0% {
     left: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(164, 189, 204, 1) 0%,
+      rgba(205, 214, 218, 1) 50%
+    );
   }
 
   25% {
     left: 50%;
+    background: linear-gradient(
+      90deg,
+      rgba(205, 214, 218, 1) 0%,
+      rgba(164, 189, 204, 1) 33%,
+      rgba(205, 214, 218, 1) 66%
+    );
   }
 
   50% {
     left: 0;
     right: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(205, 214, 218, 1) 0%,
+      rgba(164, 189, 204, 1) 50%
+    );
   }
 
   75% {
     right: 50%;
+    background: linear-gradient(
+      90deg,
+      rgba(205, 214, 218, 1) 0%,
+      rgba(164, 189, 204, 1) 33%,
+      rgba(205, 214, 218, 1) 66%
+    );
   }
 
   100% {
     right: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(164, 189, 204, 1) 0%,
+      rgba(205, 214, 218, 1) 50%
+    );
   }
 }

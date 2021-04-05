@@ -1,12 +1,12 @@
-import React from 'react'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/material.css'
-import 'codemirror/mode/xml/xml'
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/css/css'
-import './Pane.css'
+import React from 'react';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/css/css';
+import './Pane.css';
 import MinimizeIcon from '@material-ui/icons/Minimize';
-import { Controlled as ControlledEditor } from 'react-codemirror2'
+import { Controlled as ControlledEditor } from 'react-codemirror2';
 
 function Pane(props) {
   const {language, displayName, value, onChange} = props;

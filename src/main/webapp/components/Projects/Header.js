@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import './Header.css'
+import React, { useEffect, useRef, useState } from 'react';
+import './Header.css';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 
@@ -20,10 +20,8 @@ function Header(props) {
     displayMenu ? menuRef.current.style.display = "flex" : menuRef.current.style.display = "none";
      const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target) && 
-          iconRef.current && !iconRef.current.contains(event.target)) {
-        if (displayMenu) {
-          setDisplayMenu(prevState => !prevState);
-        }
+          iconRef.current && !iconRef.current.contains(event.target) && displayMenu) {      
+        setDisplayMenu(prevState => !prevState);     
       }
     }
   
@@ -32,27 +30,39 @@ function Header(props) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
 
-  }, [displayMenu])
+  }, [displayMenu]);
 
   return (
     <div className="Header_container">
-      <span className="Header_title">COLLABORATIVE CODING</span>
+      <span className="Header_title">
+        COLLABORATIVE CODING
+      </span>
 
       <div className="Header_user">
         <div className="Header_user_details">
-          <span className="Header_user_name">{name}</span>
-          <span className="Header_user_email">{email}</span>
+          <span className="Header_user_name">
+            {name}
+          </span>
+          <span className="Header_user_email">
+            {email}
+          </span>
         </div>
-        <div className="Header_user_icon" ref={iconRef} onClick={() => setDisplayMenu(prevState => !prevState)}></div>
+        <div className="Header_user_icon" 
+          ref={iconRef} 
+          onClick={() => setDisplayMenu(prevState => !prevState)}></div>
         <div className="Header_menu" ref={menuRef}>
           <ul>
             <li onClick={() => handleClick(displaySettings)}>
               <SettingsIcon className="Header_menu_icon"/>
-              <span>Settings</span>
+              <span>
+                Settings
+              </span>
             </li>
             <li onClick={() => handleClick(handleLogout)}>
               <ExitToAppIcon className="Header_menu_icon"/>
-              <span>Logout</span>
+              <span>
+                Logout
+              </span>
             </li>
           </ul>
         </div>

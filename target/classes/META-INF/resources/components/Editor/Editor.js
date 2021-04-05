@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Pane from './Pane.js'
 import Navbar from "./Navbar.js"
 import './Editor.css'
@@ -23,7 +23,7 @@ function Editor() {
     }, 250)
 
     return () => clearTimeout(timeout);
-  }, [html, css, js])
+  }, [html, css, js]);
 
   return (
     <>
