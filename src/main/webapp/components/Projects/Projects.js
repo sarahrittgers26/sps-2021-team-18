@@ -1,15 +1,14 @@
 import React, {useEffect, useState } from 'react';
+import { saveAs } from 'file-saver';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import './Projects.css';
 import ConnectedUsers from './ConnectedUsers.js';
 import Searchbar from './Searchbar.js';
 import Header from './Header.js';
 import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
-import { saveAs } from 'file-saver';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AlertDialog from './AlertDialog.js';
 import SettingsDialog from './SettingsDialog.js'
-
 
 const active = [
   {name: "Mufaro Emmanuel Manue Makiwa", id: 0},
@@ -92,7 +91,6 @@ function Projects() {
   const [activeUsers, setActiveUsers] = useState([]);
   const [inactiveUsers, setInactiveUsers] = useState([]);
   const [openSettingsDialog, setOpenSettingsDialog] = useState(false);
-
 
   const onActiveUserClick = (name, id) => {
     alert("Active user clicked: " + id + " " + name);
