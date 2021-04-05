@@ -7,6 +7,7 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import { saveAs } from 'file-saver';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import AlertDialog from './AlertDialog.js';
 
 
 const active = [
@@ -14,11 +15,12 @@ const active = [
   {name: "Cynthia Enofe", id: 1},
   {name: "Michael Lawes", id: 2},
   {name: "Sarah Rittgers", id: 3},
+  {name: "Mufaro Makiwa", id: 4},
 ];
 
 const inactive = [
-  {name: "Emmanuel Makiwawa", id: 0},
-  {name: "Andreea Lovan", id: 1}
+  {name: "Emmanuel Makiwa", id: 5},
+  {name: "Andreea Lovan", id: 6}
 ];
 
 const allProjects = [
@@ -26,6 +28,7 @@ const allProjects = [
     projectId: 0,
     title: "Simple HTML",
     collaborator: "Mufaro Makiwa",
+    collaboratorId: 4,
     html: "<h1>This is my name</h1>",
     css: "h1 {color: red}",
     js: "console.log(\"I was just saved\")"
@@ -34,6 +37,7 @@ const allProjects = [
     projectId: 1,
     title: "Basic CSS",
     collaborator: "Michael Lawes",
+    collaboratorId: 2,
     html: "<h1>I just love how this is taking shape</h1>",
     css: "h1 {color: grey}",
     js: "console.log(\"I was just saved, damn\")"
@@ -42,6 +46,7 @@ const allProjects = [
     projectId: 2,
     title: "Basic JS",
     collaborator: "Cynthia Enofe",
+    collaboratorId: 1,
     html: "<h1>I dont like this project at all</h1>",
     css: "h1 {color: red}",
     js: "console.log(\"I was didnt want to be saved\")"
@@ -50,6 +55,7 @@ const allProjects = [
     projectId: 3,
     title: "Basic Coding",
     collaborator: "Sarah Rittgers",
+    collaboratorId: 3,
     html: "<h1>I am tired of being used for testing</h1>",
     css: "h1 {color: red}",
     js: "console.log(\"I was just saved\")"
@@ -58,6 +64,7 @@ const allProjects = [
     projectId: 4,
     title: "Basic basic hahaha",
     collaborator: "Andreea Lovan",
+    collaboratorId: 6,
     html: "<h1>Oh yeah he got me</h1>",
     css: "h1 {color: red}",
     js: "console.log(\"I was just saved\")"
@@ -66,6 +73,7 @@ const allProjects = [
     projectId: 5,
     title: "Another basic HTML",
     collaborator: "Emmanuel Makiwa",
+    collaboratorId: 5,
     html: "<h1>I am being used for testing</h1>",
     css: "h1 {color: red}",
     js: "console.log(\"I was just saved\")"
@@ -77,15 +85,23 @@ function Projects() {
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState("");
-  const [displayedProjects, setDisplayedProjects] = useState("");
+  const [displayedProjects, setDisplayedProjects] = useState([]);
+  const [alertWarning, setAlertWarning] = useState("");
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const [activeUsers, setActiveUsers] = useState([]);
+  const [inactiveUsers, setInactiveUsers] = useState([]);
 
 
-  const onActiveUserClick = (id) => {
-    alert("Active user clicked: " + id);
+  const onActiveUserClick = (name, id) => {
+    alert("Active user clicked: " + id + " " + name);
   }
   
-  const onInactiveUserClick = (id) => {
-    alert("Inactive user clicked: " + id);
+  const onInactiveUserClick = (collaborator) => {
+    setOpenAlertDialog(true);
+    setAlertWarning(
+      `${collaborator} is currently offline. You can only create new projects with online users.`
+      )
+    
   }
 
   const handleLogout = () => {
@@ -137,19 +153,52 @@ function Projects() {
     return split;
   }
 
-  const closeDialog = () => {
-    setOpenConnectionDialog(false);
-    
+  const isOnline = (collaboratorId) => {
+    console.log(activeUsers);
+    console.log(inactiveUsers);
+    for (let user of active) {
+      if (user.id === collaboratorId) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  const continueProject = (projectId, collaborator) => {
-    setOpenConnectionDialog(true);
-    setCurrentConnection(collaborator);
+  const continueProject = (projectId, collaborator, collaboratorId) => {
+    if (isOnline(collaboratorId)) {
+      setOpenConnectionDialog(true);
+      setCurrentConnection(collaborator);
+
+    } else {
+      setOpenAlertDialog(true);
+      setAlertWarning(
+        `${collaborator} is currently offline. You can only edit this project when you are both online.`
+        )
+    } 
   }
 
   const createNew = () => {
     alert("Creating new project");
   }
+
+  useEffect(() => {
+    // disable flickering behavious on window resize
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      document.body.classList.add("resize-animation-stopper");
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.body.classList.remove("resize-animation-stopper");
+      }, 400);
+    });
+  }, [])
+
+
+  useEffect(() => {
+    // set state for active and inactive users with dummy users
+    
+  }, []);
+
 
   useEffect(() => {
     const projects = allProjects.filter((project) => {
@@ -160,21 +209,11 @@ function Projects() {
         title={project.title}
         collaborator={project.collaborator}
         downloadProject={() => downloadProject(project.projectId)}
-        continueProject={() => continueProject(project.projectId, project.collaborator)}/>
+        continueProject={() => continueProject(project.projectId, project.collaborator, project.collaboratorId)}/>
     ));
+
     setDisplayedProjects(projects);
-
-    // disable flickering behavious on window resize
-    let resizeTimer;
-    window.addEventListener("resize", () => {
-      document.body.classList.add("resize-animation-stopper");
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        document.body.classList.remove("resize-animation-stopper");
-      }, 400);
-  });
-
-  }, [openConnectionDialog, searchQuery]);
+  }, [searchQuery]);
 
 
   return (
@@ -214,8 +253,8 @@ function Projects() {
           </div>
 
           <ConnectedUsers 
-            active={active}
-            inactive={inactive}
+            active={activeUsers}
+            inactive={inactiveUsers}
             onActiveUserClick={onActiveUserClick}
             onInactiveUserClick={onInactiveUserClick}/>
         </div>   
@@ -224,8 +263,13 @@ function Projects() {
       <ConnectionDialog
         collaborator={currentConnection}
         isOpen={openConnectionDialog}
-        closeDialog={closeDialog}/>
+        closeDialog={() => setOpenConnectionDialog(false)}/>
           
+      <AlertDialog 
+        isOpen={openAlertDialog}
+        closeDialog={() => setOpenAlertDialog(false)}
+        message={alertWarning}/>
+
     </div>
   )
 }

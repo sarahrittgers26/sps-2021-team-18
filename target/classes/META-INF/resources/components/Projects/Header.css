@@ -60,7 +60,7 @@
 .Header_user_name {
   font-size: 1.1rem;
   text-transform: uppercase;
-  color: rgb(207, 207, 207);
+  color: whitesmoke;
 }
 
 .Header_user_email {

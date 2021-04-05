@@ -10,7 +10,7 @@ function ConnectedUsers(props) {
       key={`User_obj_${user.id}`}
       name={user.name}
       active={true}
-      onClick={() => onActiveUserClick(user.id)}/>
+      onClick={() => onActiveUserClick(user.name, user.id)}/>
   ));
 
   const inactiveUsers = inactive.map((user) => (
@@ -18,7 +18,7 @@ function ConnectedUsers(props) {
       key={`User_obj_${user.id}`}
       name={user.name}
       active={false}
-      onClick={() => onInactiveUserClick(user.id)}/>
+      onClick={() => onInactiveUserClick(user.name)}/>
   ));
 
   return (
