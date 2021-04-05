@@ -15,7 +15,7 @@ const active = [
 ]
 
 const inactive = [
-  {name: "Emmanuel Makiwa", id: 0},
+  {name: "Emmanuel Makiwawa", id: 0},
   {name: "Andreea Lovan", id: 1}
 ]
 
@@ -76,7 +76,7 @@ function Projects() {
     alert("Handle logout");
   }
 
-  const displaySettings =() => {
+  const displaySettings = () => {
     alert("Display settings dialog")
   }
 

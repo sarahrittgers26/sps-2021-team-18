@@ -23,9 +23,9 @@
 .Projects_sidebar {
   position: fixed;
   overflow: scroll;
-  bottom: 24px;
+  bottom: 0;
   top: var(--header_height);
-  padding-top: 24px;
+  padding: 24px 0;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: 0;
 }
