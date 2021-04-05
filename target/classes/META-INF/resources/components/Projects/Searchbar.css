@@ -1,0 +1,32 @@
+.Searchbar_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1;
+  border-radius: 8px;
+  background-color: white;
+  margin-bottom: 24px;
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
+}
+
+.Searchbar_icon_container {
+  padding: 12px 12px 12px 16px;
+  background-color: transparent;
+}
+
+.Searchbar_icon {
+  background-color: transparent;
+}
+
+.Searchbar_input {
+  width: 100%;
+  background-color: transparent;
+  text-decoration: none;
+  outline: none;
+  font-size: 1.1em;
+  border: none;
+  color: black;
+  flex-grow: 1;
+}

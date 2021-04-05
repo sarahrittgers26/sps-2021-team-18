@@ -4,7 +4,6 @@ import ConnectedUsers from './ConnectedUsers.js'
 import Searchbar from './Searchbar.js'
 import Header from './Header.js'
 import ProjectCard from './ProjectCard.js'
-import ConnectionDialog from './ConnectionDialog.js'
 
 
 const active = [
@@ -60,8 +59,6 @@ const dummyProjects = [
 function Projects() {
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
-
   const onActiveUserClick = (id) => {
     alert("Active user clicked: " + id);
   }
@@ -82,13 +79,8 @@ function Projects() {
     alert("Downloading project: " + projectId);
   }
 
-  const closeDialog = () => {
-    setOpenConnectionDialog(false);
-    
-  }
-
   const continueProject = (projectId) => {
-    setOpenConnectionDialog(true);
+    alert("Continuing project: " + projectId);
   }
 
   const projects = dummyProjects.map((project) => (
@@ -102,7 +94,7 @@ function Projects() {
 
   useEffect(() => {
 
-  }, [openConnectionDialog]);
+  });
 
 
   return (
@@ -133,12 +125,7 @@ function Projects() {
           onActiveUserClick={onActiveUserClick}
           onInactiveUserClick={onInactiveUserClick}/>
       </div>
-    
-      <ConnectionDialog
-        collaborator="Mufaro Makiwa"
-        isOpen={openConnectionDialog}
-        closeDialog={closeDialog}/>
-          
+      
     </div>
   )
 }
