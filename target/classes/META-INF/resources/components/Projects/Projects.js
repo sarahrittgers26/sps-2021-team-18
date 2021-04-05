@@ -132,13 +132,17 @@ function Projects() {
           </div>      
         </div>
 
-        <ConnectedUsers 
-          active={active}
-          inactive={inactive}
-          onActiveUserClick={onActiveUserClick}
-          onInactiveUserClick={onInactiveUserClick}/>
+        <div className="Projects_sidebar">
+          <ConnectedUsers 
+            active={active}
+            inactive={inactive}
+            onActiveUserClick={onActiveUserClick}
+            onInactiveUserClick={onInactiveUserClick}/>
+
       </div>
-    
+      
+      </div>
+      
       <ConnectionDialog
         collaborator={currentConnection}
         isOpen={openConnectionDialog}

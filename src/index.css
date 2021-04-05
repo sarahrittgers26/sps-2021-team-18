@@ -3,6 +3,7 @@
   --pane_title_background: rgb(33, 37, 43);
   --profile_background: rgb(238, 240, 244);
   --header_height: 80px;
+  --sidebar_width: 300px;
 }
 
 * {
@@ -35,5 +36,11 @@ div.MuiDialogContent-root:first-child {
   }
   100% {
     transform: translateX(-100%);
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  :root {
+    --sidebar_width: 275px;
   }
 }
