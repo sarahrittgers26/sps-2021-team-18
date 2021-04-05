@@ -189,7 +189,7 @@ function Projects() {
 
   // when the user clicks save after editing settings
   const saveSettings = (name, email, onlineStatus) => {
-    alert("Saving the settings");
+    alert("To handle save");
     setOpenSettingsDialog(false);
   }
 

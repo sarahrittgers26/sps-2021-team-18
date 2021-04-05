@@ -42,3 +42,54 @@
 .left {
   margin-right: 8px;
 }
+
+.Toggle_label {
+  margin-left: 16px;
+}
+
+.Settings_toggle {
+  --width: 50px;
+  --padding: 3px;
+  --height: calc(var(--width) / 2);
+  --border_radius: calc(var(--height) / 2);
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+}
+
+.Settings_toggle_input {
+  display: none;
+}
+
+.Settings_toggle_fill {
+  position: relative;
+  width: var(--width);
+  height: var(--height);
+  border-radius: var(--border_radius);
+  background: #dddddd;
+  transition: background 0.2s;
+}
+
+.Settings_toggle_input:checked ~ .Settings_toggle_fill {
+  background: #078;
+}
+
+.Settings_toggle_fill::after {
+  content: "";
+  position: absolute;
+  top: var(--padding);
+  bottom: var(--padding);
+  left: var(--padding);
+  height: calc(var(--height) - 2 * var(--padding));
+  width: calc(var(--height) - 2 * var(--padding));
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  border-radius: calc(var(--border_radius) - var(--padding));
+  transition: transform 0.2s;
+}
+
+.Settings_toggle_input:checked ~ .Settings_toggle_fill::after {
+  transform: translateX(calc(var(--height)));
+}
