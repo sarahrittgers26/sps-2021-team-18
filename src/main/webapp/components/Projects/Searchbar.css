@@ -9,6 +9,11 @@
   -moz-box-shadow: 0 0 3px #ccc;
   -webkit-box-shadow: 0 0 3px #ccc;
   box-shadow: 0 0 3px #ccc;
+  border: 1px solid white;
+}
+
+.Searchbar_container_focused {
+  border: 1px solid grey;
 }
 
 .Searchbar_icon_container {

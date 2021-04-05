@@ -19,7 +19,7 @@ const inactive = [
   {name: "Andreea Lovan", id: 1}
 ]
 
-const dummyProjects = [
+const allProjects = [
   {
     projectId: 0,
     title: "Simple HTML",
@@ -28,32 +28,32 @@ const dummyProjects = [
   {
     projectId: 1,
     title: "Basic CSS",
-    collaborator: "Mufaro Makiwa"
+    collaborator: "Michael Lawes"
   },
   {
     projectId: 2,
     title: "Basic JS",
-    collaborator: "Mufaro Makiwa"
+    collaborator: "Cynthia Enofe"
   },
   {
     projectId: 3,
     title: "Basic Coding",
-    collaborator: "Mufaro Makiwa"
+    collaborator: "Sarah Rittgers"
   },
   {
     projectId: 4,
     title: "Basic basic hahaha",
-    collaborator: "Mufaro Makiwa"
+    collaborator: "Andreea Lovan"
   },
   {
     projectId: 5,
     title: "Another basic HTML",
-    collaborator: "Mufaro Makiwa"
+    collaborator: "Emmanuel Makiwa"
   },
   {
     projectId: 6,
     title: "Another hahaha",
-    collaborator: "Mufaro Makiwa"
+    collaborator: "Manue Makiwa"
   }
 ]
 
@@ -61,6 +61,8 @@ function Projects() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
+  const [currentConnection, setCurrentConnection] = useState("");
+  const [displayedProjects, setDisplayedProjects] = useState("");
 
   const onActiveUserClick = (id) => {
     alert("Active user clicked: " + id);
@@ -87,22 +89,25 @@ function Projects() {
     
   }
 
-  const continueProject = (projectId) => {
+  const continueProject = (projectId, collaborator) => {
     setOpenConnectionDialog(true);
+    setCurrentConnection(collaborator);
   }
 
-  const projects = dummyProjects.map((project) => (
-    <ProjectCard
-      key={`Project_${project.projectId}`}
-      title={project.title}
-      collaborator={project.collaborator}
-      downloadProject={() => downloadProject(project.projectId)}
-      continueProject={() => continueProject(project.projectId)}/>
-  ));
-
   useEffect(() => {
+    const projects = allProjects.filter((project) => {
+      return project.title.includes(searchQuery);
+    }).map((project) => (
+      <ProjectCard
+        key={`Project_${project.projectId}`}
+        title={project.title}
+        collaborator={project.collaborator}
+        downloadProject={() => downloadProject(project.projectId)}
+        continueProject={() => continueProject(project.projectId, project.collaborator)}/>
+    ));
+    setDisplayedProjects(projects);
 
-  }, [openConnectionDialog]);
+  }, [openConnectionDialog, searchQuery]);
 
 
   return (
@@ -123,7 +128,7 @@ function Projects() {
         <span className="Projects_label">Recent Projects</span>
 
         <div className="Projects_recent">
-          {projects}
+          {displayedProjects}
           </div>      
         </div>
 
@@ -135,7 +140,7 @@ function Projects() {
       </div>
     
       <ConnectionDialog
-        collaborator="Mufaro Makiwa"
+        collaborator={currentConnection}
         isOpen={openConnectionDialog}
         closeDialog={closeDialog}/>
           
