@@ -31,7 +31,7 @@ import com.google.cloud.datastore.DatastoreException;
 public class LoadProjectsServlet extends HttpServlet {
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) 
+	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
     		 // Allow CORS so frontend can access it			
 		 response.addHeader("Access-Control-Allow-Origin", "*");
@@ -93,8 +93,7 @@ public class LoadProjectsServlet extends HttpServlet {
 			
 			projectResults
 				.add(new FormattedProject(
-							user1, 
-							user2, 
+							partner,  
 							projectid, 
 							bothActive,
 							title)

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from 'react-redux';
 import {
   Paper,
   Card,
@@ -11,12 +12,13 @@ import {
   Button
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
-//import { useDispatch } from 'react-redux';
+
 import axios from '../Api/Api';
+import { signIn } from '../../actions';
 
 const Auth = ({ history }) => {
   // Dispatch for react-redux store
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 	
   // Local state control of displaying sign-in or sign-up info
   const [mainVisible, setMainVisible] = useState(true);
@@ -35,7 +37,10 @@ const Auth = ({ history }) => {
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
-  const [emailErrorMsg, setEmailErrorMsg] = useState('');;
+  const [emailErrorMsg, setEmailErrorMsg] = useState('');
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [nameErrorMsg, setNameErrorMsg] = useState('');
 
   // Show main modal which gives user the option to signin or signup
   const showMain = () => {
@@ -61,6 +66,8 @@ const Auth = ({ history }) => {
     setPasswordError(false);
     setEmailErrorMsg('');
     setEmailError(false);
+    setNameErrorMsg('');
+    setNameError(false);
   };
 
   // Handles showing the signIn window
@@ -98,7 +105,7 @@ const Auth = ({ history }) => {
   }
 
   // Validates user entered sign up information correctly
-  const handleOnSignUpSubmit = (username, password, email, callBack) => {
+  const handleOnSignUpSubmit = (username, password, email, name, callBack) => {
     let error = false;
     if (username === '') {
       setUsernameError(true);
@@ -124,6 +131,14 @@ const Auth = ({ history }) => {
     } else {
       setEmailError(false);
       setEmailErrorMsg('');
+    }
+    if (name === '') {
+      setNameError(true);
+      setNameErrorMsg('Name cannot be empty');
+      error = true;
+    } else {
+      setNameError(false);
+      setNameErrorMsg('');
     }
 
     if (!error) {
@@ -158,17 +173,18 @@ const Auth = ({ history }) => {
   };
 
   // Handles creation of account
-  const handleSignUp = async (username, password, email) => {
+  const handleSignUp = async (username, password, email, name) => {
     try {
       // Encode username, password & email they may have special symbols
       username = encodeURIComponent(username);
       password = encodeURIComponent(password);
       email = encodeURIComponent(email);
+      name = encodeURIComponent(name);
 
       // Check if username is taken and email is valid then add to Datastore
       const response = await axios.post(
                `/sign-up?username=${username}
-              &password=${password}&email=${email}`);
+              &password=${password}&email=${email}&name=${name}`);
 
       if (response.status !== 200) {
         setUsernameError(true);
@@ -177,6 +193,8 @@ const Auth = ({ history }) => {
         setPasswordErrorMsg('Unable to sign up at this time please try again');
         setEmailError(true);
         setEmailErrorMsg('Unable to sign up at this time please try again');
+        setNameError(true);
+        setNameErrorMsg('Unable to sign up at this time please try again');
 	return;
       }
 	    
@@ -195,10 +213,20 @@ const Auth = ({ history }) => {
 	setEmailErrorMsg('Email address has already been used');
       }
       if (usernameExists || emailExists) return;
-
-      const signInInfo = { username: username, email: email };
-      //dispatch(signIn(signInInfo));
-      history.push('/projects');
+      
+      var partner = "testuser1";
+      var title = "title";
+      const response1 = await axios.post(`/create?username=${username}&partner=${partner}&title=${title}`);
+      const worked = response1.data
+      if (worked) {
+	console.log(worked)
+	const response2 = await axios.get(`/load?username=${username}`);
+	var projects = response2.data;
+	console.log(projects);
+	console.log(projects[0]);
+      }
+      dispatch(signIn({ username: username, email: email, name: name }));
+      //history.push('/projects');
     } catch (err) {
       // If error occurs notify user
       if (err) {
@@ -223,16 +251,16 @@ const Auth = ({ history }) => {
 
       if (response.status === 200) {
         // Direct user to next page
-	const errorAndEmail = response.data
-	const userExists = errorAndEmail[0] === 'true' ? true : false;
+	const errorAndInfo = response.data;
+	const userExists = errorAndInfo[0] === 'true' ? true : false;
 	if (!userExists) {
 	  setUsernameError(true);
 	  setUsernameErrorMsg('Username or password entered incorrectly');
 	  setPasswordError(true);
 	  setPasswordErrorMsg('Username or password entered incorrectly');
 	} else {
-	  const signInInfo = { username: username, email: errorAndEmail[1] };
-	  //dispatch(signIn(signInInfo));
+	  dispatch(signIn({ username: username, email: errorAndInfo[1], 
+		  name: errorAndInfo[2] }));
 	  history.push('/projects'); 
 	}
       } else {
@@ -298,6 +326,25 @@ const Auth = ({ history }) => {
           </Grid>
           <Grid item xs={12} className="grid-textfield">
             <TextField
+              id="name"
+              label="Name"
+              value={name}
+              error={nameError}
+              helperText={nameErrorMsg}
+              onChange={e => setName(e.target.value)}
+              margin="dense"
+              autoComplete="off"
+              variant="outlined"
+              onKeyPress={e =>
+                handleKeyPress(e, () =>
+                  handleOnSignUpSubmit(username, password, email, name,
+                          () => handleSignUp(username, password, email, name))
+                )
+              }
+            />
+          </Grid>
+          <Grid item xs={12} className="grid-textfield">
+            <TextField
               id="username"
               label="Username"
               value={username}
@@ -309,13 +356,13 @@ const Auth = ({ history }) => {
               variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
-                  handleOnSignUpSubmit(username, password, email,
-                          () => handleSignUp(username, password, email))
+                  handleOnSignUpSubmit(username, password, email, name,
+                          () => handleSignUp(username, password, email, name))
                 )
               }
             />
           </Grid>
-		  <Grid item xs={12} className="grid-textfield">
+	  <Grid item xs={12} className="grid-textfield">
             <TextField
               id="password"
               label="Password"
@@ -329,8 +376,8 @@ const Auth = ({ history }) => {
               variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
-                  handleOnSignUpSubmit(username, password, email,
-                          () => handleSignUp(username, password, email))
+                  handleOnSignUpSubmit(username, password, email, name,
+                          () => handleSignUp(username, password, email, name))
                 )
               }
             />
@@ -349,8 +396,8 @@ const Auth = ({ history }) => {
               variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
-                  handleOnSignUpSubmit(username, password, email,
-                          () => handleSignUp(username, password, email))
+                  handleOnSignUpSubmit(username, password, email, name,
+                          () => handleSignUp(username, password, email, name))
                 )
               }
             />
@@ -359,8 +406,8 @@ const Auth = ({ history }) => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => handleOnSignUpSubmit(username, password, email,
-                      () => handleSignUp(username, password, email))}
+              onClick={() => handleOnSignUpSubmit(username, password, email, name,
+                      () => handleSignUp(username, password, email, name))}
             >
               Sign Up
             </Button>

@@ -1,6 +1,7 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
+import javax.servlet.ServletException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import com.google.cloud.datastore.Datastore;
@@ -27,18 +28,19 @@ public class SignUpServlet extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws IOException {
+			throws ServletException, IOException {
     		 // Allow CORS so frontend can access it			
 		 response.addHeader("Access-Control-Allow-Origin", "*");
 		 response.addHeader("Access-Control-Allow-Headers", 
 				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		 response.addHeader("Access-Control-Allow-Credentials", "true");
 		 response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
-		 
+
 		 // Get the username, password and email from user
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		 String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
 		 String email = Jsoup.clean(request.getParameter("email"), Whitelist.none());
+		 String name = Jsoup.clean(request.getParameter("name"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
@@ -66,6 +68,7 @@ public class SignUpServlet extends HttpServlet {
 					.set("password", password)
 					.set("email", email)
 					.set("lastLogin", newLogin)
+					.set("name", name)
 					.build();
 			 datastore.put(user);
 		 }
