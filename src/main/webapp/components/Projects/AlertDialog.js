@@ -21,7 +21,7 @@ function AlertDialog(props) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 export default AlertDialog

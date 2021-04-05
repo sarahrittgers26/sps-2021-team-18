@@ -18,7 +18,7 @@ function Profile(props) {
         </span>
       </div>
     </div>
-  )
+  );
 }
 
 export default Profile

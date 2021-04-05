@@ -57,7 +57,7 @@ function SettingsDialog(props) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 export default SettingsDialog

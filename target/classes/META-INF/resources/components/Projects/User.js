@@ -29,7 +29,7 @@ function User(props) {
         {name}
       </span>
     </div>
-  )
+  );
 }
 
 export default User

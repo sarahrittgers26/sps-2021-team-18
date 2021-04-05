@@ -23,7 +23,7 @@ function ConnectionDialog(props) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 export default ConnectionDialog

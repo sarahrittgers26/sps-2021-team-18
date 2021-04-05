@@ -8,7 +8,7 @@ function ProgressSpinner() {
       <div className="line-base"></div>
       <div className="line"></div>
     </div>
-  )
+  );
 }
 
 export default ProgressSpinner

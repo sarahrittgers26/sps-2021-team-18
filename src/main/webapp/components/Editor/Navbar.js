@@ -38,7 +38,7 @@ function Navbar(props) {
           active={false}/>
       </div>
     </div>
-  )
+  );
 }
 
 export default Navbar

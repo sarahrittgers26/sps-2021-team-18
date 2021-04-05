@@ -37,7 +37,7 @@ function Pane(props) {
         }}
       />
     </div>
-  )
+  );
 }
 
 export default Pane

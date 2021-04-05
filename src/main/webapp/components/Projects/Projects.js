@@ -294,7 +294,7 @@ function Projects() {
           closeDialog={() => setOpenSettingsDialog(false)}
           saveSettings={saveSettings}/>)}
     </div>
-  )
+  );
 }
 
 export default Projects

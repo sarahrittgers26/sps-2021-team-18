@@ -9,20 +9,6 @@ import Projects from './components/Projects/Projects'
 
 const history = createHashHistory();
 
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <HashRouter history={history}>
-        <Route path="/" exact component={Projects} />
-        {/* <Route path="/editor" exact component={Editor} />
-        <Route path="/projects" exact component={Projects} /> */}
-      </HashRouter>
-    </ThemeProvider>
-  );
-}
-
-export default App;
-
 const theme = createMuiTheme({
   palette: {
     type: 'light',
@@ -41,3 +27,17 @@ const theme = createMuiTheme({
     fontWeightMedium: 600
   }
 });
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <HashRouter history={history}>
+        <Route path="/" exact component={Projects} />
+        {/* <Route path="/editor" exact component={Editor} />
+        <Route path="/projects" exact component={Projects} /> */}
+      </HashRouter>
+    </ThemeProvider>
+  );
+}
+
+export default App;

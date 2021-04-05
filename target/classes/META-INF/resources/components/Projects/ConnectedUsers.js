@@ -26,7 +26,7 @@ function ConnectedUsers(props) {
       {activeUsers}
       {inactiveUsers}
     </div>
-  )
+  );
 }
 
 export default ConnectedUsers

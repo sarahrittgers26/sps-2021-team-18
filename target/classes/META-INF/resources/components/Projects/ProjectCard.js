@@ -34,7 +34,7 @@ function ProjectCard(props) {
       </div>
        
     </div>
-  )
+  );
 }
 
 export default ProjectCard

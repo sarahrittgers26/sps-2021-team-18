@@ -7,7 +7,7 @@ function AspectRatio(child) {
     <div className="AspectRatio">
       <div className="AspectRatio-innerWrapper">{child}</div>
     </div>
-  )
+  );
 }
 
 export default AspectRatio;

@@ -33,7 +33,7 @@ function Searchbar(props) {
         onBlur={() => setFocus(false)}
         className="Searchbar_input"/>
     </div>
-  )
+  );
 }
 
 export default Searchbar

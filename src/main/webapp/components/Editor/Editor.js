@@ -20,7 +20,7 @@ function Editor() {
         <script>${js}</script>
       </html>
       `)
-    }, 250)
+    }, 250);
 
     return () => clearTimeout(timeout);
   }, [html, css, js]);
@@ -61,7 +61,7 @@ function Editor() {
 
       </div>
     </>
-  )
+  );
 }
 
 export default Editor
