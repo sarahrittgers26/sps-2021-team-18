@@ -8,6 +8,7 @@ import ConnectionDialog from './ConnectionDialog.js';
 import { saveAs } from 'file-saver';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AlertDialog from './AlertDialog.js';
+import SettingsDialog from './SettingsDialog.js'
 
 
 const active = [
@@ -90,6 +91,7 @@ function Projects() {
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [inactiveUsers, setInactiveUsers] = useState([]);
+  const [openSettingsDialog, setOpenSettingsDialog] = useState(false);
 
 
   const onActiveUserClick = (name, id) => {
@@ -104,12 +106,14 @@ function Projects() {
     
   }
 
+  // when the user want to log out
   const handleLogout = () => {
     alert("Handle logout");
   }
 
+  // called when user clicks on settings
   const displaySettings = () => {
-    alert("Display settings dialog")
+    setOpenSettingsDialog(true);
   }
 
   // given a project id, get the project object with that id
@@ -124,6 +128,7 @@ function Projects() {
     return selectedProject;
   }
 
+  // save project as a zip file on download
   const downloadProject = (projectId) => {
     // get the project
     
@@ -153,6 +158,7 @@ function Projects() {
     return split;
   }
 
+  // check if the user is with id given is online
   const isOnline = (collaboratorId) => {
     console.log(activeUsers);
     console.log(inactiveUsers);
@@ -164,6 +170,7 @@ function Projects() {
     return false;
   }
 
+  // called user clicks on continue button
   const continueProject = (projectId, collaborator, collaboratorId) => {
     if (isOnline(collaboratorId)) {
       setOpenConnectionDialog(true);
@@ -177,8 +184,15 @@ function Projects() {
     } 
   }
 
+  // called when a user clicks on the create new button
   const createNew = () => {
     alert("Creating new project");
+  }
+
+  // when the user clicks save after editing settings
+  const saveSettings = (name, email, onlineStatus) => {
+    alert("Saving the settings");
+    setOpenSettingsDialog(false);
   }
 
   useEffect(() => {
@@ -196,7 +210,8 @@ function Projects() {
 
   useEffect(() => {
     // set state for active and inactive users with dummy users
-    
+    setActiveUsers(active);
+    setInactiveUsers(inactive);
   }, []);
 
 
@@ -260,16 +275,26 @@ function Projects() {
         </div>   
       </div>
       
-      <ConnectionDialog
-        collaborator={currentConnection}
-        isOpen={openConnectionDialog}
-        closeDialog={() => setOpenConnectionDialog(false)}/>
-          
-      <AlertDialog 
-        isOpen={openAlertDialog}
-        closeDialog={() => setOpenAlertDialog(false)}
-        message={alertWarning}/>
+      {openConnectionDialog && (
+        <ConnectionDialog
+          collaborator={currentConnection}
+          isOpen={openConnectionDialog}
+          closeDialog={() => setOpenConnectionDialog(false)}/>)}
+        
+      {openAlertDialog && (
+        <AlertDialog 
+          isOpen={openAlertDialog}
+          closeDialog={() => setOpenAlertDialog(false)}
+          message={alertWarning}/>)} 
 
+      {openSettingsDialog && (
+        <SettingsDialog 
+          isOpen={openSettingsDialog}
+          name="Mufaro Makiwa"  // this depends on the users credentials
+          username="mufaromakiwa"
+          currentOnlineStatus={true} // this will depend on the users previous setting
+          closeDialog={() => setOpenSettingsDialog(false)}
+          saveSettings={saveSettings}/>)}
     </div>
   )
 }
