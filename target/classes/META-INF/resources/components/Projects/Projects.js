@@ -8,7 +8,7 @@ import Header from './Header.js';
 import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
-import SettingsDialog from './SettingsDialog.js'
+import ProfileDialog from './ProfileDialog.js'
 
 const active = [
   {name: "Mufaro Emmanuel Manue Makiwa", id: 0},
@@ -90,7 +90,7 @@ function Projects() {
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [inactiveUsers, setInactiveUsers] = useState([]);
-  const [openSettingsDialog, setOpenSettingsDialog] = useState(false);
+  const [openProfileDialog, setOpenProfileDialog] = useState(false);
 
   const onActiveUserClick = (name, id) => {
     alert("Active user clicked: " + id + " " + name);
@@ -109,9 +109,9 @@ function Projects() {
     alert("Handle logout");
   }
 
-  // called when user clicks on settings
-  const displaySettings = () => {
-    setOpenSettingsDialog(true);
+  // called when user clicks on Profile
+  const displayProfile = () => {
+    setOpenProfileDialog(true);
   }
 
   // given a project id, get the project object with that id
@@ -187,10 +187,10 @@ function Projects() {
     alert("Creating new project");
   }
 
-  // when the user clicks save after editing settings
-  const saveSettings = (name, email, onlineStatus) => {
+  // when the user clicks save after editing Profile
+  const saveProfile = (name, email, onlineStatus) => {
     alert("To handle save");
-    setOpenSettingsDialog(false);
+    setOpenProfileDialog(false);
   }
 
   useEffect(() => {
@@ -236,7 +236,7 @@ function Projects() {
         name="Mufaro Makiwa"
         email="mufaroemakiwa@gmail.com"
         handleLogout={handleLogout}
-        displaySettings={displaySettings}/>
+        displayProfile={displayProfile}/>
 
       <div className="Projects_main">
         <div className="Projects_content">
@@ -285,14 +285,14 @@ function Projects() {
           closeDialog={() => setOpenAlertDialog(false)}
           message={alertWarning}/>)} 
 
-      {openSettingsDialog && (
-        <SettingsDialog 
-          isOpen={openSettingsDialog}
+      {openProfileDialog && (
+        <ProfileDialog 
+          isOpen={openProfileDialog}
           name="Mufaro Makiwa"  // this depends on the users credentials
           username="mufaromakiwa"
           currentOnlineStatus={true} // this will depend on the users previous setting
-          closeDialog={() => setOpenSettingsDialog(false)}
-          saveSettings={saveSettings}/>)}
+          closeDialog={() => setOpenProfileDialog(false)}
+          saveProfile={saveProfile}/>)}
     </div>
   );
 }

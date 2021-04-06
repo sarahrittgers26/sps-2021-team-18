@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SettingsIcon from '@material-ui/icons/Settings';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 
 function Header(props) {
-  const {name, email, handleLogout, displaySettings} = props;
+  const {name, email, handleLogout, displayProfile} = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const menuRef = useRef();
   const iconRef = useRef();
@@ -23,7 +23,7 @@ function Header(props) {
           iconRef.current && !iconRef.current.contains(event.target) && displayMenu) {      
         setDisplayMenu(prevState => !prevState);     
       }
-    }
+    };
   
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -52,10 +52,10 @@ function Header(props) {
           onClick={() => setDisplayMenu(prevState => !prevState)}></div>
         <div className="Header_menu" ref={menuRef}>
           <ul>
-            <li onClick={() => handleClick(displaySettings)}>
-              <SettingsIcon className="Header_menu_icon"/>
+            <li onClick={() => handleClick(displayProfile)}>
+              <AccountCircleIcon className="Header_menu_icon"/>
               <span>
-                Settings
+                Profile
               </span>
             </li>
             <li onClick={() => handleClick(handleLogout)}>

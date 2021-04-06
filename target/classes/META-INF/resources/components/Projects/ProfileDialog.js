@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
-import './SettingsDialog.css'
+import './ProfileDialog.css'
 
-function SettingsDialog(props) {
-  const {isOpen, name, username, currentOnlineStatus, closeDialog, saveSettings } = props;
+function ProfileDialog(props) {
+  const {isOpen, name, username, currentOnlineStatus, closeDialog, saveProfile } = props;
   const [updatedName, setUpdatedName] = useState(name);
   const [updatedUsername, setUpdatedUsername] = useState(username);
   const [showOnlineStatus, setShowOnlineStatus] = useState(currentOnlineStatus);
@@ -19,40 +19,44 @@ function SettingsDialog(props) {
   return (
     <Dialog open={isOpen}>
       <DialogContent>
-        <div className="SettingsDialog_container">
-          
+        <div className="ProfileDialog_container">
+
+          <span className="ProfileDialog_header">
+            Update your profile
+          </span>
+           
           <input 
             type="text"
             value={updatedName}
             onChange={updateName}
             placeholder="Name"
-            className="Settings_input"/>
+            className="Profile_input"/>
 
           <input 
             type="text"
             value={updatedUsername}
             onChange={updateUsername}
             placeholder="Username"
-            className="Settings_input"/>
+            className="Profile_input"/>
 
 
-          <label htmlFor="status_toggle" className="Settings_toggle">
+          <label htmlFor="status_toggle" className="Profile_toggle">
             <input
               type="checkbox"
               id="status_toggle"
               name="status_toggle"
               checked={showOnlineStatus}
               onChange={() => setShowOnlineStatus(prevState => !prevState)}
-              className="Settings_toggle_input"/>
-            <div className="Settings_toggle_fill"></div>   
+              className="Profile_toggle_input"/>
+            <div className="Profile_toggle_fill"></div>   
             <span className="Toggle_label">
               Display online status 
             </span>       
           </label>
 
-          <div className="SettingsDialog_button_container">
-            <button className="SettingsDialog_button left" onClick={closeDialog}>CLOSE</button>
-            <button className="SettingsDialog_button right" onClick={saveSettings}>SAVE</button>
+          <div className="ProfileDialog_button_container">
+            <button className="ProfileDialog_button left" onClick={closeDialog}>CLOSE</button>
+            <button className="ProfileDialog_button right" onClick={saveProfile}>SAVE</button>
           </div>
         </div>
       </DialogContent>
@@ -60,4 +64,4 @@ function SettingsDialog(props) {
   );
 }
 
-export default SettingsDialog
+export default ProfileDialog

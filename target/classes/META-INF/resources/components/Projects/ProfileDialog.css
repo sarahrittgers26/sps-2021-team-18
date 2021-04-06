@@ -1,4 +1,4 @@
-.SettingsDialog_container {
+.ProfileDialog_container {
   background-color: var(--profile_background);
   box-sizing: border-box;
   padding: 24px;
@@ -9,7 +9,15 @@
   width: 400px;
 }
 
-.SettingsDialog_button_container {
+.ProfileDialog_header {
+  width: 100%;
+  text-align: left;
+  font-weight: bold;
+  font-size: 1.4em;
+  margin-bottom: 24px;
+}
+
+.ProfileDialog_button_container {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -18,7 +26,7 @@
   margin-top: 24px;
 }
 
-.SettingsDialog_button {
+.ProfileDialog_button {
   outline: none;
   text-decoration: none;
   border: none;
@@ -30,7 +38,7 @@
   background-color: rgba(202, 213, 218, 0.308);
 }
 
-.SettingsDialog_button:hover {
+.ProfileDialog_button:hover {
   background-color: rgba(161, 170, 179, 0.6);
   cursor: pointer;
 }
@@ -47,7 +55,7 @@
   margin-left: 16px;
 }
 
-.Settings_toggle {
+.Profile_toggle {
   --width: 50px;
   --padding: 3px;
   --height: calc(var(--width) / 2);
@@ -59,11 +67,11 @@
   padding: 8px;
 }
 
-.Settings_toggle_input {
+.Profile_toggle_input {
   display: none;
 }
 
-.Settings_toggle_fill {
+.Profile_toggle_fill {
   position: relative;
   width: var(--width);
   height: var(--height);
@@ -72,11 +80,11 @@
   transition: background 0.2s;
 }
 
-.Settings_toggle_input:checked ~ .Settings_toggle_fill {
+.Profile_toggle_input:checked ~ .Profile_toggle_fill {
   background: #078;
 }
 
-.Settings_toggle_fill::after {
+.Profile_toggle_fill::after {
   content: "";
   position: absolute;
   top: var(--padding);
@@ -90,6 +98,6 @@
   transition: transform 0.2s;
 }
 
-.Settings_toggle_input:checked ~ .Settings_toggle_fill::after {
+.Profile_toggle_input:checked ~ .Profile_toggle_fill::after {
   transform: translateX(calc(var(--height)));
 }
