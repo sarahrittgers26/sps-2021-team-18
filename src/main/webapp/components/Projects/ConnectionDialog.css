@@ -7,6 +7,27 @@
   align-items: center;
   max-width: 100%;
   width: 400px;
+  position: relative;
+}
+
+.ConnectionDialog_options {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+  position: absolute;
+  background-color: var(--profile_background);
+  display: flex;
+  flex-direction: column;
+}
+
+.ConnectionDialog_alert {
+  width: 100%;
+  color: gray;
+  text-align: justify;
+  text-justify: inter-word;
+  padding-top: 16px;
 }
 
 .ConnectionDialog_header {
@@ -53,4 +74,43 @@
 .ConnectionDialog_button:hover {
   background-color: rgba(161, 170, 179, 0.6);
   cursor: pointer;
+}
+
+.Connection_confirm_button_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.Connection_confirm_button {
+  outline: none;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  font-weight: bold;
+  transition: all 0.3s;
+  background-color: rgba(202, 213, 218, 0.308);
+}
+
+.Connection_confirm_button:hover {
+  background-color: rgba(161, 170, 179, 0.6);
+  cursor: pointer;
+}
+
+.right {
+  margin-left: 8px;
+}
+
+.left {
+  margin-right: 8px;
+}
+
+.ConnectionDialog_hide_options {
+  transform: translateX(-100%);
+  transition: all 0.3s;
 }

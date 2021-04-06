@@ -84,25 +84,51 @@ function Projects() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
-  const [currentConnection, setCurrentConnection] = useState("");
+  const [currentConnection, setCurrentConnection] = useState({});
   const [displayedProjects, setDisplayedProjects] = useState([]);
   const [alertWarning, setAlertWarning] = useState("");
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [inactiveUsers, setInactiveUsers] = useState([]);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
+  const [connectionAlert, setConnectionAlert] = useState("");
 
+
+  // this displays the connection dialog for the user to confirm they want to send the invite
   const onActiveUserClick = (name, id) => {
     setOpenConnectionDialog(true);
-    setCurrentConnection(name);
+    setCurrentConnection({
+      name: name, 
+      userId: id
+    });
+    setConnectionAlert(`This will send an invitation to ${name} to collaborate on a new project.`)
+  }
+
+
+  // this displays the connection dialog for the user to confirm they want to send the invite
+  const continueProject = (projectId, projectTitle, collaborator, collaboratorId) => {
+    if (isOnline(collaboratorId)) {
+      setOpenConnectionDialog(true);
+      setCurrentConnection({
+        name: collaborator, 
+        userId: collaboratorId
+      });
+      setConnectionAlert(`This will send an invitation to ${collaborator} to continue working on the project, ${projectTitle}`)
+
+    } else {
+      setOpenAlertDialog(true);
+      setAlertWarning(
+        `${collaborator} is currently offline. You can only edit this project when you are both online.`
+        )
+    } 
   }
   
+  // this is called when the user tries to connect with an inactive user
   const onInactiveUserClick = (collaborator) => {
     setOpenAlertDialog(true);
     setAlertWarning(
-      `${collaborator} is currently offline. You can only create new projects with online users.`
+      `${collaborator} is currently offline. You can only collaborate on new projects with active users.`
       )
-    
   }
 
   // when the user want to log out
@@ -169,20 +195,6 @@ function Projects() {
     return false;
   }
 
-  // called user clicks on continue button
-  const continueProject = (projectId, collaborator, collaboratorId) => {
-    if (isOnline(collaboratorId)) {
-      setOpenConnectionDialog(true);
-      setCurrentConnection(collaborator);
-
-    } else {
-      setOpenAlertDialog(true);
-      setAlertWarning(
-        `${collaborator} is currently offline. You can only edit this project when you are both online.`
-        )
-    } 
-  }
-
   // when the user clicks save after editing Profile
   const saveProfile = (name, email, onlineStatus) => {
     alert("To handle save");
@@ -218,12 +230,22 @@ function Projects() {
         title={project.title}
         collaborator={project.collaborator}
         downloadProject={() => downloadProject(project.projectId)}
-        continueProject={() => continueProject(project.projectId, project.collaborator, project.collaboratorId)}/>
+        continueProject={() => continueProject(project.projectId, project.title, project.collaborator, project.collaboratorId)}/>
     ));
 
     setDisplayedProjects(projects);
   }, [searchQuery]);
 
+  const closeConnectionDialog = () => {
+    setOpenConnectionDialog(false);
+    setConnectionAlert("");
+    setCurrentConnection({});
+  }
+
+  const closeAlertDialog = () => {
+    setAlertWarning("");
+    setOpenAlertDialog(false);
+  }
 
   return (
     <div className="Projects_container">
@@ -261,14 +283,15 @@ function Projects() {
       
       {openConnectionDialog && (
         <ConnectionDialog
-          collaborator={currentConnection}
+          collaborator={currentConnection.name}
           isOpen={openConnectionDialog}
-          closeDialog={() => setOpenConnectionDialog(false)}/>)}
+          closeDialog={closeConnectionDialog}
+          message={connectionAlert}/>)}
         
       {openAlertDialog && (
         <AlertDialog 
           isOpen={openAlertDialog}
-          closeDialog={() => setOpenAlertDialog(false)}
+          closeDialog={closeAlertDialog}
           message={alertWarning}/>)} 
 
       {openProfileDialog && (
