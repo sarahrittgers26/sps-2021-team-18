@@ -3,12 +3,30 @@
   --pane_title_background: rgb(33, 37, 43);
   --profile_background: rgb(238, 240, 244);
   --header_height: 80px;
+  --sidebar_width: 300px;
 }
 
 * {
   margin: 0;
   border: 0;
   box-sizing: border-box;
+}
+
+div.MuiDialogContent-root {
+  padding: 0;
+  margin: 0;
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
+}
+
+div.MuiDialogContent-root:first-child {
+  padding: 0;
 }
 
 @keyframes scroll_out {

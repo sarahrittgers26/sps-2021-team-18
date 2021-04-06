@@ -1,0 +1,103 @@
+.ProfileDialog_container {
+  background-color: var(--profile_background);
+  box-sizing: border-box;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  width: 400px;
+}
+
+.ProfileDialog_header {
+  width: 100%;
+  text-align: left;
+  font-weight: bold;
+  font-size: 1.4em;
+  margin-bottom: 24px;
+}
+
+.ProfileDialog_button_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.ProfileDialog_button {
+  outline: none;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  font-weight: bold;
+  transition: all 0.3s;
+  background-color: rgba(202, 213, 218, 0.308);
+}
+
+.ProfileDialog_button:hover {
+  background-color: rgba(161, 170, 179, 0.6);
+  cursor: pointer;
+}
+
+.right {
+  margin-left: 8px;
+}
+
+.left {
+  margin-right: 8px;
+}
+
+.Toggle_label {
+  margin-left: 16px;
+}
+
+.Profile_toggle {
+  --width: 50px;
+  --padding: 3px;
+  --height: calc(var(--width) / 2);
+  --border_radius: calc(var(--height) / 2);
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+}
+
+.Profile_toggle_input {
+  display: none;
+}
+
+.Profile_toggle_fill {
+  position: relative;
+  width: var(--width);
+  height: var(--height);
+  border-radius: var(--border_radius);
+  background: #dddddd;
+  transition: background 0.2s;
+}
+
+.Profile_toggle_input:checked ~ .Profile_toggle_fill {
+  background: #078;
+}
+
+.Profile_toggle_fill::after {
+  content: "";
+  position: absolute;
+  top: var(--padding);
+  bottom: var(--padding);
+  left: var(--padding);
+  height: calc(var(--height) - 2 * var(--padding));
+  width: calc(var(--height) - 2 * var(--padding));
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  border-radius: calc(var(--border_radius) - var(--padding));
+  transition: transform 0.2s;
+}
+
+.Profile_toggle_input:checked ~ .Profile_toggle_fill::after {
+  transform: translateX(calc(var(--height)));
+}
