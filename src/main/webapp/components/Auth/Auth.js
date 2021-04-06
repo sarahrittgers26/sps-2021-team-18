@@ -14,11 +14,11 @@ import {
 import { ArrowBack } from '@material-ui/icons';
 
 import axios from '../Api/Api';
-import { signIn } from '../../actions';
+import { loadProjects, loadUsers, signIn } from '../../actions';
 
 const Auth = ({ history }) => {
   // Get user from store
-  const user = useSelector((state) => state.user);
+  const user = useSelector(state => state.userReducer);
   	
   // Dispatch for react-redux store
   const dispatch = useDispatch();
@@ -216,11 +216,11 @@ const Auth = ({ history }) => {
 	setEmailErrorMsg('Email address has already been used');
       }
       if (usernameExists || emailExists) return;
-      
-      var partner = "testuser1";
-      var title = "title";
+
       dispatch(signIn({ username: username, email: email, name: name }));
-      console.log(user);
+      dispatch(loadUsers(username));
+      dispatch(loadProjects(username));
+      console.log(user.username);
       history.push('/projects');
     } catch (err) {
       // If error occurs notify user
@@ -256,8 +256,8 @@ const Auth = ({ history }) => {
 	} else {
 	  dispatch(signIn({ username: username, email: errorAndInfo[1], 
 		  name: errorAndInfo[2] }));
-          const response = await axios.post(`load/?${username}`);
-          console.log(response.data)
+	  dispatch(loadUsers(username));
+	  dispatch(loadProjects(username));
 	  console.log(user.username);
 	  history.push('/projects'); 
 	}
