@@ -103,7 +103,9 @@ function Projects() {
       name: name, 
       userId: id
     });
-    setConnectionAlert(`This will send an invitation to ${name} to collaborate on a new project.`)
+    setConnectionAlert(
+      `This will send an invitation to ${name} to collaborate on a new project.`
+    );
   }
 
 
@@ -115,13 +117,15 @@ function Projects() {
         name: collaborator, 
         userId: collaboratorId
       });
-      setConnectionAlert(`This will send an invitation to ${collaborator} to continue working on the project, ${projectTitle}`)
+      setConnectionAlert(
+        `This will send an invitation to ${collaborator} to continue working on the project, ${projectTitle}`
+        );
 
     } else {
       setOpenAlertDialog(true);
       setAlertWarning(
         `${collaborator} is currently offline. You can only edit this project when you are both online.`
-        )
+      );
     } 
   }
   
@@ -134,7 +138,7 @@ function Projects() {
     setOpenAlertDialog(true);
     setAlertWarning(
       `${collaborator} is currently offline. You can only collaborate on new projects with active users.`
-      )
+    );
   }
 
   // when the user want to log out
@@ -224,7 +228,9 @@ function Projects() {
         title={project.title}
         collaborator={project.collaborator}
         downloadProject={() => downloadProject(project.projectId)}
-        continueProject={() => continueProject(project.projectId, project.title, project.collaborator, project.collaboratorId)}/>
+        continueProject={() => continueProject(
+          project.projectId, project.title, project.collaborator, project.collaboratorId
+        )}/>
     ));
     return projects;
   }
@@ -239,7 +245,7 @@ function Projects() {
         document.body.classList.remove("resize-animation-stopper");
       }, 400);
     });
-  }, [])
+  }, []);
 
 
   useEffect(() => {
