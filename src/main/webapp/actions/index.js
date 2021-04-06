@@ -81,25 +81,12 @@ export const loadUsers = (username) => async (dispatch) => {
     // Load users from backend
     let url = `/get-users?username=${username}`;
     const response = await axios.get(url);
-    const users = response.data;
-    const activeUsers = [];
-    const inactiveUsers = [];
-    for (var i = 0; i < users.length; i++) {
-      let current = users[i];
-      let user = { name: current.name, username: current.username, 
-	      email: current.email };
-      if (current.isActive) {
-        activeUsers.push(user);
-      } else {
-        inactiveUsers.push(user);
-      }
-    }
-    dispatch({ type: ACTION.UPDATE_ACTIVE_USERS, payload: activeUsers });
-    dispatch({ type: ACTION.UPDATE_INACTIVE_USERS, payload: inactiveUsers });
+    dispatch({ type: ACTION.UPDATE_ACTIVE_USERS, payload: userSelector(true, response.data) });
+    dispatch({ type: ACTION.UPDATE_INACTIVE_USERS, payload: userSelector(false, response.data) });
   }
 }
 
-// Load project data
+// Load projects that are online or offline
 export const loadProjects = (username) => async (dispatch) => {
   if (username !== '') {
     // Load projects from backend
@@ -110,7 +97,7 @@ export const loadProjects = (username) => async (dispatch) => {
   }
 }
 
-// Return either offline or online projects
+// Return either online or offline projects
 const projectSelector = (selector, projects) => {
     const selection = [];
     for (var i = 0;i < projects.length; i++) {
@@ -122,6 +109,22 @@ const projectSelector = (selector, projects) => {
 	        title: current.title, html: current.html, css: current.css, 
 	        js: current.js };
 	selection.push(project);
+      }
+    }
+    return selection;
+}
+
+// Return either active or inactive users
+const userSelector = (selector, users) => {
+    const selection = [];
+    for (var i = 0;i < users.length; i++) {
+      let current = users[i]
+      // selector is true/false for online/offline projects
+      // if selector is true then only add online projects otherwise add offline
+      if (current.isActive == selector) {
+        let user = { username: current.username, name: current.name,
+	        email: current.email };
+	selection.push(user);
       }
     }
     return selection;
