@@ -1,6 +1,39 @@
 import axios from '../components/Api/Api';
 import { ACTION } from './types';
 
+// Return either online or offline projects
+const projectSelector = (selector, projects) => {
+    const selection = [];
+    for (var i = 0; i < projects.length; i++) {
+      let current = projects[i]
+      // selector is true/false for online/offline projects
+      // if selector is true then only add online projects otherwise add offline
+      if (current.bothActive === selector) {
+        let project = { collaborator: current.partner, projectid: current.projectid,
+	        title: current.title, html: current.html, css: current.css, 
+	        js: current.js };
+	selection.push(project);
+      }
+    }
+    return selection;
+};
+
+// Return either active or inactive users
+const userSelector = (selector, users) => {
+    const selection = [];
+    for (var i = 0; i < users.length; i++) {
+      let current = users[i]
+      // selector is true/false for online/offline projects
+      // if selector is true then only add online projects otherwise add offline
+      if (current.isActive === selector) {
+        let user = { username: current.username, name: current.name,
+	        email: current.email };
+	selection.push(user);
+      }
+    }
+    return selection;
+};
+
 // On sign in
 export const signIn = (user) => {
   return {
@@ -37,7 +70,7 @@ export const updateActiveUsers = (userList) => {
     type: ACTION.UPDATE_ACTIVE_USERS,
     payload: userList
   }
-}
+};
 
 // Update inactive users
 export const updateInactiveUsers = (userList) => {
@@ -45,7 +78,7 @@ export const updateInactiveUsers = (userList) => {
     type: ACTION.UPDATE_INACTIVE_USERS,
     payload: userList
   }
-}
+};
 
 // Update online projects
 export const updateOnlineProjects = (projectList) => {
@@ -53,7 +86,7 @@ export const updateOnlineProjects = (projectList) => {
     type: ACTION.UPDATE_ONLINE_PROJECTS,
     payload: projectList
   }
-}
+};
 
 // Update offOnline projects
 export const updateOfflineProjects = (projectList) => {
@@ -61,7 +94,7 @@ export const updateOfflineProjects = (projectList) => {
     type: ACTION.UPDATE_OFFLINE_PROJECTS,
     payload: projectList
   }
-}
+};
 
 // On name change
 export const changeName = async (change) => {
@@ -73,7 +106,7 @@ export const changeName = async (change) => {
     type: ACTION.CHANGE_NAME,
     payload: name
   }
-}
+};
 
 // Load users that are active and inactive 
 export const loadUsers = (username) => async (dispatch) => {
@@ -84,7 +117,7 @@ export const loadUsers = (username) => async (dispatch) => {
     dispatch({ type: ACTION.UPDATE_ACTIVE_USERS, payload: userSelector(true, response.data) });
     dispatch({ type: ACTION.UPDATE_INACTIVE_USERS, payload: userSelector(false, response.data) });
   }
-}
+};
 
 // Load projects that are online or offline
 export const loadProjects = (username) => async (dispatch) => {
@@ -95,37 +128,4 @@ export const loadProjects = (username) => async (dispatch) => {
     dispatch({ type: ACTION.UPDATE_ONLINE_PROJECTS, payload: projectSelector(true, response.data) });
     dispatch({ type: ACTION.UPDATE_OFFLINE_PROJECTS, payload: projectSelector(false, response.data) });
   }
-}
-
-// Return either online or offline projects
-const projectSelector = (selector, projects) => {
-    const selection = [];
-    for (var i = 0;i < projects.length; i++) {
-      let current = projects[i]
-      // selector is true/false for online/offline projects
-      // if selector is true then only add online projects otherwise add offline
-      if (current.bothActive == selector) {
-        let project = { collaborator: current.partner, projectid: current.projectid,
-	        title: current.title, html: current.html, css: current.css, 
-	        js: current.js };
-	selection.push(project);
-      }
-    }
-    return selection;
-}
-
-// Return either active or inactive users
-const userSelector = (selector, users) => {
-    const selection = [];
-    for (var i = 0;i < users.length; i++) {
-      let current = users[i]
-      // selector is true/false for online/offline projects
-      // if selector is true then only add online projects otherwise add offline
-      if (current.isActive == selector) {
-        let user = { username: current.username, name: current.name,
-	        email: current.email };
-	selection.push(user);
-      }
-    }
-    return selection;
-}
+};

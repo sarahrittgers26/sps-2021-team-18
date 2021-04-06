@@ -58,13 +58,12 @@ public class GetUsersServlet extends HttpServlet {
 	// Get users associated with user from Datastore
 	private FormattedUser[] loadUsers(String username, Datastore datastore) 
 			throws DatastoreException {
-		 // Initialize Array list for usernames of project partners	
-		 List<String> allUsers = new ArrayList<>();
-		 allUsers.addAll(queryUsersFromProjects(username, "user1", datastore));
-		 allUsers.addAll(queryUsersFromProjects(username, "user2", datastore));
+		 // Get all distinct usernames of project partners	
+		 Set<String> distinctUsers = new HashSet<> (Arrays.asList(
+			queryUsersFromProjects(username, "user1", datastore),
+			queryUsersFromProjects(username, "user2", datastore)));
 		
 		 // Remove duplicate users from list
-		 Set<String> distinctUsers = new HashSet<String>(allUsers);
 		 List<FormattedUser> users = new ArrayList<FormattedUser>();
 
 		 for (String partner: distinctUsers) {
@@ -89,10 +88,10 @@ public class GetUsersServlet extends HttpServlet {
 	}
 
 	// Get project by username equality and return partner names
-	private ArrayList<String> queryUsersFromProjects(String username, String field, 
+	private HashSet<String> queryUsersFromProjects(String username, String field, 
 			Datastore datastore) throws DatastoreException {
 		 // Query for projects where username == field
-		 ArrayList<String> collaborators = new ArrayList<>();
+		 Set<String> collaborators = new HashSet<>();
 		 Query<Entity> projectQuery = Query.newEntityQueryBuilder()
 			 .setKind("Project")
 			 .setFilter(PropertyFilter.eq(field, username))
@@ -119,6 +118,11 @@ public class GetUsersServlet extends HttpServlet {
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = 
 			DateTimeFormatter.ISO_DATE_TIME;
+
+		// Login time is stored as lastLogin but is also used as active status
+		// lastLogin is updated every minute the user is on the application with useEffect()
+		// only when a user logs out does this stop so an active user is one
+		// still using the application
 		LocalDateTime loginTime = LocalDateTime
 			.parse(lastLogin, formatter);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(1);

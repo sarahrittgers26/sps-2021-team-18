@@ -18,7 +18,7 @@ import { loadProjects, loadUsers, signIn } from '../../actions';
 
 const Auth = ({ history }) => {
   // Get user from store
-  const user = useSelector(state => state.userReducer);
+  const user = useSelector((state) => state.userReducer);
   	
   // Dispatch for react-redux store
   const dispatch = useDispatch();
@@ -220,7 +220,6 @@ const Auth = ({ history }) => {
       dispatch(signIn({ username: username, email: email, name: name }));
       dispatch(loadUsers(username));
       dispatch(loadProjects(username));
-      console.log(user.username);
       history.push('/projects');
     } catch (err) {
       // If error occurs notify user
@@ -258,7 +257,6 @@ const Auth = ({ history }) => {
 		  name: errorAndInfo[2] }));
 	  dispatch(loadUsers(username));
 	  dispatch(loadProjects(username));
-	  console.log(user.username);
 	  history.push('/projects'); 
 	}
       } else {
