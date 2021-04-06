@@ -1,6 +1,5 @@
 import React, {useEffect, useState } from 'react';
 import { saveAs } from 'file-saver';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import './Projects.css';
 import ConnectedUsers from './ConnectedUsers.js';
 import Searchbar from './Searchbar.js';
@@ -23,7 +22,7 @@ const inactive = [
   {name: "Andreea Lovan", id: 6}
 ];
 
-const allProjects = [
+const dummyProjects = [
   {
     projectId: 0,
     title: "Simple HTML",
@@ -86,12 +85,14 @@ function Projects() {
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
   const [displayedProjects, setDisplayedProjects] = useState([]);
+  const [allProjects, setAllProjects] = useState([]);
   const [alertWarning, setAlertWarning] = useState("");
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [inactiveUsers, setInactiveUsers] = useState([]);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [connectionAlert, setConnectionAlert] = useState("");
+  const [loading, setLoading] = useState(true);
 
 
   // this displays the connection dialog for the user to confirm they want to send the invite
@@ -185,8 +186,6 @@ function Projects() {
 
   // check if the user is with id given is online
   const isOnline = (collaboratorId) => {
-    console.log(activeUsers);
-    console.log(inactiveUsers);
     for (let user of active) {
       if (user.id === collaboratorId) {
         return true;
@@ -201,40 +200,6 @@ function Projects() {
     setOpenProfileDialog(false);
   }
 
-  useEffect(() => {
-    // disable flickering behavious on window resize
-    let resizeTimer;
-    window.addEventListener("resize", () => {
-      document.body.classList.add("resize-animation-stopper");
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        document.body.classList.remove("resize-animation-stopper");
-      }, 400);
-    });
-  }, [])
-
-
-  useEffect(() => {
-    // set state for active and inactive users with dummy users
-    setActiveUsers(active);
-    setInactiveUsers(inactive);
-  }, []);
-
-
-  useEffect(() => {
-    const projects = allProjects.filter((project) => {
-      return project.title.includes(searchQuery);
-    }).map((project) => (
-      <ProjectCard
-        key={`Project_${project.projectId}`}
-        title={project.title}
-        collaborator={project.collaborator}
-        downloadProject={() => downloadProject(project.projectId)}
-        continueProject={() => continueProject(project.projectId, project.title, project.collaborator, project.collaboratorId)}/>
-    ));
-
-    setDisplayedProjects(projects);
-  }, [searchQuery]);
 
   const closeConnectionDialog = () => {
     setOpenConnectionDialog(false);
@@ -247,6 +212,41 @@ function Projects() {
     setOpenAlertDialog(false);
   }
 
+  useEffect(() => {
+    // disable flickering behavious on window resize
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      document.body.classList.add("resize-animation-stopper");
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.body.classList.remove("resize-animation-stopper");
+      }, 400);
+    });
+
+    console.log("Supposed to run only at the beginning to set listener")
+  }, [])
+
+
+  useEffect(() => {
+    // set state for active and inactive users with dummy users
+    setActiveUsers(active);
+    setInactiveUsers(inactive);
+    setAllProjects(JSON.parse(JSON.stringify(dummyProjects)))
+    setLoading(false);
+    console.log("Supposed to run only at the beginning")
+  }, []);
+
+
+  useEffect(() => {
+    const projects = allProjects.filter((project) => {
+      return project.title.includes(searchQuery);
+    });
+
+    setDisplayedProjects(projects);
+    console.log("Supposed to run only when query changes")
+  }, [searchQuery, allProjects]);
+
+
   return (
     <div className="Projects_container">
 
@@ -256,20 +256,28 @@ function Projects() {
         handleLogout={handleLogout}
         displayProfile={displayProfile}/>
 
-      <div className="Projects_main">
-        <div className="Projects_content">
-          <Searchbar
-            query={searchQuery}
-            onChange={setSearchQuery}/>
+      {!loading && ( 
+        <div className="Projects_main">
+          <div className="Projects_content">
+            <Searchbar
+              query={searchQuery}
+              onChange={setSearchQuery}/>
 
-        <span className="Projects_label">
-          Recent Projects
-        </span>
+          <span className="Projects_label">
+            Recent Projects
+          </span>
 
-        <div className="Projects_recent">
-          {displayedProjects}
-          </div>      
-        </div>
+          <div className="Projects_recent">
+            {displayedProjects.map((project) => (
+              <ProjectCard
+                key={`Project_${project.projectId}`}
+                title={project.title}
+                collaborator={project.collaborator}
+                downloadProject={() => downloadProject(project.projectId)}
+                continueProject={() => continueProject(project.projectId, project.title, project.collaborator, project.collaboratorId)}/>
+            ))}
+            </div>      
+          </div>
 
         <div className="Projects_sidebar">
 
@@ -279,7 +287,7 @@ function Projects() {
             onActiveUserClick={onActiveUserClick}
             onInactiveUserClick={onInactiveUserClick}/>
         </div>   
-      </div>
+      </div> )}
       
       {openConnectionDialog && (
         <ConnectionDialog
