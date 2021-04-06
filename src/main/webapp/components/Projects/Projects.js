@@ -10,16 +10,17 @@ import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js'
 
 const active = [
-  {name: "Mufaro Emmanuel Manue Makiwa", id: 0},
-  {name: "Cynthia Enofe", id: 1},
-  {name: "Michael Lawes", id: 2},
-  {name: "Sarah Rittgers", id: 3},
-  {name: "Mufaro Makiwa", id: 4},
+  {name: "Mufaro Emmanuel Manue Makiwa", id: 0, online: true},
+  {name: "Cynthia Enofe", id: 1, online: true},
+  {name: "Michael Lawes", id: 2, online: true},
+  {name: "Sarah Rittgers", id: 3, online: true},
+  {name: "Mufaro Makiwa", id: 4, online: true},
 ];
 
-const inactive = [
-  {name: "Emmanuel Makiwa", id: 5},
-  {name: "Andreea Lovan", id: 6}
+const recent = [
+  {name: "Dwayne Johnson", id: 7, online: true},
+  {name: "Emmanuel Makiwa", id: 5, online: false},
+  {name: "Andreea Lovan", id: 6, online: false}
 ];
 
 const dummyProjects = [
@@ -89,10 +90,10 @@ function Projects() {
   const [alertWarning, setAlertWarning] = useState("");
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
-  const [inactiveUsers, setInactiveUsers] = useState([]);
+  const [recentUsers, setRecentUsers] = useState([]);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [connectionAlert, setConnectionAlert] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loadingProjects, setLoadingProjects] = useState(true);
 
 
   // this displays the connection dialog for the user to confirm they want to send the invite
@@ -124,8 +125,12 @@ function Projects() {
     } 
   }
   
-  // this is called when the user tries to connect with an inactive user
-  const onInactiveUserClick = (collaborator) => {
+  // this is called when the user tries to connect with a recent user
+  const onRecentUserClick = (collaborator, collaboratorId, online) => {
+    if (online) {
+      onActiveUserClick(collaborator, collaboratorId);
+      return;
+    }
     setOpenAlertDialog(true);
     setAlertWarning(
       `${collaborator} is currently offline. You can only collaborate on new projects with active users.`
@@ -212,6 +217,18 @@ function Projects() {
     setOpenAlertDialog(false);
   }
 
+  const getProjectComponents = () => {
+    let projects = displayedProjects.map((project) => (
+      <ProjectCard
+        key={`Project_${project.projectId}`}
+        title={project.title}
+        collaborator={project.collaborator}
+        downloadProject={() => downloadProject(project.projectId)}
+        continueProject={() => continueProject(project.projectId, project.title, project.collaborator, project.collaboratorId)}/>
+    ));
+    return projects;
+  }
+
   useEffect(() => {
     // disable flickering behavious on window resize
     let resizeTimer;
@@ -222,18 +239,15 @@ function Projects() {
         document.body.classList.remove("resize-animation-stopper");
       }, 400);
     });
-
-    console.log("Supposed to run only at the beginning to set listener")
   }, [])
 
 
   useEffect(() => {
-    // set state for active and inactive users with dummy users
+    // set state for active and recent users with dummy users
     setActiveUsers(active);
-    setInactiveUsers(inactive);
-    setAllProjects(JSON.parse(JSON.stringify(dummyProjects)))
-    setLoading(false);
-    console.log("Supposed to run only at the beginning")
+    setRecentUsers(recent);
+    // setAllProjects(JSON.parse(JSON.stringify(dummyProjects)));
+    setAllProjects([]);
   }, []);
 
 
@@ -241,66 +255,89 @@ function Projects() {
     const projects = allProjects.filter((project) => {
       return project.title.includes(searchQuery);
     });
-
     setDisplayedProjects(projects);
-    console.log("Supposed to run only when query changes")
-  }, [searchQuery, allProjects]);
+    
+    return () => {
+      if (loadingProjects) {
+        setLoadingProjects(false);
+      }
+    }
+  }, [searchQuery, allProjects, loadingProjects]);
 
 
   return (
     <div className="Projects_container">
-
       <Header 
         name="Mufaro Makiwa"
         email="mufaroemakiwa@gmail.com"
         handleLogout={handleLogout}
         displayProfile={displayProfile}/>
 
-      {!loading && ( 
-        <div className="Projects_main">
-          <div className="Projects_content">
-            <Searchbar
-              query={searchQuery}
-              onChange={setSearchQuery}/>
+      
+      <div className="Projects_main">
+        <div className="Projects_content">
+          <Searchbar
+            query={searchQuery}
+            onChange={setSearchQuery}/>
 
-          <span className="Projects_label">
-            Recent Projects
-          </span>
+        <span className="Projects_label">
+          Recent Projects
+        </span>
 
-          <div className="Projects_recent">
-            {displayedProjects.map((project) => (
-              <ProjectCard
-                key={`Project_${project.projectId}`}
-                title={project.title}
-                collaborator={project.collaborator}
-                downloadProject={() => downloadProject(project.projectId)}
-                continueProject={() => continueProject(project.projectId, project.title, project.collaborator, project.collaboratorId)}/>
-            ))}
-            </div>      
+        {!loadingProjects && allProjects.length === 0 && ( 
+          <div className="card Projects_no_result">
+            <span className="no_result_summary">
+              No projects
+            </span>
+            <span className="no_result_message">
+              You have not collaborated on any projects with anyone. Please select any active user
+              to start collaborating on your first project.
+            </span>
           </div>
+        )}
+
+
+        {!loadingProjects && allProjects.length !== 0 && displayedProjects.length === 0 && (
+          <div className="card Projects_no_result">
+            <span className="no_result_summary">
+              No results found
+            </span>
+            <span className="no_result_message">
+              You do not have any project that matches the given name. 
+            </span>
+          </div>
+        )}
+
+        {!loadingProjects && ( 
+          <div className="Projects_recent">
+            {getProjectComponents()}
+          </div>
+        )}    
+        </div>
 
         <div className="Projects_sidebar">
-
           <ConnectedUsers 
             active={activeUsers}
-            inactive={inactiveUsers}
+            recent={recentUsers}
             onActiveUserClick={onActiveUserClick}
-            onInactiveUserClick={onInactiveUserClick}/>
+            onRecentUserClick={onRecentUserClick}/>
         </div>   
-      </div> )}
+      </div>
       
       {openConnectionDialog && (
         <ConnectionDialog
           collaborator={currentConnection.name}
           isOpen={openConnectionDialog}
           closeDialog={closeConnectionDialog}
-          message={connectionAlert}/>)}
+          message={connectionAlert}/>
+      )}
         
       {openAlertDialog && (
         <AlertDialog 
           isOpen={openAlertDialog}
           closeDialog={closeAlertDialog}
-          message={alertWarning}/>)} 
+          message={alertWarning}/>
+      )} 
 
       {openProfileDialog && (
         <ProfileDialog 
@@ -309,7 +346,8 @@ function Projects() {
           username="mufaromakiwa"
           currentOnlineStatus={true} // this will depend on the users previous setting
           closeDialog={() => setOpenProfileDialog(false)}
-          saveProfile={saveProfile}/>)}
+          saveProfile={saveProfile}/>
+      )}
     </div>
   );
 }

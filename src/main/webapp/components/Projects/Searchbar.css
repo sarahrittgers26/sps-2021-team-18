@@ -8,7 +8,7 @@
 }
 
 .Searchbar_container_focused {
-  border: 1px solid grey;
+  border: 1px solid rgb(201, 201, 201);
 }
 
 .Searchbar_icon_container {
