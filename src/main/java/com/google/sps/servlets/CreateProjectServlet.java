@@ -2,7 +2,6 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
@@ -61,6 +60,9 @@ public class CreateProjectServlet extends HttpServlet {
 					.set("user2", partner)
 					.set("projectid", projectid)
 					.set("title", title)
+					.set("html", "")
+					.set("css", "")
+					.set("js", "")
 					.build();
 			 datastore.put(project);	
 		 }

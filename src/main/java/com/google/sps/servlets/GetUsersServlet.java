@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Arrays;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
@@ -16,9 +19,8 @@ import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.gson.Gson;
-import com.google.sps.data.User;
+import com.google.sps.data.FormattedUser;
 import com.google.sps.data.Project;
-import com.google.sps.data.FormattedProject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +29,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import com.google.cloud.datastore.DatastoreException;
 		
-@WebServlet("/load")
-public class LoadProjectsServlet extends HttpServlet {
+@WebServlet("/get-users")
+public class GetUsersServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -44,33 +46,52 @@ public class LoadProjectsServlet extends HttpServlet {
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		 FormattedProject[] userProjects = loadProjects(username, datastore);
+		 FormattedUser[] users = loadUsers(username, datastore);
 		
 		 Gson gson = new Gson();	
 
 		 // Return project objects to frontend
 		 response.setContentType("application/json");
-		 response.getWriter().println(gson.toJson(userProjects));
+		 response.getWriter().println(gson.toJson(users));
 	}
 
-	// Get projects associated with user from Datastore
-	private FormattedProject[] loadProjects(String username, Datastore datastore) 
+	// Get users associated with user from Datastore
+	private FormattedUser[] loadUsers(String username, Datastore datastore) 
 			throws DatastoreException {
-		 // Initialize Array list of formatted projects	
-		 ArrayList<FormattedProject> formattedProjects = new ArrayList<>();
-		 formattedProjects.addAll(queryProjects(username, "user1", datastore));
-		 formattedProjects.addAll(queryProjects(username, "user2", datastore));
+		 // Get all distinct usernames of project partners	
+		 Set<String> distinctUsers = new HashSet<> (Arrays.asList(
+			queryUsersFromProjects(username, "user1", datastore),
+			queryUsersFromProjects(username, "user2", datastore)));
+		
+		 // Remove duplicate users from list
+		 List<FormattedUser> users = new ArrayList<FormattedUser>();
 
-		 // Return all projects where user is either user1 or user2
-		 return formattedProjects
-			 .toArray(new FormattedProject[formattedProjects.size()]);
+		 for (String partner: distinctUsers) {
+			// Pull user from database
+			Key key = datastore.newKeyFactory()
+				.setKind("User")
+				.newKey(partner);
+			Entity user = datastore.get(key);
+			
+			// Get display name, email and lastLogin
+			String name = user.getString("name");
+			String email = user.getString("email");
+			String lastLogin = user.getString("lastLogin");
+
+			// Determine if user is active
+			boolean isActive = userIsActive(lastLogin);
+			users.add(new FormattedUser(partner, name, email, isActive));
+		 }
+
+		 return users
+			 .toArray(new FormattedUser[users.size()]);
 	}
 
-	// Get project by username equality
-	private ArrayList<FormattedProject> queryProjects(String username, String field, 
+	// Get project by username equality and return partner names
+	private HashSet<String> queryUsersFromProjects(String username, String field, 
 			Datastore datastore) throws DatastoreException {
 		 // Query for projects where username == field
-		 ArrayList<FormattedProject> projectResults = new ArrayList<>();
+		 Set<String> collaborators = new HashSet<>();
 		 Query<Entity> projectQuery = Query.newEntityQueryBuilder()
 			 .setKind("Project")
 			 .setFilter(PropertyFilter.eq(field, username))
@@ -81,46 +102,27 @@ public class LoadProjectsServlet extends HttpServlet {
 			// Get project user has started
 			Entity project = projects.next();
 
-			// Extract information about project
+			// Extract information about users on project
 			String user1 = project.getString("user1");
 			String user2 = project.getString("user2");
-			String projectid = project.getString("projectid");
-			String title = project.getString("title");
-			String html = project.getString("html");
-			String css = project.getString("css");
-			String js = project.getString("js");
 
 			// Determine whether partner is stored as user1 or user2
 			String partner = user1.equals(username) ? user2 : user1;
-			boolean bothActive = userIsActive(partner, datastore);
-			
-			projectResults
-				.add(new FormattedProject(
-							partner,  
-							projectid, 
-							title,
-							bothActive,
-							html,
-							css,
-							js)
-				);
+			collaborators.add(partner);
 		 }
-		 return projectResults;
+		 return collaborators;
 	}
 
 	// Check if user is active
-	private boolean userIsActive(String username, Datastore datastore)
-		throws DatastoreException {
-		// Get key using username
-		Key key = datastore.newKeyFactory()
-			.setKind("User")
-			.newKey(username);
-		Entity user = datastore.get(key);
-		String lastLogin = user.getString("lastLogin");
-
+	private boolean userIsActive(String lastLogin) {
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = 
 			DateTimeFormatter.ISO_DATE_TIME;
+
+		// Login time is stored as lastLogin but is also used as active status
+		// lastLogin is updated every minute the user is on the application with useEffect()
+		// only when a user logs out does this stop so an active user is one
+		// still using the application
 		LocalDateTime loginTime = LocalDateTime
 			.parse(lastLogin, formatter);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(1);

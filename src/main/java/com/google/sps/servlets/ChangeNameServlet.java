@@ -2,7 +2,6 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
@@ -17,8 +16,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import com.google.cloud.datastore.DatastoreException;
 		
-@WebServlet("/update-active")
-public class UpdateActiveServlet extends HttpServlet {
+@WebServlet("/change-name")
+public class ChangeNameServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -32,19 +31,15 @@ public class UpdateActiveServlet extends HttpServlet {
 		 
 		 // Get the username from user
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
-
+		 String name = Jsoup.clean(request.getParameter("name"), Whitelist.none());
+		
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 
-		 // Log last login time as current time
-		 LocalDateTime now = LocalDateTime.now();
-		 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-		 String login = now.format(formatter);
-
 		 Key thisUser = datastore.newKeyFactory()
 			.setKind("User")
 			.newKey(username);
 		 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-			 .set("lastLogin", login).build(); 
+			 .set("name", name).build(); 
 		 datastore.update(loggedInUser);
 	}
 }

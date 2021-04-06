@@ -44,7 +44,8 @@ public class SignInServlet extends HttpServlet {
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 
 		// Get user email from server
-	        String userEmail = getUserEmail(username, password, datastore);
+	        String userEmail = getUserField(username, password, datastore, "email");
+	        String name = getUserField(username, password, datastore, "name");
 
 		// If user exists than userEmail should be an address otherwise empty	 
 		String userExists = !userEmail.isEmpty() ? "true" : "false";
@@ -52,18 +53,18 @@ public class SignInServlet extends HttpServlet {
 		Gson gson = new Gson();
 
 		// Store error and user email in array to send in response
-		String[] errorAndEmail = new String[] {userExists, userEmail};
+		String[] errorAndInfo = new String[] {userExists, userEmail, name};
 
 		// Let frontend know whether there were errors adding user to datastore
 		response.setContentType("application/json");
-		response.getWriter().println(gson.toJson(errorAndEmail));
+		response.getWriter().println(gson.toJson(errorAndInfo));
 	}
 
-	// Check if user exists in datastore and retrieve their email
-	private String getUserEmail(String username, String password, 
-			Datastore datastore) throws DatastoreException {
-	         // Email will remain empty string if user does not exist
-		 String userEmail = "";	 
+	// Check if user exists and retrieve their info
+	private String getUserField(String username, String password,
+			Datastore datastore, String field) throws DatastoreException {
+	         // Field will remain empty string if user does not exist
+		 String fieldValue = "";
 
 		 // Check if username/password combination is correct
 		 Query<Entity> usernameQuery = Query.newEntityQueryBuilder()
@@ -81,8 +82,8 @@ public class SignInServlet extends HttpServlet {
 			 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
 			 // Get user's email address
-			 userEmail = user.getString("email");
-			 
+			 fieldValue = user.getString(field);
+
 			 // Log last login time as current time
 			 LocalDateTime now = LocalDateTime.now();
 			 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
@@ -96,7 +97,7 @@ public class SignInServlet extends HttpServlet {
 			 datastore.update(loggedInUser);
 		 }
 
-		 return userEmail;
+		 return fieldValue;
 	}
 
 }

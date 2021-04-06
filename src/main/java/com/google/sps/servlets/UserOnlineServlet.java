@@ -21,7 +21,7 @@ import com.google.cloud.datastore.DatastoreException;
 public class UserOnlineServlet extends HttpServlet {
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) 
+	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
     		 // Allow CORS so frontend can access it			
 		 response.addHeader("Access-Control-Allow-Origin", "*");
@@ -53,7 +53,7 @@ public class UserOnlineServlet extends HttpServlet {
 
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = 
-			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			DateTimeFormatter.ISO_DATE_TIME;
 		LocalDateTime loginTime = LocalDateTime
 			.parse(lastLogin, formatter);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
