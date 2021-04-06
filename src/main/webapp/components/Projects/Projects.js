@@ -247,7 +247,6 @@ function Projects() {
     setActiveUsers(active);
     setRecentUsers(recent);
     setAllProjects(JSON.parse(JSON.stringify(dummyProjects)));
-    // setAllProjects([]);
   }, []);
 
 
