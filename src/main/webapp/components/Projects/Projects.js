@@ -246,8 +246,8 @@ function Projects() {
     // set state for active and recent users with dummy users
     setActiveUsers(active);
     setRecentUsers(recent);
-    // setAllProjects(JSON.parse(JSON.stringify(dummyProjects)));
-    setAllProjects([]);
+    setAllProjects(JSON.parse(JSON.stringify(dummyProjects)));
+    // setAllProjects([]);
   }, []);
 
 
