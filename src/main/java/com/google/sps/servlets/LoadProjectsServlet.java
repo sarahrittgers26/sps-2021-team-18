@@ -86,6 +86,9 @@ public class LoadProjectsServlet extends HttpServlet {
 			String user2 = project.getString("user2");
 			String projectid = project.getString("projectid");
 			String title = project.getString("title");
+			String html = project.getString("html");
+			String css = project.getString("css");
+			String js = project.getString("js");
 
 			// Determine whether partner is stored as user1 or user2
 			String partner = user1.equals(username) ? user2 : user1;
@@ -95,8 +98,11 @@ public class LoadProjectsServlet extends HttpServlet {
 				.add(new FormattedProject(
 							partner,  
 							projectid, 
+							title,
 							bothActive,
-							title)
+							html,
+							css,
+							js)
 				);
 		 }
 		 return projectResults;
@@ -114,7 +120,7 @@ public class LoadProjectsServlet extends HttpServlet {
 
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = 
-			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			DateTimeFormatter.ISO_DATE_TIME;
 		LocalDateTime loginTime = LocalDateTime
 			.parse(lastLogin, formatter);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(1);

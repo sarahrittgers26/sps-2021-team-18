@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Paper,
   Card,
@@ -17,6 +17,9 @@ import axios from '../Api/Api';
 import { signIn } from '../../actions';
 
 const Auth = ({ history }) => {
+  // Get user from store
+  const user = useSelector((state) => state.user);
+  	
   // Dispatch for react-redux store
   const dispatch = useDispatch();
 	
@@ -216,17 +219,9 @@ const Auth = ({ history }) => {
       
       var partner = "testuser1";
       var title = "title";
-      const response1 = await axios.post(`/create?username=${username}&partner=${partner}&title=${title}`);
-      const worked = response1.data
-      if (worked) {
-	console.log(worked)
-	const response2 = await axios.get(`/load?username=${username}`);
-	var projects = response2.data;
-	console.log(projects);
-	console.log(projects[0]);
-      }
       dispatch(signIn({ username: username, email: email, name: name }));
-      //history.push('/projects');
+      console.log(user);
+      history.push('/projects');
     } catch (err) {
       // If error occurs notify user
       if (err) {
@@ -261,6 +256,9 @@ const Auth = ({ history }) => {
 	} else {
 	  dispatch(signIn({ username: username, email: errorAndInfo[1], 
 		  name: errorAndInfo[2] }));
+          const response = await axios.post(`load/?${username}`);
+          console.log(response.data)
+	  console.log(user.username);
 	  history.push('/projects'); 
 	}
       } else {
