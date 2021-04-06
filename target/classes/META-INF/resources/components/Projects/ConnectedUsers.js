@@ -23,7 +23,9 @@ function ConnectedUsers(props) {
 
   return (
     <div className="ConnectedUsers_container card">
+      <span className="ConnectedUsers_label">Active users</span>
       {activeUsers}
+      <span className="ConnectedUsers_label">Recent contacts</span>
       {inactiveUsers}
     </div>
   );

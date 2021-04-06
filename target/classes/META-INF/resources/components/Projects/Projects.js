@@ -93,7 +93,8 @@ function Projects() {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
 
   const onActiveUserClick = (name, id) => {
-    alert("Active user clicked: " + id + " " + name);
+    setOpenConnectionDialog(true);
+    setCurrentConnection(name);
   }
   
   const onInactiveUserClick = (collaborator) => {
@@ -182,11 +183,6 @@ function Projects() {
     } 
   }
 
-  // called when a user clicks on the create new button
-  const createNew = () => {
-    alert("Creating new project");
-  }
-
   // when the user clicks save after editing Profile
   const saveProfile = (name, email, onlineStatus) => {
     alert("To handle save");
@@ -254,16 +250,6 @@ function Projects() {
         </div>
 
         <div className="Projects_sidebar">
-          <div className="Projects_create_new card" onClick={createNew}>
-            <div className="Projects_addIcon_container">
-              <AddCircleOutlineIcon 
-                style={{ fontSize: 50, color: "gray" }}/>
-            </div>
-    
-            <span className="Projects_create_span">  
-              Create new project
-            </span>
-          </div>
 
           <ConnectedUsers 
             active={activeUsers}

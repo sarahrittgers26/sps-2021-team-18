@@ -7,3 +7,13 @@
   flex-shrink: 0;
   transition: all 0.3s;
 }
+
+.ConnectedUsers_label {
+  font-size: 1.1em;
+  font-weight: bold;
+  padding-bottom: 16px;
+}
+
+.ConnectedUsers_label:last-of-type {
+  padding-top: 32px;
+}
