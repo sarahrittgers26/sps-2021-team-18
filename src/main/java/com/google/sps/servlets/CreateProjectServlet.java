@@ -39,16 +39,15 @@ public class CreateProjectServlet extends HttpServlet {
 		 // Get the username, partner name from user
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		 String partner = Jsoup.clean(request.getParameter("partner"), Whitelist.none());
-		 String title = Jsoup.clean(request.getParameter("title"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 
 		 // Check that partner is a valid username
 		 boolean partnerExists = checkIfFieldExists("username", partner, datastore, "User");
-
+		 String projectid = "none";
 		 if (partnerExists) {
 			 // Generate projectid for project
-			 String projectid = generateProjectID(datastore);
+			 projectid = generateProjectID(datastore);
 			
 			 // Add project to datastore 
 			 Key projectKey = datastore.newKeyFactory()
@@ -59,7 +58,7 @@ public class CreateProjectServlet extends HttpServlet {
 					.set("user1", username)
 					.set("user2", partner)
 					.set("projectid", projectid)
-					.set("title", title)
+					.set("title", "")
 					.set("html", "")
 					.set("css", "")
 					.set("js", "")
@@ -73,7 +72,7 @@ public class CreateProjectServlet extends HttpServlet {
 
 		 // Let frontend know whether there were errors adding project to datastore
 		 response.setContentType("application/json");
-		 response.getWriter().println(gson.toJson(partnerExists));
+		 response.getWriter().println(gson.toJson(projectid));
 	}
 
 	// Check if user with specified field exists
