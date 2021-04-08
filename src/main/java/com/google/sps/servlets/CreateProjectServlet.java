@@ -63,6 +63,8 @@ public class CreateProjectServlet extends HttpServlet {
 					.set("html", "")
 					.set("css", "")
 					.set("js", "")
+					.set("user1Selected", true)
+					.set("user2Selected", true)
 					.build();
 			 datastore.put(project);	
 		 }
