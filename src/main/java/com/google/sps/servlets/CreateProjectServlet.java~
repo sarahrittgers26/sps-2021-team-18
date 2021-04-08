@@ -1,7 +1,6 @@
 package com.google.sps.servlets;
 
 import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
@@ -10,6 +9,7 @@ import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
 import com.google.sps.data.Project;

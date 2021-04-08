@@ -1,21 +1,21 @@
 package com.google.sps.servlets;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-import com.google.cloud.datastore.DatastoreException;
 		
 @WebServlet("/still-active")
 public class UserOnlineServlet extends HttpServlet {
@@ -49,14 +49,21 @@ public class UserOnlineServlet extends HttpServlet {
 			.setKind("User")
 			.newKey(username);
 		Entity user = datastore.get(key);
-		String lastLogin = user.getString("lastLogin");
 
-		// Convert to LocalDateTime and check if within 1 minute
-		DateTimeFormatter formatter = 
-			DateTimeFormatter.ISO_DATE_TIME;
-		LocalDateTime loginTime = LocalDateTime
-			.parse(lastLogin, formatter);
-		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
-		return loginTime.isAfter(now);
+		// Check if user wants to appear online
+		boolean isActive = user.getBoolean("appearingOnline");
+		if (isActive) {
+			String lastLogin = user.getString("lastLogin");
+
+			// Convert to LocalDateTime and check if within 1 minute
+			DateTimeFormatter formatter = 
+				DateTimeFormatter.ISO_DATE_TIME;
+			LocalDateTime loginTime = LocalDateTime
+				.parse(lastLogin, formatter);
+			LocalDateTime now = LocalDateTime.now().minusMinutes(1);
+			return loginTime.isAfter(now);
+		} else {
+			return isActive;
+		}
 	}
 }

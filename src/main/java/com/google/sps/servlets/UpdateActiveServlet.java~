@@ -17,11 +17,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import com.google.cloud.datastore.DatastoreException;
 		
-@WebServlet("/not-active")
-public class NotActiveServlet extends HttpServlet {
+@WebServlet("/update-active")
+public class UpdateActiveServlet extends HttpServlet {
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) 
+	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws IOException {
     		 // Allow CORS so frontend can access it			
 		 response.addHeader("Access-Control-Allow-Origin", "*");
@@ -36,7 +36,7 @@ public class NotActiveServlet extends HttpServlet {
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 
 		 // Log last login time as current time
-		 LocalDateTime now = LocalDateTime.now().minusMinutes(2);
+		 LocalDateTime now = LocalDateTime.now();
 		 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 		 String login = now.format(formatter);
 
