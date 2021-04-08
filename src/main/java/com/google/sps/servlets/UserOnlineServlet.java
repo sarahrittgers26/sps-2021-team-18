@@ -53,13 +53,13 @@ public class UserOnlineServlet extends HttpServlet {
 		// Check if user wants to appear online
 		boolean isActive = user.getBoolean("appearingOnline");
 		if (isActive) {
-			String lastLogin = user.getString("lastLogin");
+			String lastActive = user.getString("lastActive");
 
 			// Convert to LocalDateTime and check if within 1 minute
 			DateTimeFormatter formatter = 
 				DateTimeFormatter.ISO_DATE_TIME;
 			LocalDateTime loginTime = LocalDateTime
-				.parse(lastLogin, formatter);
+				.parse(lastActive, formatter);
 			LocalDateTime now = LocalDateTime.now().minusMinutes(1);
 			return loginTime.isAfter(now);
 		} else {

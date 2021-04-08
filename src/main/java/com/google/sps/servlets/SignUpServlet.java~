@@ -67,7 +67,7 @@ public class SignUpServlet extends HttpServlet {
 					.set("username", username)
 					.set("password", password)
 					.set("email", email)
-					.set("lastActive", newLogin)
+					.set("lastLogin", newLogin)
 					.set("name", name)
 					.set("appearingOnline", true)
 					.build();

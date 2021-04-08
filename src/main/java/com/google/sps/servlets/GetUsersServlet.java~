@@ -80,9 +80,9 @@ public class GetUsersServlet extends HttpServlet {
 			// Check to see if user wants to appear online
 			boolean isActive = user.getBoolean("appearingOnline");
 			if (isActive) {
-				// If user is active check lastActive time
-				String lastActive = user.getString("lastActive");
-				isActive = userIsActive(lastActive);
+				// If user is active check lastLogin time
+				String lastLogin = user.getString("lastLogin");
+				isActive = userIsActive(lastLogin);
 			}
 			users.add(new FormattedUser(partner, name, email, isActive));
 		 }
@@ -118,17 +118,17 @@ public class GetUsersServlet extends HttpServlet {
 	}
 
 	// Check if user is active
-	private boolean userIsActive(String lastActive) {
+	private boolean userIsActive(String lastLogin) {
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = 
 			DateTimeFormatter.ISO_DATE_TIME;
 
-		// Login time is stored as lastActive but is also used as active status
-		// lastActive is updated every minute the user is on the application with useEffect()
+		// Login time is stored as lastLogin but is also used as active status
+		// lastLogin is updated every minute the user is on the application with useEffect()
 		// only when a user logs out does this stop so an active user is one
 		// still using the application
 		LocalDateTime loginTime = LocalDateTime
-			.parse(lastActive, formatter);
+			.parse(lastLogin, formatter);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
 		return loginTime.isAfter(now);
 	}

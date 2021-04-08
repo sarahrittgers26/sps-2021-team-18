@@ -95,7 +95,7 @@ public class SignInServlet extends HttpServlet {
 				.setKind("User")
 				.newKey(username);
 			 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-				 .set("lastActive", login).build(); 
+				 .set("lastLogin", login).build(); 
 			 datastore.update(loggedInUser);
 		 }
 
@@ -135,7 +135,7 @@ public class SignInServlet extends HttpServlet {
 				.setKind("User")
 				.newKey(username);
 			 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-				 .set("lastActive", login).build(); 
+				 .set("lastLogin", login).build(); 
 			 datastore.update(loggedInUser);
 		 }
 

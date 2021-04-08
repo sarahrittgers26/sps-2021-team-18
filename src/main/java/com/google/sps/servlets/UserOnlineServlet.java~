@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 		
-@WebServlet("/update-active")
-public class UpdateActiveServlet extends HttpServlet {
+@WebServlet("/still-active")
+public class UserOnlineServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -34,17 +34,36 @@ public class UpdateActiveServlet extends HttpServlet {
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		 
-		 // Log last login time as current time
-		 LocalDateTime now = LocalDateTime.now();
-		 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-		 String login = now.format(formatter);
+		 Gson gson = new Gson();	
 
-		 Key thisUser = datastore.newKeyFactory()
+		 // Return whether use is online to frontend
+		 response.setContentType("application/json");
+		 response.getWriter().println(gson.toJson(userIsActive(username, datastore)));
+	}
+
+	// Check if user is active
+	private boolean userIsActive(String username, Datastore datastore)
+		throws DatastoreException {
+		// Get key using username
+		Key key = datastore.newKeyFactory()
 			.setKind("User")
 			.newKey(username);
-		 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-			 .set("lastActive", login).build(); 
-		 datastore.update(loggedInUser);
+		Entity user = datastore.get(key);
+
+		// Check if user wants to appear online
+		boolean isActive = user.getBoolean("appearingOnline");
+		if (isActive) {
+			String lastLogin = user.getString("lastLogin");
+
+			// Convert to LocalDateTime and check if within 1 minute
+			DateTimeFormatter formatter = 
+				DateTimeFormatter.ISO_DATE_TIME;
+			LocalDateTime loginTime = LocalDateTime
+				.parse(lastLogin, formatter);
+			LocalDateTime now = LocalDateTime.now().minusMinutes(1);
+			return loginTime.isAfter(now);
+		} else {
+			return isActive;
+		}
 	}
 }
