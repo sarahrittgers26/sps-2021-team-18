@@ -59,7 +59,7 @@ public class GetUsersServlet extends HttpServlet {
 	private FormattedUser[] loadUsers(String username, Datastore datastore) 
 			throws DatastoreException {
 		 // Get all distinct usernames of project partners	
-		 HashSet<String> distinctUsers = new HashSet<>();
+		 Set<String> distinctUsers = new HashSet<>();
 		 distinctUsers.addAll(queryUsersFromProjects(username, "user1", datastore));
 		 distinctUsers.addAll(queryUsersFromProjects(username, "user2", datastore));
 		
@@ -88,10 +88,10 @@ public class GetUsersServlet extends HttpServlet {
 	}
 
 	// Get project by username equality and return partner names
-	private HashSet<String> queryUsersFromProjects(String username, String field, 
+	private Set<String> queryUsersFromProjects(String username, String field, 
 			Datastore datastore) throws DatastoreException {
 		 // Query for projects where username == field
-		 HashSet<String> collaborators = new HashSet<>();
+		 Set<String> collaborators = new HashSet<>();
 		 Query<Entity> projectQuery = Query.newEntityQueryBuilder()
 			 .setKind("Project")
 			 .setFilter(PropertyFilter.eq(field, username))
