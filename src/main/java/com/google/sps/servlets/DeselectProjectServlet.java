@@ -46,7 +46,7 @@ public class DeselectProjectServlet extends HttpServlet {
 		 String user1 = project.getString("user1");
 		 String user2 = project.getString("user2");
 
-		 // If user1, set user1Selected true otherwise set user2Selected
+		 // If user is stored as user1 in project, set user1Selected to true
 		 if (user1.equals(username)) {
 			 project = Entity.newBuilder(datastore.get(thisProject))
 				 .set("user1Selected", false).build(); 
