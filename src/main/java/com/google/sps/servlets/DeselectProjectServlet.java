@@ -1,21 +1,21 @@
 package com.google.sps.servlets;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-import com.google.cloud.datastore.DatastoreException;
 		
 @WebServlet("/deselect")
 public class DeselectProjectServlet extends HttpServlet {
@@ -46,7 +46,7 @@ public class DeselectProjectServlet extends HttpServlet {
 		 String user1 = project.getString("user1");
 		 String user2 = project.getString("user2");
 
-		 // If user1, set user1Selected true otherwise set user2Selected
+		 // If user is stored as user1 in project, set user1Selected to true
 		 if (user1.equals(username)) {
 			 project = Entity.newBuilder(datastore.get(thisProject))
 				 .set("user1Selected", false).build(); 

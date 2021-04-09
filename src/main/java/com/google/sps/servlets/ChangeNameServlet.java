@@ -1,20 +1,20 @@
 package com.google.sps.servlets;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-import com.google.cloud.datastore.DatastoreException;
 		
 @WebServlet("/change-name")
 public class ChangeNameServlet extends HttpServlet {

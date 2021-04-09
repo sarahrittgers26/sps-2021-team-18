@@ -1,10 +1,7 @@
 package com.google.sps.servlets;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
@@ -15,13 +12,16 @@ import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-import com.google.cloud.datastore.DatastoreException;
 		
 @WebServlet("/sign-up")
 public class SignUpServlet extends HttpServlet {
@@ -67,8 +67,9 @@ public class SignUpServlet extends HttpServlet {
 					.set("username", username)
 					.set("password", password)
 					.set("email", email)
-					.set("lastLogin", newLogin)
+					.set("lastActive", newLogin)
 					.set("name", name)
+					.set("isVisible", true)
 					.build();
 			 datastore.put(user);
 		 }
