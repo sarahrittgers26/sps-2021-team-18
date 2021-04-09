@@ -217,7 +217,8 @@ const Auth = ({ history }) => {
       }
       if (usernameExists || emailExists) return;
 
-      dispatch(signIn({ username: username, email: email, name: name }));
+      dispatch(signIn({ username: username, email: email, name: name, 
+      	appearingOnline: true }));
       dispatch(loadUsers(username));
       dispatch(loadProjects(username));
       history.push('/projects');
@@ -253,8 +254,9 @@ const Auth = ({ history }) => {
 	  setPasswordError(true);
 	  setPasswordErrorMsg('Username or password entered incorrectly');
 	} else {
+	  const appearingOnline = errorAndInfo[3] === 'true' ? true : false;
 	  dispatch(signIn({ username: username, email: errorAndInfo[1], 
-		  name: errorAndInfo[2] }));
+		  name: errorAndInfo[2], appearingOnline: appearingOnline }));
 	  dispatch(loadUsers(username));
 	  dispatch(loadProjects(username));
 	  history.push('/projects'); 

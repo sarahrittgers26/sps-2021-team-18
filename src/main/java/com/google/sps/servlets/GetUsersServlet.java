@@ -1,18 +1,11 @@
 package com.google.sps.servlets;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Arrays;
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
@@ -21,6 +14,14 @@ import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.gson.Gson;
 import com.google.sps.data.FormattedUser;
 import com.google.sps.data.Project;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -72,13 +73,13 @@ public class GetUsersServlet extends HttpServlet {
 			Key key = datastore.newKeyFactory().setKind("User").newKey(partner);
 			Entity user = datastore.get(key);
 
-			// Get display name, email and lastLogin
+			// Get display name, email and lastActive
 			String name = user.getString("name");
 			String email = user.getString("email");
-			String lastLogin = user.getString("lastLogin");
+			String lastActive = user.getString("lastActive");
 
 			// Determine if user is active
-			boolean isActive = userIsActive(lastLogin);
+			boolean isActive = userIsActive(lastActive);
 			users.add(new FormattedUser(partner, name, email, isActive, true));
 		}
 
@@ -87,7 +88,7 @@ public class GetUsersServlet extends HttpServlet {
 			Key key = datastore.newKeyFactory().setKind("User").newKey(appUser);
 			Entity user = datastore.get(key);
 
-			// Get display name, email and lastLogin
+			// Get display name, email and lastActive
 			String name = user.getString("name");
 			String email = user.getString("email");
 			users.add(new FormattedUser(appUser, name, email, true, false));
@@ -139,16 +140,16 @@ public class GetUsersServlet extends HttpServlet {
 	}
 
 	// Check if user is active
-	private boolean userIsActive(String lastLogin) {
+	private boolean userIsActive(String lastActive) {
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
-		// Login time is stored as lastLogin but is also used as active status
-		// lastLogin is updated every minute the user is on the application with
+		// Login time is stored as lastActive but is also used as active status
+		// lastActive is updated every minute the user is on the application with
 		// useEffect()
 		// only when a user logs out does this stop so an active user is one
 		// still using the application
-		LocalDateTime loginTime = LocalDateTime.parse(lastLogin, formatter);
+		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
 		return loginTime.isAfter(now);
 	}
@@ -158,11 +159,11 @@ public class GetUsersServlet extends HttpServlet {
 		// Get key using username
 		Key key = datastore.newKeyFactory().setKind("User").newKey(username);
 		Entity user = datastore.get(key);
-		String lastLogin = user.getString("lastLogin");
+		String lastActive = user.getString("lastActive");
 
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-		LocalDateTime loginTime = LocalDateTime.parse(lastLogin, formatter);
+		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
 		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
 		return loginTime.isAfter(now);
 	}

@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 		
-@WebServlet("/still-active")
-public class UserOnlineServlet extends HttpServlet {
+@WebServlet("/select")
+public class SelectProjectServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -30,40 +30,31 @@ public class UserOnlineServlet extends HttpServlet {
 		 response.addHeader("Access-Control-Allow-Credentials", "true");
 		 response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
 		 
-		 // Get the username from user
+		 // Get the projectid and html text from user
+		 String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		 Gson gson = new Gson();	
+		 
+		 // Get project from datastore
+		 Key thisProject = datastore.newKeyFactory()
+			.setKind("Project")
+			.newKey(projectid);
+		 Entity project = datastore.get(thisProject); 
+			 
+		 // Get user1 and user2 names from datastore
+		 String user1 = project.getString("user1");
+		 String user2 = project.getString("user2");
 
-		 // Return whether use is online to frontend
-		 response.setContentType("application/json");
-		 response.getWriter().println(gson.toJson(userIsActive(username, datastore)));
-	}
-
-	// Check if user is active
-	private boolean userIsActive(String username, Datastore datastore)
-		throws DatastoreException {
-		// Get key using username
-		Key key = datastore.newKeyFactory()
-			.setKind("User")
-			.newKey(username);
-		Entity user = datastore.get(key);
-
-		// Check if user wants to appear online
-		boolean isActive = user.getBoolean("isVisible");
-		if (isActive) {
-			String lastActive = user.getString("lastActive");
-
-			// Convert to LocalDateTime and check if within 1 minute
-			DateTimeFormatter formatter = 
-				DateTimeFormatter.ISO_DATE_TIME;
-			LocalDateTime loginTime = LocalDateTime
-				.parse(lastActive, formatter);
-			LocalDateTime now = LocalDateTime.now().minusMinutes(1);
-			return loginTime.isAfter(now);
-		} else {
-			return isActive;
-		}
+		 // If user1, set user1Selected true otherwise set user2Selected
+		 if (user1.equals(username)) {
+			 project = Entity.newBuilder(datastore.get(thisProject))
+				 .set("user1Selected", true).build(); 
+			 datastore.update(project);
+		 } else {
+			 project = Entity.newBuilder(datastore.get(thisProject))
+				 .set("user2Selected", true).build(); 
+			 datastore.update(project);
+		 }
 	}
 }

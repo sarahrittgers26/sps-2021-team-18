@@ -1,22 +1,21 @@
 package com.google.sps.servlets;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.Blob;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
-import com.google.cloud.datastore.DatastoreException;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +43,10 @@ public class SignInServlet extends HttpServlet {
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 
 		// Get user email from server
-	        String userEmail = getUserField(username, password, datastore, "email");
-	        String name = getUserField(username, password, datastore, "name");
+	        String userEmail = getStringField(username, password, datastore, "email");
+	        String name = getStringField(username, password, datastore, "name");
+	        String isVisible = getBooleanField(username, password, datastore, 
+				"isVisible") ? "true" : "false";
 
 		// If user exists than userEmail should be an address otherwise empty	 
 		String userExists = !userEmail.isEmpty() ? "true" : "false";
@@ -53,7 +54,8 @@ public class SignInServlet extends HttpServlet {
 		Gson gson = new Gson();
 
 		// Store error and user email in array to send in response
-		String[] errorAndInfo = new String[] {userExists, userEmail, name};
+		String[] errorAndInfo = new String[] {userExists, userEmail, name,
+		 isVisible};
 
 		// Let frontend know whether there were errors adding user to datastore
 		response.setContentType("application/json");
@@ -61,7 +63,7 @@ public class SignInServlet extends HttpServlet {
 	}
 
 	// Check if user exists and retrieve their info
-	private String getUserField(String username, String password,
+	private String getStringField(String username, String password,
 			Datastore datastore, String field) throws DatastoreException {
 	         // Field will remain empty string if user does not exist
 		 String fieldValue = "";
@@ -81,7 +83,7 @@ public class SignInServlet extends HttpServlet {
 			 Entity user = users.next();
 			 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
-			 // Get user's email address
+			 // Get user's string field
 			 fieldValue = user.getString(field);
 
 			 // Log last login time as current time
@@ -93,11 +95,50 @@ public class SignInServlet extends HttpServlet {
 				.setKind("User")
 				.newKey(username);
 			 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-				 .set("lastLogin", login).build(); 
+				 .set("lastActive", login).build(); 
 			 datastore.update(loggedInUser);
 		 }
 
 		 return fieldValue;
 	}
 
+	// Check if user exists and retrieve their info
+	private boolean getBooleanField(String username, String password,
+			Datastore datastore, String field) throws DatastoreException {
+	         // Field will remain empty string if user does not exist
+		 boolean fieldValue = false;
+
+		 // Check if username/password combination is correct
+		 Query<Entity> usernameQuery = Query.newEntityQueryBuilder()
+			 .setKind("User")
+			 .setFilter(CompositeFilter.and(
+				PropertyFilter.eq("username", username),
+				PropertyFilter.eq("password", password)))
+			 .build();
+
+		 // Run query and retrieve user from datastore
+		 QueryResults<Entity> users = datastore.run(usernameQuery);
+
+		 if (users.hasNext()) {
+			 Entity user = users.next();
+			 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
+
+			 // Get user's isVisible status
+			 fieldValue = user.getBoolean(field);
+
+			 // Log last login time as current time
+			 LocalDateTime now = LocalDateTime.now();
+			 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+			 String login = now.format(formatter);
+
+			 Key thisUser = datastore.newKeyFactory()
+				.setKind("User")
+				.newKey(username);
+			 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
+				 .set("lastActive", login).build(); 
+			 datastore.update(loggedInUser);
+		 }
+
+		 return fieldValue;
+	}
 }
