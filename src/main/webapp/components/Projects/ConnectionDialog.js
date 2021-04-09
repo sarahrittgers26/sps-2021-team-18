@@ -4,11 +4,12 @@ import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
 
 function ConnectionDialog(props) {
-  const { collaborator, isOpen, closeDialog, message } = props;
+  const { collaborator, collaboratorId, isOpen, closeDialog, message, sendInvite } = props;
   const optionsRef = useRef();
 
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
+    sendInvite(collaboratorId);
   }
 
   return (

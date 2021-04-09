@@ -8,6 +8,9 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js'
+import axios from '../Api/Api';
+import { loadProjects, loadUsers, signIn, changeName, changeVisibility, changePassword } from '../../actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const active = [
   {name: "Mufaro Emmanuel Manue Makiwa", id: 0, online: true},
@@ -82,6 +85,11 @@ const dummyProjects = [
 
 function Projects() {
 
+  // Get user from store
+  const user = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
+  // const { activeUsers, inactiveUsers, onlineProjects, offlineProjects } = useSelector((state) => state.chat);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
@@ -90,7 +98,7 @@ function Projects() {
   const [alertWarning, setAlertWarning] = useState("");
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
-  const [recentUsers, setRecentUsers] = useState([]);
+  const [inactiveUsers, setRecentUsers] = useState([]);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [connectionAlert, setConnectionAlert] = useState("");
   const [loadingProjects, setLoadingProjects] = useState(true);
@@ -141,6 +149,10 @@ function Projects() {
     );
   }
 
+  const sendInvite = (collaboratorId) => {
+    console.log(collaboratorId);
+  }
+  
   // when the user want to log out
   const handleLogout = () => {
     alert("Handle logout");
@@ -204,8 +216,18 @@ function Projects() {
   }
 
   // when the user clicks save after editing Profile
-  const saveProfile = (name, email, onlineStatus) => {
-    alert("To handle save");
+  const saveProfile = (name, password, onlineStatus) => {
+    if (user.name !== name) {
+      dispatch(changeName({ username: user.username, name: name }));
+    }
+    
+    if (user.appearingOnline !== onlineStatus) {
+      dispatch(changeVisibility(onlineStatus));
+    }
+    
+    if (password.length >= 8 && password.length <= 60) {
+      dispatch(changePassword({ username: user.username, password: password }));
+    }
     setOpenProfileDialog(false);
   }
 
@@ -273,8 +295,8 @@ function Projects() {
   return (
     <div className="Projects_container">
       <Header 
-        name="Mufaro Makiwa"
-        email="mufaroemakiwa@gmail.com"
+        name={user.name}
+        email={user.email}
         handleLogout={handleLogout}
         displayProfile={displayProfile}/>
 
@@ -323,7 +345,7 @@ function Projects() {
         <div className="Projects_sidebar">
           <ConnectedUsers 
             active={activeUsers}
-            recent={recentUsers}
+            recent={inactiveUsers}
             onActiveUserClick={onActiveUserClick}
             onRecentUserClick={onRecentUserClick}/>
         </div>   
@@ -332,9 +354,11 @@ function Projects() {
       {openConnectionDialog && (
         <ConnectionDialog
           collaborator={currentConnection.name}
+          collaboratorId={currentConnection.userId}
           isOpen={openConnectionDialog}
           closeDialog={closeConnectionDialog}
-          message={connectionAlert}/>
+          message={connectionAlert}
+          sendInvite={sendInvite}/>
       )}
         
       {openAlertDialog && (
@@ -347,9 +371,8 @@ function Projects() {
       {openProfileDialog && (
         <ProfileDialog 
           isOpen={openProfileDialog}
-          name="Mufaro Makiwa"  // this depends on the users credentials
-          username="mufaromakiwa"
-          currentOnlineStatus={true} // this will depend on the users previous setting
+          name={user.name} 
+          currentOnlineStatus={user.appearingOnline}
           closeDialog={() => setOpenProfileDialog(false)}
           saveProfile={saveProfile}/>
       )}

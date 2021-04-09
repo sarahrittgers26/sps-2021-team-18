@@ -5,15 +5,15 @@ import './ProfileDialog.css'
 function ProfileDialog(props) {
   const {isOpen, name, username, currentOnlineStatus, closeDialog, saveProfile } = props;
   const [updatedName, setUpdatedName] = useState(name);
-  const [updatedUsername, setUpdatedUsername] = useState(username);
+  const [updatedPassword, setUpdatedPassword] = useState("");
   const [showOnlineStatus, setShowOnlineStatus] = useState(currentOnlineStatus);
 
   const updateName = elt => {
     setUpdatedName(elt.target.value)
   }
 
-  const updateUsername = elt => {
-    setUpdatedUsername(elt.target.value)
+  const updatePassword = elt => {
+    setUpdatedPassword(elt.target.value)
   }
 
   return (
@@ -36,21 +36,20 @@ function ProfileDialog(props) {
                 name="name_input"
                 value={updatedName}
                 onChange={updateName}
-                placeholder="Name"
+                placeholder="Change name"
                 className="Profile_input"/>
             </label>
             
             <label htmlFor="username_input" className="input_container input_right">
               <span className="Profile_input_label">
-                Username
+                Password
               </span>
               <input 
-                type="text"
+                type="password"
                 id="username_input"
                 name="username_input"
-                value={updatedUsername}
-                onChange={updateUsername}
-                placeholder="Username"
+                onChange={updatePassword}
+                placeholder="Change password"
                 className="Profile_input"/>
             </label>       
           </div> 
@@ -78,7 +77,9 @@ function ProfileDialog(props) {
 
           <div className="ProfileDialog_button_container">
             <button className="ProfileDialog_button left" onClick={closeDialog}>CLOSE</button>
-            <button className="ProfileDialog_button right" onClick={saveProfile}>SAVE</button>
+            <button 
+              className="ProfileDialog_button right" 
+              onClick={() => saveProfile(updatedName, updatedPassword, showOnlineStatus)}>SAVE</button>
           </div>
         </div>
       </DialogContent>

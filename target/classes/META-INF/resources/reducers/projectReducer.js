@@ -5,7 +5,7 @@ const initialState = {
   onlineProjects: [],
   offlineProjects: [],
   activeUsers: [],
-  inactiveUsers: []
+  contacts: []
 }
 
 export const projectReducer = (state = initialState, action) => {
@@ -18,8 +18,8 @@ export const projectReducer = (state = initialState, action) => {
       return { ...state, offlineProjects: action.payload };
     case ACTION.UPDATE_ACTIVE_USERS:
       return { ...state, activeUsers: action.payload };
-    case ACTION.UPDATE_INACTIVE_USERS:
-      return { ...state, inactiveUsers: action.payload };
+    case ACTION.UPDATE_CONTACTS:
+      return { ...state, contacts: action.payload };
     default:
       return state;
   }
