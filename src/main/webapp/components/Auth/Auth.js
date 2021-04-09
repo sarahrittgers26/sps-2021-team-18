@@ -216,9 +216,10 @@ const Auth = ({ history }) => {
 	setEmailErrorMsg('Email address has already been used');
       }
       if (usernameExists || emailExists) return;
-
+      console.log(user)
       dispatch(signIn({ username: username, email: email, name: name, 
       	appearingOnline: true }));
+      console.log(user)
       dispatch(loadUsers(username));
       dispatch(loadProjects(username));
       history.push('/projects');

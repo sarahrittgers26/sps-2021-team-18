@@ -1,16 +1,10 @@
-import React, {useEffect, useState } from 'react';
-import { saveAs } from 'file-saver';
-import './Projects.css';
-import ConnectedUsers from './ConnectedUsers.js';
-import Searchbar from './Searchbar.js';
-import Header from './Header.js';
-import ProjectCard from './ProjectCard.js';
-import ConnectionDialog from './ConnectionDialog.js';
-import AlertDialog from './AlertDialog.js';
-import ProfileDialog from './ProfileDialog.js'
-import axios from '../Api/Api';
-import { loadProjects, loadUsers, signIn, changeName, changeVisibility, changePassword } from '../../actions';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useEffect, useState} from 'react'
+import './Projects.css'
+import ConnectedUsers from './ConnectedUsers.js'
+import Searchbar from './Searchbar.js'
+import Header from './Header.js'
+import ProjectCard from './ProjectCard.js'
+
 
 const active = [
   {name: "Mufaro Emmanuel Manue Makiwa", id: 0, online: true},
@@ -83,7 +77,7 @@ const dummyProjects = [
   }
 ];
 
-function Projects() {
+function Projects({ history }) {
 
   // Get user from store
   const user = useSelector((state) => state.userReducer);
@@ -91,6 +85,7 @@ function Projects() {
   // const { activeUsers, inactiveUsers, onlineProjects, offlineProjects } = useSelector((state) => state.chat);
 
   const [searchQuery, setSearchQuery] = useState("");
+<<<<<<< Updated upstream
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
   const [displayedProjects, setDisplayedProjects] = useState([]);
@@ -135,6 +130,11 @@ function Projects() {
         `${collaborator} is currently offline. You can only edit this project when you are both online.`
       );
     } 
+=======
+  const onActiveUserClick = (id) => {
+    alert("Active user clicked: " + id);
+    history.push('/editor');
+>>>>>>> Stashed changes
   }
   
   // this is called when the user tries to connect with a recent user
