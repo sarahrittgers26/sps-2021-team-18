@@ -78,7 +78,7 @@ public class GetUsersServlet extends HttpServlet {
 			String email = user.getString("email");
 
 			// Check to see if user wants to appear online
-			boolean isActive = user.getBoolean("appearingOnline");
+			boolean isActive = user.getBoolean("isVisible");
 			if (isActive) {
 				// If user is active check lastActive time
 				String lastActive = user.getString("lastActive");

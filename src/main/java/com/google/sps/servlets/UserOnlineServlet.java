@@ -51,7 +51,7 @@ public class UserOnlineServlet extends HttpServlet {
 		Entity user = datastore.get(key);
 
 		// Check if user wants to appear online
-		boolean isActive = user.getBoolean("appearingOnline");
+		boolean isActive = user.getBoolean("isVisible");
 		if (isActive) {
 			String lastActive = user.getString("lastActive");
 

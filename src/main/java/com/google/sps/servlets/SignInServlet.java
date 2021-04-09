@@ -45,8 +45,8 @@ public class SignInServlet extends HttpServlet {
 		// Get user email from server
 	        String userEmail = getStringField(username, password, datastore, "email");
 	        String name = getStringField(username, password, datastore, "name");
-	        String appearingOnline = getBooleanField(username, password, datastore, 
-				"appearingOnline") ? "true" : "false";
+	        String isVisible = getBooleanField(username, password, datastore, 
+				"isVisible") ? "true" : "false";
 
 		// If user exists than userEmail should be an address otherwise empty	 
 		String userExists = !userEmail.isEmpty() ? "true" : "false";
@@ -55,7 +55,7 @@ public class SignInServlet extends HttpServlet {
 
 		// Store error and user email in array to send in response
 		String[] errorAndInfo = new String[] {userExists, userEmail, name,
-		 appearingOnline};
+		 isVisible};
 
 		// Let frontend know whether there were errors adding user to datastore
 		response.setContentType("application/json");
@@ -123,7 +123,7 @@ public class SignInServlet extends HttpServlet {
 			 Entity user = users.next();
 			 KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
-			 // Get user's appearingOnline status
+			 // Get user's isVisible status
 			 fieldValue = user.getBoolean(field);
 
 			 // Log last login time as current time

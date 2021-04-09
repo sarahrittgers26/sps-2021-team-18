@@ -69,7 +69,7 @@ public class SignUpServlet extends HttpServlet {
 					.set("email", email)
 					.set("lastActive", newLogin)
 					.set("name", name)
-					.set("appearingOnline", true)
+					.set("isVisible", true)
 					.build();
 			 datastore.put(user);
 		 }
