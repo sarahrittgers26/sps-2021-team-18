@@ -10,12 +10,13 @@ const projectSelector = (selector, projects) => {
             // if selector is true then only add online projects otherwise add offline
         if (current.bothActive === selector) {
             let project = {
-                collaborator: current.partner,
+                collaborator: current.collaborator,
+		cname: current.cname,
                 projectid: current.projectid,
                 title: current.title,
                 html: current.html,
                 css: current.css,
-                js: current.js
+                js: current.js,
             };
             selection.push(project);
         }
@@ -34,8 +35,7 @@ const userSelector = (wantContact, users) => {
             let user = {
                 username: current.username,
                 name: current.name,
-                email: current.email,
-                isActive: current.isActive
+                isActive: current.isActive,
             };
             selection.push(user);
         }
@@ -57,19 +57,26 @@ export const signOut = () => ({
     payload: null
 });
 
-// On visibility change
-export const changeVisibility = (change) => {
-    return {
-        type: ACTION.CHANGE_VISIBILITY,
-        payload: change
-    }
-};
+// Clears state on sign out
+export const clearProjects = () => ({
+  type: ACTION.CLEAR_PROJECTS,
+  payload: null
+});
+
 
 // On project selection
 export const chooseProject = (project) => {
     return {
         type: ACTION.CHOOSE_PROJECT,
         payload: project
+    }
+};
+
+// On project selection
+export const chooseUser = (username) => {
+    return {
+        type: ACTION.CHOOSE_USER,
+        payload: username
     }
 };
 
@@ -129,6 +136,28 @@ export const changePassword = (change) => async(dispatch) => {
     })
 };
 
+// On visibility change
+export const changeVisibility = (vis) => async(dispatch) => {
+    const username = vis.username;
+    const vis = vis.visibility;
+    let url = `/change-vis?username=${username}&visibility=${vis}`;
+    const response = await axios.get(url);
+    dispatch({
+        type: ACTION.CHANGE_VISIBILITY,
+        payload: vis
+    })
+};
+
+// Create project with user
+export const createProject = (details) => async(dispatch) => {
+  const username = details.username;
+  const partner = details.collaborator;
+  const title = details.title;
+  let url = `/create?username=${username}&partner=${partner}&title=${title}`;
+  const response = await axios.post(url);
+  dispatch(loadProjects(username));
+}
+
 // Load users that are active and inactive 
 export const loadUsers = (username) => async(dispatch) => {
     if (username !== '') {
@@ -150,3 +179,4 @@ export const loadProjects = (username) => async(dispatch) => {
         dispatch({ type: ACTION.UPDATE_OFFLINE_PROJECTS, payload: projectSelector(false, response.data) });
     }
 };
+

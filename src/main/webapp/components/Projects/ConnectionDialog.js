@@ -1,15 +1,27 @@
 import React, { useRef } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
+import { createProject, loadProjects } from '../../actions';
 
-function ConnectionDialog(props) {
-  const { collaborator, collaboratorId, isOpen, closeDialog, message, sendInvite } = props;
+const ConnectionDialog = (props) => {
+  const dispatch = useDispatch();
+  const { collaborator, cname, isOpen, closeDialog, message, sendInvite } = props;
   const optionsRef = useRef();
+  const user = useSelector((state) => state.userReducer);
 
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    sendInvite(collaboratorId);
+    sendInvite(collaborator);
+  }
+
+  const newProject = () => {
+    console.log(`Collaborator: ${collaborator}`);
+    dispatch(createProject({ username: user.username, 
+	    collaborator: collaborator, title: "New Project" }));
+    closeDialog();
+    dispatch(loadProjects(user.username));
   }
 
   return (
@@ -30,16 +42,16 @@ function ConnectionDialog(props) {
 
         <div className="ConnectionDialog_options" ref={optionsRef}>
           <span className="ConnectionDialog_header">
-            Invite to collaborate?
+            Create a new project?
           </span>
 
           <span className="ConnectionDialog_alert"> 
             {message}
           </span>
-
           <div className="Connection_confirm_button_container">
-            <button className="Connection_confirm_button left" onClick={closeDialog}>CANCEL</button>
-            <button className="Connection_confirm_button right" onClick={displayConnectionStatus}>CONTINUE</button>
+            <button className="Connection_confirm_button left" 
+	  	onClick={() => newProject()}>YES</button>
+            <button className="Connection_confirm_button right" onClick={closeDialog}>NO</button>
           </div>
 
         </div>

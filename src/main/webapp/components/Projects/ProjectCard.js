@@ -5,7 +5,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 function ProjectCard(props) {
-  const {title, collaborator, downloadProject, continueProject} = props;
+  const {title, cname, downloadProject, continueProject} = props;
 
   return (
     <div className="Project_container card">
@@ -14,7 +14,7 @@ function ProjectCard(props) {
         {title}
       </span>
       <span className="Project_collaborator">
-        {`Collaborator: ${collaborator}`}
+        {`Collaborator: ${cname}`}
       </span>
 
       <div className="Project_options">
