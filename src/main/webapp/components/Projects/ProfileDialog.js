@@ -70,8 +70,7 @@ function ProfileDialog(props) {
             </label>
 
             <span className="online_status_message">
-              If you do not display your online status, you will not be able to see other users
-              who are online.
+              If you do not display your online status, other users will not you are online
             </span>
           </div>
 

@@ -14,7 +14,7 @@ import {
 import { ArrowBack } from '@material-ui/icons';
 
 import axios from '../Api/Api';
-import { loadProjects, loadUsers, signIn } from '../../actions';
+import { loadUsers, loadProjects, signIn } from '../../actions';
 
 const Auth = ({ history }) => {
   // Get user from store
