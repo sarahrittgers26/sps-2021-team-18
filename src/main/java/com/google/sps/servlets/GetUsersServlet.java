@@ -75,23 +75,23 @@ public class GetUsersServlet extends HttpServlet {
 
 			// Get display name, email and lastActive
 			String name = user.getString("name");
-			String email = user.getString("email");
 			String lastActive = user.getString("lastActive");
 
 			// Determine if user is active
 			boolean isActive = userIsActive(lastActive);
-			users.add(new FormattedUser(partner, name, email, isActive, true));
+			users.add(new FormattedUser(partner, name, isActive, true));
 		}
 
 		for (String appUser : nonCollaborators) {
-			// Pull user from datastore
-			Key key = datastore.newKeyFactory().setKind("User").newKey(appUser);
-			Entity user = datastore.get(key);
+			if (!appUser.equals(username)) {
+				// Pull user from datastore
+				Key key = datastore.newKeyFactory().setKind("User").newKey(appUser);
+				Entity user = datastore.get(key);
 
-			// Get display name, email and lastActive
-			String name = user.getString("name");
-			String email = user.getString("email");
-			users.add(new FormattedUser(appUser, name, email, true, false));
+				// Get display name, email and lastActive
+				String name = user.getString("name");
+				users.add(new FormattedUser(appUser, name, true, false));
+			}
 		}
 
 		return users.toArray(new FormattedUser[users.size()]);
