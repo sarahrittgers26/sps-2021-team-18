@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './Projects.css';
@@ -9,7 +9,7 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
-import { changeName, chooseProject, signOut, clearProjects,
+import { changeName, chooseProject, clearProjects, updateActive, signOut,
  changeVisibility, changePassword, chooseUser } from '../../actions';
 
 const Projects = ({ history }) => {
@@ -17,12 +17,11 @@ const Projects = ({ history }) => {
   // Get user from store
   const user = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  const { activeUser, activeUsers, contacts, onlineProjects, 
+  const { activeUsers, contacts, onlineProjects, 
 	  offlineProjects } = useSelector((state) => state.projectReducer);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
-  const [openCreateProjectDialog, setOpenCreateProjectDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
   const [displayedProjects, setDisplayedProjects] = useState([]);
   const [allProjects, setAllProjects] = useState([]);
@@ -32,6 +31,24 @@ const Projects = ({ history }) => {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [connectionAlert, setConnectionAlert] = useState("");
   const [loadingProjects, setLoadingProjects] = useState(true);
+
+  // Updates active status, users and projects
+  const activeStatusWrapper = useCallback(() => {
+    const updateActiveStatus = () => {
+      //dispatch(updateActiveState());
+      dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
+      isProjectsPage: true }));
+      setTimeout(updateActiveStatus, 1 * 60000);
+    };
+    updateActiveStatus();
+  }, [dispatch, user.username, user.isVisible]);
+
+  // Ping server every minute to update our active status and retrieve info
+  useEffect(() => {
+    if(user.isSignedIn) {
+      activeStatusWrapper();
+    }
+  }, [activeStatusWrapper, user.isSignedIn]);
 
   // this displays the connection dialog for the user to confirm they want to send the invite
   const continueProject = (projectid, title, collaborator, cname) => {
@@ -94,13 +111,12 @@ const Projects = ({ history }) => {
 
   // given a project id, get the project object with that id
   const getProject = (projectid) => {
-    let selectedProject;
     for (let project of allProjects) {
       if (project.projectid === projectid) {
         return project;
       }
     }
-    return;
+    return null;
   }
 
   // save project as a zip file on download
@@ -307,79 +323,9 @@ const Projects = ({ history }) => {
           closeDialog={() => setOpenProfileDialog(false)}
           saveProfile={saveProfile}/>
       )}
+      
     </div>
   );
 }
 
 export default Projects;
-/*
-const active = [
-  {name: "Mufaro Emmanuel Manue Makiwa", id: 0, online: true},
-  {name: "Cynthia Enofe", id: 1, online: true},
-  {name: "Michael Lawes", id: 2, online: true},
-  {name: "Sarah Rittgers", id: 3, online: true},
-  {name: "Mufaro Makiwa", id: 4, online: true},
-];
-
-const recent = [
-  {name: "Dwayne Johnson", id: 7, online: true},
-  {name: "Emmanuel Makiwa", id: 5, online: false},
-  {name: "Andreea Lovan", id: 6, online: false}
-];
-
-const dummyProjects = [
-  {
-    projectId: 0,
-    title: "Simple HTML",
-    collaborator: "Mufaro Makiwa",
-    collaboratorId: 4,
-    html: "<h1>This is my name</h1>",
-    css: "h1 {color: red}",
-    js: "console.log(\"I was just saved\")"
-  },
-  {
-    projectId: 1,
-    title: "Basic CSS",
-    collaborator: "Michael Lawes",
-    collaboratorId: 2,
-    html: "<h1>I just love how this is taking shape</h1>",
-    css: "h1 {color: grey}",
-    js: "console.log(\"I was just saved, damn\")"
-  },
-  {
-    projectId: 2,
-    title: "Basic JS",
-    collaborator: "Cynthia Enofe",
-    collaboratorId: 1,
-    html: "<h1>I dont like this project at all</h1>",
-    css: "h1 {color: red}",
-    js: "console.log(\"I was didnt want to be saved\")"
-  },
-  {
-    projectId: 3,
-    title: "Basic Coding",
-    collaborator: "Sarah Rittgers",
-    collaboratorId: 3,
-    html: "<h1>I am tired of being used for testing</h1>",
-    css: "h1 {color: red}",
-    js: "console.log(\"I was just saved\")"
-  },
-  {
-    projectId: 4,
-    title: "Basic basic hahaha",
-    collaborator: "Andreea Lovan",
-    collaboratorId: 6,
-    html: "<h1>Oh yeah he got me</h1>",
-    css: "h1 {color: red}",
-    js: "console.log(\"I was just saved\")"
-  },
-  {
-    projectId: 5,
-    title: "Another basic HTML",
-    collaborator: "Emmanuel Makiwa",
-    collaboratorId: 5,
-    html: "<h1>I am being used for testing</h1>",
-    css: "h1 {color: red}",
-    js: "console.log(\"I was just saved\")"
-  }
-]; */

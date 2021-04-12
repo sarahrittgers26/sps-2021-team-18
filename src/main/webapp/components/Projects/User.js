@@ -3,7 +3,7 @@ import './User.css';
 
 const User = (props) => {
 
-  const { username, name, isActive, onClick } = props;
+  const { name, isActive, onClick } = props;
   const nameRef = useRef();
 
 

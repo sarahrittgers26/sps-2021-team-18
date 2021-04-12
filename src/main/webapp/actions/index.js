@@ -112,12 +112,28 @@ export const updateOfflineProjects = (projectList) => {
     }
 };
 
+// Update online status
+export const updateActive = (pageInfo) => async(dispatch) => {
+  const username = pageInfo.username;
+  const isVisible = pageInfo.isVisible;
+  const isProjectsPage = pageInfo.isProjectsPage;
+  if (isVisible) {
+    let url = `/update-active?username=${username}`;
+    await axios.get(url);
+  }
+  
+  if (isProjectsPage) {
+    dispatch(loadProjects(username));
+    dispatch(loadUsers(username));
+  }
+};
+
 // On name change
 export const changeName = (change) => async(dispatch) => {
     const username = change.username;
     const name = change.name;
     let url = `/change-name?username=${username}&name=${name}`;
-    const response = await axios.get(url);
+    await axios.get(url);
     dispatch({
         type: ACTION.CHANGE_NAME,
         payload: name
@@ -129,7 +145,7 @@ export const changePassword = (change) => async(dispatch) => {
     const username = change.username;
     const password = change.password;
     let url = `/change-pass?username=${username}&password=${password}`;
-    const response = await axios.get(url);
+    await axios.get(url);
     dispatch({
         type: ACTION.CHANGE_PASSWORD,
         payload: password
@@ -137,11 +153,11 @@ export const changePassword = (change) => async(dispatch) => {
 };
 
 // On visibility change
-export const changeVisibility = (vis) => async(dispatch) => {
-    const username = vis.username;
-    const vis = vis.visibility;
+export const changeVisibility = (visInfo) => async(dispatch) => {
+    const username = visInfo.username;
+    const vis = visInfo.visibility;
     let url = `/change-vis?username=${username}&visibility=${vis}`;
-    const response = await axios.get(url);
+    await axios.get(url);
     dispatch({
         type: ACTION.CHANGE_VISIBILITY,
         payload: vis
@@ -154,7 +170,7 @@ export const createProject = (details) => async(dispatch) => {
   const partner = details.collaborator;
   const title = details.title;
   let url = `/create?username=${username}&partner=${partner}&title=${title}`;
-  const response = await axios.post(url);
+  await axios.post(url);
   dispatch(loadProjects(username));
 };
 

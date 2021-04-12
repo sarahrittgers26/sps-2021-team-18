@@ -35,7 +35,7 @@ function Header(props) {
   return (
     <div className="Header_container">
       <span className="Header_title">
-        COLLABORATIVE CODING
+        COLLABCODE
       </span>
 
       <div className="Header_user">

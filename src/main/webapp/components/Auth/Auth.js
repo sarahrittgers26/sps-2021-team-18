@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   Paper,
   Card,
@@ -17,9 +17,6 @@ import axios from '../Api/Api';
 import { loadProjects, loadUsers, signIn } from '../../actions';
 
 const Auth = ({ history }) => {
-  // Get user from store
-  const user = useSelector((state) => state.userReducer);
-  	
   // Dispatch for react-redux store
   const dispatch = useDispatch();
 	

@@ -32,7 +32,7 @@ const ConnectionDialog = (props) => {
             Connecting
           </span>
           <span className="ConnectionDialog_summary">
-            {`Waiting for ${collaborator} to connect...`}
+            {`Waiting for ${cname} to connect...`}
           </span>
           <ProgressSpinner />
           <div className="ConnectionDialog_button_container">
