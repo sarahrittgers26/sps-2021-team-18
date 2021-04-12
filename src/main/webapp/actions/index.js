@@ -11,7 +11,7 @@ const projectSelector = (selector, projects) => {
         if (current.bothActive === selector) {
             let project = {
                 collaborator: current.collaborator,
-		cname: current.cname,
+		collaboratorName: current.collaboratorName,
                 projectid: current.projectid,
                 title: current.title,
                 html: current.html,

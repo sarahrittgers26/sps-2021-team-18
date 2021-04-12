@@ -39,6 +39,7 @@ const Projects = ({ history }) => {
       dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
       isProjectsPage: true }));
       setTimeout(updateActiveStatus, 1 * 60000);
+      //console.log('Updated active status');
     };
     updateActiveStatus();
   }, [dispatch, user.username, user.isVisible]);
@@ -195,7 +196,7 @@ const Projects = ({ history }) => {
       <ProjectCard
         key={project.projectid}
         title={project.title}
-        cname={project.cname}
+        cname={project.collaboratorName}
         downloadProject={() => downloadProject(project.projectid)}
         continueProject={() => continueProject(
           project.projectid, project.title, project.collaborator, project.cname
