@@ -4,8 +4,7 @@ import User from './User.js';
 
 const ConnectedUsers = (props) => {
   
-  //const { activeUsers, contacts } = useSelector((state) => state.projectReducer);
-  const { activeUsers, contacts,onActiveUserClick, onRecentUserClick } = props;
+  const { activeUsers, contacts, onActiveUserClick, onRecentUserClick } = props;
   const actives = activeUsers.map((user) => (
    <User
       key={user.username}

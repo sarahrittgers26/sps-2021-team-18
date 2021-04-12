@@ -14,7 +14,7 @@ import {
 import { ArrowBack } from '@material-ui/icons';
 
 import axios from '../Api/Api';
-import { loadUsers, loadProjects, signIn } from '../../actions';
+import { loadProjects, loadUsers, signIn } from '../../actions';
 
 const Auth = ({ history }) => {
   // Get user from store
@@ -216,10 +216,8 @@ const Auth = ({ history }) => {
 	setEmailErrorMsg('Email address has already been used');
       }
       if (usernameExists || emailExists) return;
-      console.log(user)
       dispatch(signIn({ username: username, email: email, name: name, 
       	appearingOnline: true }));
-      console.log(user)
       dispatch(loadUsers(username));
       dispatch(loadProjects(username));
       history.push('/projects');

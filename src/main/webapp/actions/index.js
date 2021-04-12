@@ -156,7 +156,7 @@ export const createProject = (details) => async(dispatch) => {
   let url = `/create?username=${username}&partner=${partner}&title=${title}`;
   const response = await axios.post(url);
   dispatch(loadProjects(username));
-}
+};
 
 // Load users that are active and inactive 
 export const loadUsers = (username) => async(dispatch) => {

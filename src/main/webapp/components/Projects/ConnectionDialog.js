@@ -17,7 +17,7 @@ const ConnectionDialog = (props) => {
   }
 
   const newProject = () => {
-    console.log(`Collaborator: ${collaborator}`);
+    //console.log(`Collaborator: ${collaborator}`);
     dispatch(createProject({ username: user.username, 
 	    collaborator: collaborator, title: "New Project" }));
     closeDialog();

@@ -2,7 +2,7 @@ package com.google.sps.data;
 
 public final class FormattedProject {
 	private final String collaborator;
-	private final String cname;
+	private final String collaboratorName;
 	private final String projectid;
 	private final String title;
 	private final boolean bothActive;
@@ -10,10 +10,11 @@ public final class FormattedProject {
 	private final String css;
 	private final String js;
 
-	public FormattedProject(String collaborator, String cname, String projectid, String title, 
-			boolean bothActive, String html, String css, String js) {
+	public FormattedProject(String collaborator, String collaboratorName, 
+			String projectid, String title, boolean bothActive, 
+			String html, String css, String js) {
 		this.collaborator = collaborator;
-		this.cname = cname;
+		this.collaboratorName = collaboratorName;
 		this.projectid = projectid;
 		this.title = title;
 		this.bothActive = bothActive;

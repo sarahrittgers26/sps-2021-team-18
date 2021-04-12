@@ -83,15 +83,17 @@ public class GetUsersServlet extends HttpServlet {
 		}
 
 		for (String appUser : nonCollaborators) {
-			if (!appUser.equals(username)) {
-				// Pull user from datastore
-				Key key = datastore.newKeyFactory().setKind("User").newKey(appUser);
-				Entity user = datastore.get(key);
-
-				// Get display name, email and lastActive
-				String name = user.getString("name");
-				users.add(new FormattedUser(appUser, name, true, false));
+			if (appUser.equals(username)) {
+				continue;
 			}
+
+			// Pull user from datastore
+			Key key = datastore.newKeyFactory().setKind("User").newKey(appUser);
+			Entity user = datastore.get(key);
+
+			// Get display name, email and lastActive
+			String name = user.getString("name");
+			users.add(new FormattedUser(appUser, name, true, false));
 		}
 
 		return users.toArray(new FormattedUser[users.size()]);
