@@ -1,18 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
-import {
-  Paper,
-  Card,
-  Typography,
-  CardActionArea,
-  Slide,
-  TextField,
-  Grid,
-  IconButton,
-  Button
-} from '@material-ui/core';
-import { ArrowBack } from '@material-ui/icons';
-
 import axios from '../Api/Api';
 import { loadInitialProjects, loadUsers, signIn } from '../../actions';
 
@@ -276,55 +263,42 @@ const Auth = ({ history }) => {
   // Render options to sign-up or sign-in
   const renderMain = () => {
     return (
-      <Grid container spacing={1} justify="center" alignItems="center">
-        <Grid item sm={12} xs={12}>
-          <Typography variant="h5" color="primary" align="center">
+      <div>
+        <div>
+          <span> 
             Collaborative Coding
-          </Typography>
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <Card className="grid-card">
-            <CardActionArea onClick={() => showSignUp()}>
-              <Typography variant="h5" color="primary" gutterBottom>
-                Sign Up
-              </Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <Card className="grid-card">
-            <CardActionArea onClick={() => showSignIn()}>
-              <Typography variant="h5" color="primary" gutterBottom>
-                Sign In
-              </Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
-      </Grid>
+          </span>
+        </div>
+        <div>
+          <span>
+            Sign Up
+          </span>
+        </div>
+        <div>
+          <span>
+            Sign In
+          </span>
+        </div>
+      </div>
     );
   }
   
    // Render signup modal with input fields for user
   const renderSignUp = () => {
     return (
-      <Slide direction={signUpDirection} in={signUpVisible} timeout={350}
-            mountOnEnter unmountOnExit>
-        <Grid container spacing={1} justify="center" alignItems="center">
-          <Grid item xs={12}>
-            <IconButton onClick={showMain}>
-              <ArrowBack />
-            </IconButton>
-            <Typography variant="h5" color="primary" align="center">
+        <div container spacing={1} justify="center" alignItems="center">
+          <div item >
+            <button onClick={showMain}>
+            </button>
+            <span>
               Sign Up
-            </Typography>
-          </Grid>
-          <Grid item xs={12} className="grid-textfield">
-            <TextField
+            </span>
+          </div>
+          <div item  className="grid-textfield">
+            <textarea
               id="name"
               label="Name"
               value={name}
-              error={nameError}
-              helperText={nameErrorMsg}
               onChange={e => setName(e.target.value)}
               margin="dense"
               autoComplete="off"
@@ -336,58 +310,61 @@ const Auth = ({ history }) => {
                 )
               }
             />
-          </Grid>
-          <Grid item xs={12} className="grid-textfield">
-            <TextField
+	    {nameError ?
+	      <span>
+		{nameErrorMsg}
+	      </span> : <div></div>
+	    }
+          </div>
+          <div className="grid-textfield">
+            <textarea
               id="username"
               label="Username"
               value={username}
-              error={usernameError}
-              helperText={usernameErrorMsg}
               onChange={e => setUsername(e.target.value)}
               margin="dense"
               autoComplete="off"
-              variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
-                  handleOnSignUpSubmit(username, password, email, name,
-                          () => handleSignUp(username, password, email, name))
+                  handleOnSignInSubmit(username, password,
+                          () => handleSignIn(username, password))
                 )
               }
             />
-          </Grid>
-	  <Grid item xs={12} className="grid-textfield">
-            <TextField
+	    {usernameError ?
+	    <span>{usernameErrorMsg}</span>
+	    : <div></div>
+	    }
+          </div>
+	  <div className="grid-textfield">
+            <textarea
               id="password"
               label="Password"
               type="password"
               value={password}
-              error={passwordError}
-              helperText={passwordErrorMsg}
               onChange={e => setPassword(e.target.value)}
-              margin="dense"
               autoComplete="off"
-              variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
-                  handleOnSignUpSubmit(username, password, email, name,
-                          () => handleSignUp(username, password, email, name))
+                  handleOnSignInSubmit(username, password,
+                          () => handleSignIn(username, password))
                 )
               }
             />
-          </Grid>
-		  <Grid item xs={12} className="grid-textfield">
-            <TextField
+	    {passwordError ?
+	    <span>
+              {passwordErrorMsg}
+	    </span>
+	    : <div></div> }
+          </div>
+          <div className="grid-textfield">
+            <textarea
               id="email"
               label="Email"
               type="email"
               value={email}
-              error={emailError}
-              helperText={emailErrorMsg}
               onChange={e => setEmail(e.target.value)}
-              margin="dense"
               autoComplete="off"
-              variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
                   handleOnSignUpSubmit(username, password, email, name,
@@ -395,47 +372,42 @@ const Auth = ({ history }) => {
                 )
               }
             />
-          </Grid>
-          <Grid item xs={12} className="grid-button">
-            <Button
-              variant="contained"
-              color="primary"
+	    {emailError ?
+	    <span>{emailErrorMsg}</span>
+	    : <div></div>
+	    }
+          </div>
+          <div className="grid-button">
+            <button
               onClick={() => handleOnSignUpSubmit(username, password, email, name,
                       () => handleSignUp(username, password, email, name))}
             >
               Sign Up
-            </Button>
-          </Grid>
-        </Grid>
-      </Slide>
+            </button>
+          </div>
+        </div>
     );
   }
   
   // Render sign in Modal with input fields
   const renderSignIn = () => {
     return (
-      <Slide direction={signInDirection} in={signInVisible} timeout={350}
-            mountOnEnter unmountOnExit>
-        <Grid container spacing={2} justify="center" alignItems="center">
-          <Grid item xs={12}>
-            <IconButton onClick={showMain}>
-              <ArrowBack />
-            </IconButton>
-            <Typography variant="h5" color="primary" align="center">
+        <div>
+          <div>
+            <button onClick={showMain}>
+            </button>
+            <span>
               Sign In
-            </Typography>
-          </Grid>
-          <Grid item xs={12} className="grid-textfield">
-            <TextField
+            </span>
+          </div>
+          <div className="grid-textfield">
+            <textarea
               id="username"
               label="Username"
               value={username}
-              error={usernameError}
-              helperText={usernameErrorMsg}
               onChange={e => setUsername(e.target.value)}
               margin="dense"
               autoComplete="off"
-              variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
                   handleOnSignInSubmit(username, password,
@@ -443,19 +415,19 @@ const Auth = ({ history }) => {
                 )
               }
             />
-          </Grid>
-		  <Grid item xs={12} className="grid-textfield">
-            <TextField
+	    {usernameError ?
+	    <span>{usernameErrorMsg}</span>
+	    : <div></div>
+	    }
+          </div>
+	  <div className="grid-textfield">
+            <textarea
               id="password"
               label="Password"
               type="password"
               value={password}
-              error={passwordError}
-              helperText={passwordErrorMsg}
               onChange={e => setPassword(e.target.value)}
-              margin="dense"
               autoComplete="off"
-              variant="outlined"
               onKeyPress={e =>
                 handleKeyPress(e, () =>
                   handleOnSignInSubmit(username, password,
@@ -463,30 +435,30 @@ const Auth = ({ history }) => {
                 )
               }
             />
-          </Grid>
-          <Grid item xs={12} className="grid-button">
-            <Button
+	    {passwordError ?
+	    <span>
+              {passwordErrorMsg}
+	    </span>
+	    : <div></div> }
+          </div>
+          <div className="grid-button">
+            <button
               className="modal-login-button"
-              variant="contained"
-              color="primary"
               onClick={() => handleOnSignInSubmit(username, password,
                       () => handleSignIn(username, password))}
             >
               Sign In
-            </Button>
-          </Grid>
-        </Grid>
-      </Slide>
+            </button>
+          </div>
+        </div>
     );
   };
 
   return (
     <div className="auth-wrapper">
-      <Paper className="container-prompt">
-        {renderMain()}
-        {renderSignUp()}
-        {renderSignIn()}
-      </Paper>
+      {renderMain()}
+      {renderSignUp()}
+      {renderSignIn()}
     </div>
   );
 }
