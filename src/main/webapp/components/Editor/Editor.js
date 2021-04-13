@@ -1,53 +1,62 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import Pane from './Pane.js'
 import Navbar from "./Navbar.js"
 import './Editor.css'
+import { handleSave } from '../../actions';
 
-function Editor() {
+const Editor = ({ history }) => {
 
-  const [html, setHtml] = useState("");
-  const [css, setCss] = useState("");
-  const [js, setJs] = useState("");
+  const { html, css, js, title, activeProject } = 
+		useSelector((state) => state.projectReducer);
+  
+  const [projecthtml, setProjecthtml] = useState(html);
+  const [projectcss, setProjectcss] = useState(css);
+  const [projectjs, setProjectjs] = useState(js);
   const [srcDoc, setSrcDoc] = useState("");
-  const [projectName, setProjectName] = useState("");
+  const [projectName, setProjectName] = useState(title);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`
       <html>
-        <body>${html}</body>
-        <style>${css}</style>
-        <script>${js}</script>
+        <body>${projecthtml}</body>
+        <style>${projectcss}</style>
+        <script>${projectjs}</script>
       </html>
       `)
     }, 250);
 
     return () => clearTimeout(timeout);
-  }, [html, css, js]);
+  }, [projecthtml, projectcss, projectjs]);
 
   return (
     <>
       <Navbar
-        updateName={setProjectName}/>
+        updateName={setProjectName}
+	history={history}
+	title={title}
+	handleSave={() => handleSave({ html: projecthtml, css: projectcss,
+		js: projectjs, projectid: activeProject })}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 
          language="xml"
          displayName="HTML"
-         value={html}
-         onChange={setHtml}/>
+         value={projecthtml}
+         onChange={setProjecthtml}/>
 
         <Pane 
          language="css"
          displayName="CSS"
-         value={css}
-         onChange={setCss}/>
+         value={projectcss}
+         onChange={setProjectcss}/>
 
         <Pane 
          language="javascript"
          displayName="JS"
-         value={js}
-         onChange={setJs}/>
+         value={projectjs}
+         onChange={setProjectjs}/>
 
       </div>
 
