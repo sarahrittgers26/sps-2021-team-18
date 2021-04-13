@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Pane from './Pane.js';
 import Navbar from './Navbar.js';
 import './Editor.css';
 import { handleSave } from '../../actions';
 
 const Editor = ({ history }) => {
-
+  const dispatch = useDispatch();
   const { html, css, js, title, activeProject } = 
 		useSelector((state) => state.projectReducer);
   
@@ -36,8 +36,9 @@ const Editor = ({ history }) => {
         updateName={setProjectName}
 	history={history}
 	title={title}
-	handleSave={() => handleSave({ html: projecthtml, css: projectcss,
-		js: projectjs, projectid: activeProject, title: projectName })}/>
+	projectName={projectName}
+	handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
+		js: projectjs, projectid: activeProject, title: projectName }))}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 

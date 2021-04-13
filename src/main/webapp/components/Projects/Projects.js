@@ -14,7 +14,6 @@ import { changeName, chooseProject, clearReducer, updateActive, signOut,
   loadProjects, clearProject } from '../../actions';
 
 const Projects = ({ history }) => {
-
   // Get user from store
   const user = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
@@ -41,7 +40,7 @@ const Projects = ({ history }) => {
       dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
       isProjectsPage: true }));
       dispatch(loadProjects(user.username));
-      setTimeout(updateActiveStatus, 1 * 60000);
+      setTimeout(updateActiveStatus, 1 * 30000);
     };
     updateActiveStatus();
   }, [dispatch, user.username, user.isVisible]);
@@ -70,30 +69,25 @@ const Projects = ({ history }) => {
     // Check if activeProject is empty (nothing selected) or if
     // user can already edit
     if (activeProject.length === 0) {
-      console.log("Inside first if and activeProject, canEdit is: ", activeProject, canEdit);
       return;
     }
     if (!canEdit) {
       const checkProjectActivity = setInterval(() => {
         dispatch(checkProject(activeProject));
-        console.log('Pinging server for project: ', activeProject);
       }, 1000);
 
       const timeout = setTimeout(() => { 
         clearInterval(checkProjectActivity);
         dispatch(updateProjectSelection({ username: user.username, 
 		projectid: activeProject, isSelecting: false }));
-        console.log('Stopped pinging');
         closeConnectionWrapper();
       }, 60000);
 
       return () => {
         clearInterval(checkProjectActivity);
         clearTimeout(timeout);
-        console.log("In return active Project is: ", activeProject);
       }
     } else {
-      console.log('canEdit is now True')
       history.push('/editor');
       return;
     }
@@ -221,13 +215,12 @@ const Projects = ({ history }) => {
   }
 
   const sendInvite = () => {
-    console.log('Sent Invite');
+    ;
   }
 
   const closeConnectionDialog = (fromProject) => {
     setOpenConnectionDialog(false);
     if (fromProject) {
-      console.log("Close connection dialog: ", activeProject);
       dispatch(updateProjectSelection({ username: user.username, 
 		projectid: activeProject, isSelecting: false }));
       dispatch(clearProject());
@@ -357,7 +350,7 @@ const Projects = ({ history }) => {
       {openConnectionDialog && (
         <ConnectionDialog
           collaboratorName={currentConnection.name}
-          collaborator={currentConnection.username}
+          collaboratorId={currentConnection.username}
           isOpen={openConnectionDialog}
           closeDialog={() => closeConnectionDialog(fromProject)}
           message={connectionAlert}

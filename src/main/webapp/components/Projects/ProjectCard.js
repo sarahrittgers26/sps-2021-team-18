@@ -5,7 +5,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 const ProjectCard = (props) => {
-  const {title, collaboratorName, downloadProject, continueProject} = props;
+  const { title, collaboratorName, downloadProject, continueProject } = props;
 
   return (
     <div className="Project_container card">

@@ -38,13 +38,13 @@ public class UpdateActiveServlet extends HttpServlet {
 		 // Log last login time as current time
 		 LocalDateTime now = LocalDateTime.now();
 		 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-		 String login = now.format(formatter);
+		 String active = now.format(formatter);
 
 		 Key thisUser = datastore.newKeyFactory()
 			.setKind("User")
 			.newKey(username);
-		 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-			 .set("lastActive", login).build(); 
-		 datastore.update(loggedInUser);
+		 Entity activeUser = Entity.newBuilder(datastore.get(thisUser))
+			 .set("lastActive", active).build(); 
+		 datastore.update(activeUser);
 	}
 }

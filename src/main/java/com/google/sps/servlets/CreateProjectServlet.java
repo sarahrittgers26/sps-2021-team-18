@@ -42,7 +42,6 @@ public class CreateProjectServlet extends HttpServlet {
 		 String title = Jsoup.clean(request.getParameter("title"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		 
 		 // Check that partner is a valid username
 		 boolean partnerExists = checkIfFieldExists("username", partner, datastore, "User");
 		 String projectid = "none";

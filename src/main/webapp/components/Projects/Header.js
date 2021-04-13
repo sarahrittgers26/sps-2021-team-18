@@ -4,7 +4,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const Header = (props) => {
-  const {name, email, handleLogout, displayProfile} = props;
+  const { name, email, handleLogout, displayProfile } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const menuRef = useRef();
   const iconRef = useRef();

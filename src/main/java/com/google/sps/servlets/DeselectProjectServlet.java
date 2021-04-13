@@ -35,6 +35,7 @@ public class DeselectProjectServlet extends HttpServlet {
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
 		 // Get project from datastore
 		 Key thisProject = datastore.newKeyFactory()
 			.setKind("Project")

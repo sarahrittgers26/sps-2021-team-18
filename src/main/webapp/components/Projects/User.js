@@ -6,7 +6,6 @@ const User = (props) => {
   const { name, isActive, onClick } = props;
   const nameRef = useRef();
 
-
   const isOverflowing = (elt) => {
     return elt.offsetWidth < elt.scrollWidth;
   }

@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadProjects } from '../../actions';
+import { createProject, loadUsers } from '../../actions';
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ const ConnectionDialog = (props) => {
     dispatch(createProject({ username: user.username, 
 	    collaborator: collaboratorId, title: "New Project" }));
     closeDialog();
+    dispatch(loadUsers(user.username));
   }
 
   return (

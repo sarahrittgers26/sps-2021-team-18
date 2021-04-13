@@ -60,7 +60,7 @@ public class UserOnlineServlet extends HttpServlet {
 				DateTimeFormatter.ISO_DATE_TIME;
 			LocalDateTime loginTime = LocalDateTime
 				.parse(lastActive, formatter);
-			LocalDateTime now = LocalDateTime.now().minusMinutes(1);
+			LocalDateTime now = LocalDateTime.now().minusSeconds(30);
 			return loginTime.isAfter(now);
 		} else {
 			return isActive;

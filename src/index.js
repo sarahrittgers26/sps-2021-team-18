@@ -8,9 +8,8 @@ import './index.css';
 import App from './main/webapp/App.js';
 import rootReducer from './main/webapp/reducers';
 import { baseUrl } from './main/webapp/components/Api/Api';
-import { socketMiddleware } from './main/webapp/middleware/socketMiddleware';
 
-const store = createStore(rootReducer, applyMiddleware(thunk, socketMiddleware(baseUrl)));
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 ReactDOM.render(
   <Provider store={store}>

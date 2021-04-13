@@ -4,7 +4,7 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import './AlertDialog.css'
 
 const AlertDialog = (props) => {
-  const {isOpen, closeDialog, message} = props;
+  const { isOpen, closeDialog, message } = props;
 
   return (
     <Dialog open={isOpen}>

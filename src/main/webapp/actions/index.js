@@ -81,17 +81,13 @@ export const handleSave = (proj) => async(dispatch) => {
   const newTitle = proj.title;
   const projectid = proj.projectid;
   let htmlUrl = `/save-html?projectid=${projectid}&html=${newHtml}`;
-  let cssUrl = `/save-css?projectid=${projectid}&html=${newCss}`;
-  let jsUrl = `/save-js?projectid=${projectid}&html=${newJs}`;
+  let cssUrl = `/save-css?projectid=${projectid}&css=${newCss}`;
+  let jsUrl = `/save-js?projectid=${projectid}&js=${newJs}`;
   let titleUrl = `/update-title?projectid=${projectid}&title=${newTitle}`;
   await axios.get(htmlUrl);
-  console.log("Saved html successfully");
   await axios.get(cssUrl);
-  console.log("Saved css successfully");
   await axios.get(jsUrl);
-  console.log("Saved js successfully");
   await axios.get(titleUrl);
-  console.log("Saved title successfully");
 }
 
 // On project deselection
@@ -193,6 +189,14 @@ export const changeVisibility = (visInfo) => async(dispatch) => {
         payload: vis
     })
 };
+
+export const updateTitle = (title) => {
+    return {
+        type: ACTION.UPDATE_TITLE,
+        payload: title
+    }
+};
+
 
 // Create project with user
 export const createProject = (details) => async(dispatch) => {
