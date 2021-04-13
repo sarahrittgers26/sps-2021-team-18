@@ -28,7 +28,6 @@ const Profile = (props) => {
     dispatch(updateCanEdit(false));
     dispatch(clearProject());
     history.push('/projects');
-    console.log("Does this even happen?");
   }
 
   useEffect(() => {
