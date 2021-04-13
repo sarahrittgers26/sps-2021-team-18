@@ -2,36 +2,35 @@ import React from 'react';
 import './ConnectedUsers.css';
 import User from './User.js';
 
-function ConnectedUsers(props) {
+const ConnectedUsers = (props) => {
   
-  const {active, recent, onActiveUserClick, onRecentUserClick} = props;
-  
-  const activeUsers = active.map((user) => (
-    <User
-      key={`User_obj_${user.id}`}
+  const { activeUsers, contacts, onActiveUserClick, onRecentUserClick } = props;
+  const actives = activeUsers.map((user) => (
+   <User
+      key={user.username}
       name={user.name}
-      active={true}
-      onClick={() => onActiveUserClick(user.name, user.id)}/>
+      isActive={user.isActive}
+      onClick={() => onActiveUserClick(user.name, user.username)}/>
   ));
 
-  const recentUsers = recent.map((user) => (
+  const recentContacts = contacts.map((user) => (
     <User
-      key={`User_obj_${user.id}`}
+      key={user.username}
       name={user.name}
-      active={user.online}
-      onClick={() => onRecentUserClick(user.name, user.id, user.online)}/>
+      isActive={user.isActive}
+      onClick={() => onRecentUserClick(user.username, user.name, user.isActive)}/>
   ));
 
   return (
     <div className="ConnectedUsers_container card">
       <span className="ConnectedUsers_label">Recent contacts</span>
-      {recent.length > 0 ? 
-        recentUsers : 
-        (<span className="no_users">No recent contacts.</span>)}
+      {recentContacts.length > 0 ? 
+        recentContacts : 
+        (<span className="no_users">No recent contacts</span>)}
     <span className="ConnectedUsers_label top">Active users</span>
-      {active.length > 0 ? 
-        activeUsers : 
-        (<span  className="no_users">No active users.</span>)}
+      {actives.length > 0 ? 
+        actives : 
+        (<span className="no_users">No active users</span>)}
     </div>
   );
 }

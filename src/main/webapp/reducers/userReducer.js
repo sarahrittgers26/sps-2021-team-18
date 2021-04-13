@@ -5,7 +5,7 @@ const initialState = {
   username: '',
   email: '',
   name: '',
-  appearingOnline: true,
+  isVisible: true,
 }
 
 export const userReducer = (state = initialState, action) => {
@@ -18,7 +18,7 @@ export const userReducer = (state = initialState, action) => {
       return { ...state, isSignedIn: false, username: '', email: '', 
 	      activeProject: '', appearingOnline: true };
     case ACTION.CHANGE_VISIBILITY:
-      return { ...state, appearingOnline: action.payload };
+      return { ...state, isVisible: action.payload };
     case ACTION.CHANGE_NAME:
       return { ...state, name: action.payload };
     default:

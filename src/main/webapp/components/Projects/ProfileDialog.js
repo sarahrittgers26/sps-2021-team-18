@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
 import './ProfileDialog.css'
 
-function ProfileDialog(props) {
-  const {isOpen, name, username, currentOnlineStatus, closeDialog, saveProfile } = props;
+const ProfileDialog = (props) => {
+  const { isOpen, name, currentOnlineStatus, closeDialog, saveProfile } = props;
   const [updatedName, setUpdatedName] = useState(name);
   const [updatedPassword, setUpdatedPassword] = useState("");
   const [showOnlineStatus, setShowOnlineStatus] = useState(currentOnlineStatus);
@@ -70,8 +70,7 @@ function ProfileDialog(props) {
             </label>
 
             <span className="online_status_message">
-              If you do not display your online status, you will not be able to see other users
-              who are online.
+              If you do not display your online status, other users will not you are online
             </span>
           </div>
 

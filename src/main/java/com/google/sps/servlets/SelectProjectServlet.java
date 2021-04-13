@@ -5,6 +5,10 @@ import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.Query;
+import com.google.cloud.datastore.QueryResults;
+import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
+import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
 import java.io.IOException;
@@ -36,6 +40,10 @@ public class SelectProjectServlet extends HttpServlet {
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 
+		 // Clear all other projects user has selected just in case
+		 querySelectedProjects(username, "user1", datastore);
+		 querySelectedProjects(username, "user2", datastore);
+
 		 // Get project from datastore
 		 Key thisProject = datastore.newKeyFactory()
 			.setKind("Project")
@@ -55,6 +63,33 @@ public class SelectProjectServlet extends HttpServlet {
 			 project = Entity.newBuilder(datastore.get(thisProject))
 				 .set("user2Selected", true).build(); 
 			 datastore.update(project);
+		 }
+	}
+
+	// Deselect all other projects failsafe 
+	private void querySelectedProjects(String username, String field, 
+			Datastore datastore) throws DatastoreException {
+		 // Query for projects where username == field
+		 String selectedField = field + "Selected";
+		 Query<Entity> projectQuery = Query.newEntityQueryBuilder()
+			 .setKind("Project")
+			 .setFilter(CompositeFilter.and(
+				PropertyFilter.eq(field, username),
+				PropertyFilter.eq(selectedField, true)))
+			 .build();
+		 QueryResults<Entity> projects = datastore.run(projectQuery);
+		
+		 while (projects.hasNext()) {
+			// Get project user has started
+			Entity project = projects.next();
+
+			// Extract projectid and then update selected field to false
+			String projectid = project.getString("projectid");
+			Key key = datastore.newKeyFactory()
+				.setKind("Project").newKey(projectid);
+			Entity updateProject = Entity.newBuilder(datastore.get(key))
+				 .set(selectedField, false).build(); 
+			datastore.update(updateProject);
 		 }
 	}
 }

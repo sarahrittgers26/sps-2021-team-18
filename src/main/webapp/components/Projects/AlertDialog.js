@@ -3,8 +3,8 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import './AlertDialog.css'
 
-function AlertDialog(props) {
-  const {isOpen, closeDialog, message} = props;
+const AlertDialog = (props) => {
+  const { isOpen, closeDialog, message } = props;
 
   return (
     <Dialog open={isOpen}>

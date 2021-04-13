@@ -50,6 +50,16 @@
   margin-bottom: 24px;
 }
 
+.Connection_Body {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 8px 0;
+  margin-bottom: 24px;
+}
+
 .ConnectionDialog_button_container {
   width: 100%;
   display: flex;

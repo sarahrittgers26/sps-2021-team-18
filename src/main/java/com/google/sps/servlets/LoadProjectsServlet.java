@@ -90,13 +90,21 @@ public class LoadProjectsServlet extends HttpServlet {
 			String css = project.getString("css");
 			String js = project.getString("js");
 
-			// Determine whether partner is stored as user1 or user2
-			String partner = user1.equals(username) ? user2 : user1;
-			boolean bothActive = userIsActive(partner, datastore);
+			// Determine whether collaborator is stored as user1 or user2
+			String collaborator = user1.equals(username) ? user2 : user1;
+
+			// Get collaborators name on for frotend
+			Key key = datastore.newKeyFactory()
+				.setKind("User").newKey(collaborator);
+			Entity partner = datastore.get(key);
+			String cname = partner.getString("name");
+
+			boolean bothActive = userIsActive(collaborator, datastore);
 			
 			projectResults
 				.add(new FormattedProject(
-							partner,  
+							collaborator,
+						        cname,	
 							projectid, 
 							title,
 							bothActive,
@@ -116,14 +124,14 @@ public class LoadProjectsServlet extends HttpServlet {
 			.setKind("User")
 			.newKey(username);
 		Entity user = datastore.get(key);
-		String lastLogin = user.getString("lastLogin");
+		String lastActive = user.getString("lastActive");
 
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = 
 			DateTimeFormatter.ISO_DATE_TIME;
 		LocalDateTime loginTime = LocalDateTime
-			.parse(lastLogin, formatter);
-		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
+			.parse(lastActive, formatter);
+		LocalDateTime now = LocalDateTime.now().minusSeconds(30);
 		return loginTime.isAfter(now);
 	}
 }

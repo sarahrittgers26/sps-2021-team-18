@@ -1,11 +1,10 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import './User.css';
 
-function User(props) {
+const User = (props) => {
 
-  const {name, active, onClick} = props;
+  const { name, isActive, onClick } = props;
   const nameRef = useRef();
-
 
   const isOverflowing = (elt) => {
     return elt.offsetWidth < elt.scrollWidth;
@@ -22,7 +21,10 @@ function User(props) {
     <div className="User_container" onClick={onClick}>
       <div className="User_image_container">
         <div className="User_image">
-          <div className={`User_activity ${active ? "active" : "inactive"}`}></div>
+	  {isActive ?
+          <div className="User_activity active"></div> :
+          <div className="User_activity inactive"></div>
+	  }
         </div>
       </div>
       <span className="User_name" ref={nameRef}>

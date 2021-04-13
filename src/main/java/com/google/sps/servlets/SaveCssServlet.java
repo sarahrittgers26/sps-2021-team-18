@@ -35,7 +35,7 @@ public class SaveCssServlet extends HttpServlet {
 		 String css = Jsoup.clean(request.getParameter("css"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		 
+
 		 // Update stored html to new string
 		 Key thisProject = datastore.newKeyFactory()
 			.setKind("Project")

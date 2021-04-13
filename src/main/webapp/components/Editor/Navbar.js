@@ -1,41 +1,52 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './Navbar.css';
 import Profile from './Profile.js';
+import { updateTitle } from '../../actions';
 
-
-function Navbar(props) {
-  const {title, updateName} = props;
+const Navbar = (props) => {
+  const { title, updateName, projectName, handleSave, history } = props;
+  const user = useSelector((state) => state.userReducer);
+  const { collaboratorName } = useSelector((state) => state.projectReducer);
+  const dispatch = useDispatch();
 
   const handleChange = elt => {
     updateName(elt.target.value);
+    dispatch(updateTitle(elt.target.value));
   }
 
   return (
     <div>
       <div className="Navbar_container">
         <Profile
-          name="Mufaro Makiwa"
-          email="mufaroeamakiwa@gmail.com"
+          name={collaboratorName}
+          email=""
           side="L"
-          active={true}/>
+          active={true}
+	  isUser={false}
+	  handleSave={handleSave}
+	  history={history}/>
 
         <div className="Navbar_title_container">
           <input 
             type="text"
             className="Navbar_title"
-            placeholder="TITLE" 
+            placeholder={title} 
             name="title_input" 
             autoComplete="off" 
             id="title_input"
-            value={title}
+            value={projectName}
             onChange={handleChange}/>
         </div>
         
         <Profile
-          name="Cynthia Enofe"
-          email="cynthiaenofe@gmail.com"
+          name={user.name}
+          email={user.username}
           side="R"
-          active={false}/>
+          active={true}
+	  isUser={true}
+	  handleSave={handleSave}
+	  history={history}/>
       </div>
     </div>
   );

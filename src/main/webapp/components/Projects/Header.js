@@ -3,9 +3,8 @@ import './Header.css';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-
-function Header(props) {
-  const {name, email, handleLogout, displayProfile} = props;
+const Header = (props) => {
+  const { name, email, handleLogout, displayProfile } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const menuRef = useRef();
   const iconRef = useRef();
@@ -35,7 +34,7 @@ function Header(props) {
   return (
     <div className="Header_container">
       <span className="Header_title">
-        COLLABORATIVE CODING
+        COLLABCODE
       </span>
 
       <div className="Header_user">

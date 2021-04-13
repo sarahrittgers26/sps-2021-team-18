@@ -1,7 +1,7 @@
 import React from 'react';
 import './ProgressSpinner.css';
 
-function ProgressSpinner() {
+const ProgressSpinner = () => {
   return (
     <div className="Progress_container">
       

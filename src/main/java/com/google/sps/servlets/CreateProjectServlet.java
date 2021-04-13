@@ -36,12 +36,12 @@ public class CreateProjectServlet extends HttpServlet {
 		 response.addHeader("Access-Control-Allow-Credentials", "true");
 		 response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
 		 
-		 // Get the username, partner name from user
+		 // Get the username, partner name and title from user
 		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		 String partner = Jsoup.clean(request.getParameter("partner"), Whitelist.none());
+		 String title = Jsoup.clean(request.getParameter("title"), Whitelist.none());
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		 
 		 // Check that partner is a valid username
 		 boolean partnerExists = checkIfFieldExists("username", partner, datastore, "User");
 		 String projectid = "none";
@@ -58,19 +58,19 @@ public class CreateProjectServlet extends HttpServlet {
 					.set("user1", username)
 					.set("user2", partner)
 					.set("projectid", projectid)
-					.set("title", "")
-					.set("html", "")
-					.set("css", "")
+					.set("title", title)
+					.set("html", "<h1>Hello World</h1>")
+					.set("css", "h1 {\n  font-size: 24px;\n}")
 					.set("js", "")
-					.set("user1Selected", true)
-					.set("user2Selected", true)
+					.set("user1Selected", false)
+					.set("user2Selected", false)
 					.build();
 			 datastore.put(project);	
 		 }
 
 		 Gson gson = new Gson();	
 
-		 // Let frontend know whether there were errors adding project to datastore
+		 // Return project objects to frontend
 		 response.setContentType("application/json");
 		 response.getWriter().println(gson.toJson(projectid));
 	}

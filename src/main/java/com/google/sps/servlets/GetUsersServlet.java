@@ -75,23 +75,25 @@ public class GetUsersServlet extends HttpServlet {
 
 			// Get display name, email and lastActive
 			String name = user.getString("name");
-			String email = user.getString("email");
 			String lastActive = user.getString("lastActive");
 
 			// Determine if user is active
 			boolean isActive = userIsActive(lastActive);
-			users.add(new FormattedUser(partner, name, email, isActive, true));
+			users.add(new FormattedUser(partner, name, isActive, true));
 		}
 
 		for (String appUser : nonCollaborators) {
+			if (appUser.equals(username)) {
+				continue;
+			}
+
 			// Pull user from datastore
 			Key key = datastore.newKeyFactory().setKind("User").newKey(appUser);
 			Entity user = datastore.get(key);
 
 			// Get display name, email and lastActive
 			String name = user.getString("name");
-			String email = user.getString("email");
-			users.add(new FormattedUser(appUser, name, email, true, false));
+			users.add(new FormattedUser(appUser, name, true, false));
 		}
 
 		return users.toArray(new FormattedUser[users.size()]);
@@ -150,7 +152,7 @@ public class GetUsersServlet extends HttpServlet {
 		// only when a user logs out does this stop so an active user is one
 		// still using the application
 		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
-		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
+		LocalDateTime now = LocalDateTime.now().minusSeconds(30);
 		return loginTime.isAfter(now);
 	}
 
@@ -164,7 +166,7 @@ public class GetUsersServlet extends HttpServlet {
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
-		LocalDateTime now = LocalDateTime.now().minusMinutes(1);
+		LocalDateTime now = LocalDateTime.now().minusSeconds(30);
 		return loginTime.isAfter(now);
 	}
 }
