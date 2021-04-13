@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { saveAs } from 'file-saver';
 import './Projects.css';
 import ConnectedUsers from './ConnectedUsers.js';
 import Searchbar from './Searchbar.js';
@@ -9,15 +9,16 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
-import { changeName, chooseProject, clearProjects, updateActive, signOut,
- changeVisibility, changePassword, chooseUser } from '../../actions';
+import { changeName, chooseProject, clearReducer, updateActive, signOut,
+ changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection,
+  loadProjects, clearProject } from '../../actions';
 
 const Projects = ({ history }) => {
 
   // Get user from store
   const user = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  const { activeUsers, contacts, onlineProjects, 
+  const { activeUsers, contacts, onlineProjects, activeProject, canEdit,
 	  offlineProjects } = useSelector((state) => state.projectReducer);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +32,7 @@ const Projects = ({ history }) => {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [connectionAlert, setConnectionAlert] = useState("");
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const [fromProject, setFromProject] = useState(false);
 
   // Updates active status, users and projects
   const activeStatusWrapper = useCallback(() => {
@@ -38,30 +40,85 @@ const Projects = ({ history }) => {
       //dispatch(updateActiveState());
       dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
       isProjectsPage: true }));
+      dispatch(loadProjects(user.username));
       setTimeout(updateActiveStatus, 1 * 60000);
-      //console.log('Updated active status');
     };
     updateActiveStatus();
   }, [dispatch, user.username, user.isVisible]);
 
   // Ping server every minute to update our active status and retrieve info
   useEffect(() => {
-    if(user.isSignedIn) {
+    if (user.isSignedIn) {
       activeStatusWrapper();
     }
   }, [activeStatusWrapper, user.isSignedIn]);
 
+  const closeConnectionWrapper = useCallback(() => {
+    const closeDialogInTimeout = () => {
+      setOpenConnectionDialog(false);
+      dispatch(clearProject());
+      setConnectionAlert("");
+      setCurrentConnection({});
+    }
+    closeDialogInTimeout();
+  }, [dispatch]);
+
+  // Ping server every second for a minute to see if both users
+  // selected the same project. If not stop backend call. If both
+  // users 
+  useEffect(() => {
+    // Check if activeProject is empty (nothing selected) or if
+    // user can already edit
+    if (activeProject.length === 0) {
+      console.log("Inside first if and activeProject, canEdit is: ", activeProject, canEdit);
+      return;
+    }
+    if (!canEdit) {
+      const checkProjectActivity = setInterval(() => {
+        dispatch(checkProject(activeProject));
+        console.log('Pinging server for project: ', activeProject);
+      }, 1000);
+
+      const timeout = setTimeout(() => { 
+        clearInterval(checkProjectActivity);
+        dispatch(updateProjectSelection({ username: user.username, 
+		projectid: activeProject, isSelecting: false }));
+        console.log('Stopped pinging');
+        closeConnectionWrapper();
+      }, 60000);
+
+      return () => {
+        clearInterval(checkProjectActivity);
+        clearTimeout(timeout);
+        console.log("In return active Project is: ", activeProject);
+      }
+    } else {
+      console.log('canEdit is now True')
+      history.push('/editor');
+      return;
+    }
+
+  }, [dispatch, activeProject, canEdit, closeConnectionWrapper, history, 
+	  user.username]);
+
   // this displays the connection dialog for the user to confirm they want to send the invite
-  const continueProject = (projectid, title, collaborator, cname) => {
+  const continueProject = (projectid, title, collaborator, cname, html, css, 
+	  js) => {
     if (isOnline(collaborator)) {
+      setFromProject(true);
       setOpenConnectionDialog(true);
       setCurrentConnection({
         name: cname, 
         username: collaborator
       });
-      dispatch(chooseProject(projectid));
+      dispatch(updateProjectSelection({ username: user.username, 
+	    projectid: projectid, isSelecting: true })); 
+      console.log("UPDATE PROJECT SUCCESSFUL")
+      dispatch(chooseProject({ projectid: projectid, activeCollaborator: collaborator,
+      collaboratorName: cname, html: html, css: css, js: js, title: title }));
+      console.log("CHOOSE PROJECT SUCCESSFUL")
       setConnectionAlert(
-        `This will send an invitation to ${cname} to continue working on the project, ${title}`
+        `Waiting for ${cname} to select ${title} to continue working on project...`
         );
 
     } else {
@@ -74,6 +131,7 @@ const Projects = ({ history }) => {
 
   // this displays the connection dialog for the user to confirm they want to send the invite
   const onActiveUserClick = (name, username) => {
+    setFromProject(false);
     setOpenConnectionDialog(true);
     setCurrentConnection({
       name: name, 
@@ -101,7 +159,7 @@ const Projects = ({ history }) => {
   // when the user want to log out
   const handleLogout = () => {
     dispatch(signOut());
-    dispatch(clearProjects());
+    dispatch(clearReducer());
     history.push('/');
   }
 
@@ -109,35 +167,20 @@ const Projects = ({ history }) => {
   const displayProfile = () => {
     setOpenProfileDialog(true);
   }
-
-  // given a project id, get the project object with that id
-  const getProject = (projectid) => {
-    for (let project of allProjects) {
-      if (project.projectid === projectid) {
-        return project;
-      }
-    }
-    return null;
-  }
-
-  // save project as a zip file on download
-  const downloadProject = (projectid) => {
-    // get the project
-    
-    let selectedProject = getProject(projectid);
-    let folderName = getFolderName(selectedProject.title);
+  const downloadProject = (title, html, css, js) => {  
+    let folderName = getFolderName(title);
     const zip = require('jszip')();
     let folder = zip.folder(folderName);
 
     // add the files to the folder
-    folder.file("index.js", selectedProject.js);
-    folder.file("style.css", selectedProject.css);
-    folder.file("index.html", selectedProject.html);
+    folder.file("index.js", js);
+    folder.file("style.css", css);
+    folder.file("index.html", html);
 
     zip.generateAsync({type:"blob"})
     .then(function(content) {
         // see FileSaver.js
-        // saveAs(content, `${folderName}.zip`);
+        saveAs(content, `${folderName}.zip`);
     });
   }
 
@@ -180,8 +223,14 @@ const Projects = ({ history }) => {
     console.log('Sent Invite');
   }
 
-  const closeConnectionDialog = () => {
+  const closeConnectionDialog = (fromProject) => {
     setOpenConnectionDialog(false);
+    if (fromProject) {
+      console.log("Close connection dialog: ", activeProject);
+      dispatch(updateProjectSelection({ username: user.username, 
+		projectid: activeProject, isSelecting: false }));
+      dispatch(clearProject());
+    }
     setConnectionAlert("");
     setCurrentConnection({});
   }
@@ -199,7 +248,8 @@ const Projects = ({ history }) => {
         cname={project.collaboratorName}
         downloadProject={() => downloadProject(project.projectid)}
         continueProject={() => continueProject(
-          project.projectid, project.title, project.collaborator, project.cname
+          project.projectid, project.title, project.collaborator, 
+	  project.collaboratorName, project.html, project.css, project.js
         )}/>
     ));
     return projects;
@@ -220,16 +270,21 @@ const Projects = ({ history }) => {
 
   useEffect(() => {
     // set state for active and recent users with dummy users
-    setAllUsers(contacts.concat(activeUsers));
-    setAllProjects(onlineProjects.concat(offlineProjects));
+    setAllUsers([]);
+    setAllProjects([]);
+    let allUsersReloaded = contacts.concat(activeUsers);
+    let allProjectsReloaded = onlineProjects.concat(offlineProjects);
+    setAllUsers(allUsersReloaded);
+    setAllProjects(allProjectsReloaded);
   }, [contacts, onlineProjects, offlineProjects, activeUsers]);
 
 
   useEffect(() => {
-    const projects = allProjects.filter((project) => {
+    let projects = allProjects.filter((project) => {
       return project.title.includes(searchQuery);
     });
 
+    setDisplayedProjects([]);
     setDisplayedProjects(projects);
     
     return () => {
@@ -238,7 +293,6 @@ const Projects = ({ history }) => {
       }
     }
   }, [searchQuery, allProjects, loadingProjects]);
-
 
   return (
     <div className="Projects_container">
@@ -304,9 +358,10 @@ const Projects = ({ history }) => {
           cname={currentConnection.name}
           collaborator={currentConnection.username}
           isOpen={openConnectionDialog}
-          closeDialog={closeConnectionDialog}
+          closeDialog={() => closeConnectionDialog(fromProject)}
           message={connectionAlert}
-          sendInvite={sendInvite}/>
+          sendInvite={sendInvite}
+	  fromProject={fromProject}/>
       )}
         
       {openAlertDialog && (
@@ -329,4 +384,5 @@ const Projects = ({ history }) => {
   );
 }
 
+      /*closeConnectionDialog(fromProject)*/
 export default Projects;
