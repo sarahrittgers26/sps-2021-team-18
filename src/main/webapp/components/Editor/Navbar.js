@@ -7,7 +7,7 @@ const Navbar = (props) => {
   const { title, updateName, handleSave, history } = props;
 
   const user = useSelector((state) => state.userReducer);
-  const { activeCollaboratorName } = useSelector((state) => state.projectReducer);
+  const { collaboratorName } = useSelector((state) => state.projectReducer);
   
   const handleChange = elt => {
     updateName(elt.target.value);

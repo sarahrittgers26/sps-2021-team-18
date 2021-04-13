@@ -7,22 +7,20 @@ import { createProject, loadProjects } from '../../actions';
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
-  const { collaborator, cname, isOpen, closeDialog, 
+  const { collaboratorId, collaboratorName, isOpen, closeDialog, 
 	  message, sendInvite, fromProject } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
 
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    sendInvite(collaborator);
+    sendInvite(collaboratorId);
   }
 
   const newProject = () => {
-    //console.log(`Collaborator: ${collaborator}`);
     dispatch(createProject({ username: user.username, 
-	    collaborator: collaborator, title: "New Project" }));
+	    collaborator: collaboratorId, title: "New Project" }));
     closeDialog();
-    dispatch(loadProjects(user.username));
   }
 
   return (
@@ -35,7 +33,7 @@ const ConnectionDialog = (props) => {
               Connecting
             </span>
             <span className="ConnectionDialog_summary">
-              {`Waiting for ${cname} to connect...`}
+              {`Waiting for ${collaboratorName} to connect...`}
             </span>
             <ProgressSpinner />
             <div className="ConnectionDialog_button_container">

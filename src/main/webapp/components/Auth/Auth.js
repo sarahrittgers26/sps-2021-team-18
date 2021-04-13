@@ -14,7 +14,7 @@ import {
 import { ArrowBack } from '@material-ui/icons';
 
 import axios from '../Api/Api';
-import { loadProjects, loadUsers, signIn } from '../../actions';
+import { loadInitialProjects, loadUsers, signIn } from '../../actions';
 
 const Auth = ({ history }) => {
   // Dispatch for react-redux store
@@ -216,7 +216,7 @@ const Auth = ({ history }) => {
       dispatch(signIn({ username: username, email: email, name: name, 
       	appearingOnline: true }));
       dispatch(loadUsers(username));
-      dispatch(loadProjects(username));
+      dispatch(loadInitialProjects(username));
       history.push('/projects');
     } catch (err) {
       // If error occurs notify user
@@ -254,7 +254,7 @@ const Auth = ({ history }) => {
 	  dispatch(signIn({ username: username, email: errorAndInfo[1], 
 		  name: errorAndInfo[2], appearingOnline: appearingOnline }));
 	  dispatch(loadUsers(username));
-	  dispatch(loadProjects(username));
+	  dispatch(loadInitialProjects(username));
 	  history.push('/projects'); 
 	}
       } else {

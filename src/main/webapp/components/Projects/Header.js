@@ -3,8 +3,7 @@ import './Header.css';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-
-function Header(props) {
+const Header = (props) => {
   const {name, email, handleLogout, displayProfile} = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const menuRef = useRef();

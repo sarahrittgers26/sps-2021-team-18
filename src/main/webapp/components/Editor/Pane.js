@@ -8,7 +8,7 @@ import './Pane.css';
 import MinimizeIcon from '@material-ui/icons/Minimize';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
 
-function Pane(props) {
+const Pane = (props) => {
   const {language, displayName, value, onChange} = props;
   const handleChange = (editor, data, value) => {
     onChange(value);

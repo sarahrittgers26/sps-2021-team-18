@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Pane from './Pane.js'
-import Navbar from "./Navbar.js"
-import './Editor.css'
+import Pane from './Pane.js';
+import Navbar from './Navbar.js';
+import './Editor.css';
 import { handleSave } from '../../actions';
 
 const Editor = ({ history }) => {
@@ -37,7 +37,7 @@ const Editor = ({ history }) => {
 	history={history}
 	title={title}
 	handleSave={() => handleSave({ html: projecthtml, css: projectcss,
-		js: projectjs, projectid: activeProject })}/>
+		js: projectjs, projectid: activeProject, title: projectName })}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 

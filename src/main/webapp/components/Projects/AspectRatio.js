@@ -1,7 +1,7 @@
 import React from 'react';
 import "./AspectRatio.css";
 
-function AspectRatio(child) {
+const AspectRatio = (child) => {
 
   return (
     <div className="AspectRatio">

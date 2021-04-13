@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Searchbar.css';
 import SearchIcon from '@material-ui/icons/Search';
 
-function Searchbar(props) {
+const Searchbar = (props) => {
   const {query, onChange} = props;
   const searchBarRef = useRef();
   const [focus, setFocus] = useState(false);

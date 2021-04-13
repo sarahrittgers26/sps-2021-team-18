@@ -4,8 +4,8 @@ import AspectRatio from './AspectRatio.js';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
-function ProjectCard(props) {
-  const {title, cname, downloadProject, continueProject} = props;
+const ProjectCard = (props) => {
+  const {title, collaboratorName, downloadProject, continueProject} = props;
 
   return (
     <div className="Project_container card">
@@ -14,7 +14,7 @@ function ProjectCard(props) {
         {title}
       </span>
       <span className="Project_collaborator">
-        {`Collaborator: ${cname}`}
+        {`Collaborator: ${collaboratorName}`}
       </span>
 
       <div className="Project_options">

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
 import './ProfileDialog.css'
 
-function ProfileDialog(props) {
+const ProfileDialog = (props) => {
   const {isOpen, name, currentOnlineStatus, closeDialog, saveProfile } = props;
   const [updatedName, setUpdatedName] = useState(name);
   const [updatedPassword, setUpdatedPassword] = useState("");

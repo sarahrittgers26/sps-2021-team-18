@@ -1,7 +1,6 @@
 import axios from '../components/Api/Api';
 import { ACTION } from './types';
 
-
 // Return either online or offline projects
 const projectSelector = (selector, projects) => {
     const selection = [];
@@ -79,13 +78,20 @@ export const handleSave = (proj) => async(dispatch) => {
   const newHtml = proj.html;
   const newCss = proj.css;
   const newJs = proj.js;
+  const newTitle = proj.title;
   const projectid = proj.projectid;
   let htmlUrl = `/save-html?projectid=${projectid}&html=${newHtml}`;
   let cssUrl = `/save-css?projectid=${projectid}&html=${newCss}`;
   let jsUrl = `/save-js?projectid=${projectid}&html=${newJs}`;
+  let titleUrl = `/update-title?projectid=${projectid}&title=${newTitle}`;
   await axios.get(htmlUrl);
+  console.log("Saved html successfully");
   await axios.get(cssUrl);
+  console.log("Saved css successfully");
   await axios.get(jsUrl);
+  console.log("Saved js successfully");
+  await axios.get(titleUrl);
+  console.log("Saved title successfully");
 }
 
 // On project deselection
@@ -141,7 +147,6 @@ export const updateProjectSelection = (info) => async(dispatch) => {
   } else {
     let url = `/deselect?username=${username}&projectid=${projectid}`;
     await axios.get(url);
-    console.log("Successfully deselected from backend");
     return;
   }
 }
@@ -195,7 +200,8 @@ export const createProject = (details) => async(dispatch) => {
   const partner = details.collaborator;
   const title = details.title;
   let url = `/create?username=${username}&partner=${partner}&title=${title}`;
-  await axios.post(url);
+  const response = await axios.post(url);
+  dispatch({ type: ACTION.CREATE_PROJECT, payload: response.data });
   dispatch(loadProjects(username));
 };
 
@@ -231,3 +237,18 @@ export const loadProjects = (username) => async(dispatch) => {
     }
 };
 
+// Load projects that are online or offline
+export const loadInitialProjects = (username) => async(dispatch) => {
+    if (username !== '') {
+        // Load projects from backend
+        let url = `/load?username=${username}`;
+        const response = await axios.get(url);
+        dispatch({ 
+		type: ACTION.LOAD_INIT_PROJECTS, 
+		payload: { 
+			onlineProjects: projectSelector(true, response.data), 
+			offlineProjects: projectSelector(false, response.data) 
+		}
+	});
+    }
+};

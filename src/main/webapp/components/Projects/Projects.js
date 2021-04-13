@@ -102,29 +102,30 @@ const Projects = ({ history }) => {
 	  user.username]);
 
   // this displays the connection dialog for the user to confirm they want to send the invite
-  const continueProject = (projectid, title, collaborator, cname, html, css, 
-	  js) => {
+  const continueProject = (projectid, title, collaborator, collaboratorName, 
+	  html, css, js) => {
     if (isOnline(collaborator)) {
       setFromProject(true);
       setOpenConnectionDialog(true);
       setCurrentConnection({
-        name: cname, 
+        name: collaboratorName, 
         username: collaborator
       });
       dispatch(updateProjectSelection({ username: user.username, 
 	    projectid: projectid, isSelecting: true })); 
-      console.log("UPDATE PROJECT SUCCESSFUL")
-      dispatch(chooseProject({ projectid: projectid, activeCollaborator: collaborator,
-      collaboratorName: cname, html: html, css: css, js: js, title: title }));
-      console.log("CHOOSE PROJECT SUCCESSFUL")
+      dispatch(chooseProject({ projectid: projectid, 
+	      activeCollaborator: collaborator, collaboratorName: collaboratorName, 
+	      html: html, css: css, js: js, title: title }));
       setConnectionAlert(
-        `Waiting for ${cname} to select ${title} to continue working on project...`
+        `Waiting for ${collaboratorName} to select ${title} 
+	      to continue working on project...`
         );
 
     } else {
       setOpenAlertDialog(true);
       setAlertWarning(
-        `${cname} is currently offline. You can only edit this project when you are both online.`
+        `${collaboratorName} is currently offline. You can only edit 
+	      this project when you are both online.`
       );
     }
   }
@@ -144,14 +145,14 @@ const Projects = ({ history }) => {
   }
 
   // this is called when the user tries to connect with a recent user
-  const onRecentUserClick = (collaborator, cname, isActive) => {
+  const onRecentUserClick = (collaborator, collaboratorName, isActive) => {
     if (isActive) {
-      onActiveUserClick(cname, collaborator);
+      onActiveUserClick(collaboratorName, collaborator);
       return;
     }
     setOpenAlertDialog(true);
     setAlertWarning(
-      `${cname} is currently offline. You can only collaborate on new projects with active users.`
+      `${collaboratorName} is currently offline. You can only collaborate on new projects with active users.`
     );
   }
 
@@ -245,7 +246,7 @@ const Projects = ({ history }) => {
       <ProjectCard
         key={project.projectid}
         title={project.title}
-        cname={project.collaboratorName}
+        collaboratorName={project.collaboratorName}
         downloadProject={() => downloadProject(project.projectid)}
         continueProject={() => continueProject(
           project.projectid, project.title, project.collaborator, 
@@ -355,7 +356,7 @@ const Projects = ({ history }) => {
       
       {openConnectionDialog && (
         <ConnectionDialog
-          cname={currentConnection.name}
+          collaboratorName={currentConnection.name}
           collaborator={currentConnection.username}
           isOpen={openConnectionDialog}
           closeDialog={() => closeConnectionDialog(fromProject)}

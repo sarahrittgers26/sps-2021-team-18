@@ -68,6 +68,12 @@ public class CreateProjectServlet extends HttpServlet {
 					.build();
 			 datastore.put(project);	
 		 }
+
+		 Gson gson = new Gson();	
+
+		 // Return project objects to frontend
+		 response.setContentType("application/json");
+		 response.getWriter().println(gson.toJson(projectid));
 	}
 
 	// Check if user with specified field exists
