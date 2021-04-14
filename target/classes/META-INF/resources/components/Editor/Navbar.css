@@ -1,0 +1,44 @@
+.Navbar_container {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--pane_background);
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 16px 16px 0 16px;
+  width: 100%;
+}
+
+.Navbar_title_container {
+  flex-grow: 1;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.Navbar_title {
+  border: 1px solid rgb(145, 145, 145);
+  border-radius: 8px;
+  text-decoration: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  outline: none;
+  color: white;
+  padding: 12px;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.Navbar_user_icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  background-color: white;
+  position: relative;
+  display: flex;
+  cursor: pointer;
+}
+
