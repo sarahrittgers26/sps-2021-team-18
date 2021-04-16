@@ -8,14 +8,6 @@ const Auth = ({ history }) => {
   // Dispatch for react-redux store
   const dispatch = useDispatch();
 
-  // Local state control of displaying sign-in or sign-up info
-  const [mainVisible, setMainVisible] = useState(true);
-  const [mainDirection, setMainDirection] = useState('left');
-  const [signUpVisible, setSignUpVisible] = useState(false);
-  const [signUpDirection, setSignUpDirection] = useState('left');
-  const [signInVisible, setSignInVisible] = useState(false);
-  const [signInDirection, setSignInDirection] = useState('left');
-
   // Store user's information in React state
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState(false);
