@@ -1,13 +1,13 @@
 package com.google.sps.data;
 
-public final class FormattedUser {
+public class FormattedUser {
 	private final String username;
 	private final String name;
 	private final boolean isActive;
 	private final boolean isContact;
-	private final int avatar;
+	private final String avatar;
 
-	public FormattedUser(String username, String name, boolean isActive, boolean isContact, int avatar) {
+	public FormattedUser(String username, String name, boolean isActive, boolean isContact, String avatar) {
 		this.username = username;
 		this.name = name;
 		this.isActive = isActive;

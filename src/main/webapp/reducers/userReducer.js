@@ -6,18 +6,17 @@ const initialState = {
   email: '',
   name: '',
   isVisible: true,
-  avatar: 0,
+  avatar: "0",
 }
 
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
 	  case ACTION.SIGN_IN:
       return { ...state, isSignedIn: true, username: action.payload.username, 
-	      email: action.payload.email, name: action.payload.name, 
-      		appearingOnline: action.payload.appearingOnline, avatar: action.payload.avatar };
+	      email: action.payload.email, name: action.payload.name, avatar: action.payload.avatar, isVisible: action.payload.isVisible};
     case ACTION.SIGN_OUT:
       return { ...state, isSignedIn: false, username: '', email: '', 
-	      activeProject: '', appearingOnline: true, avatar: 0 };
+	      activeProject: '',  avatar: "0" };
     case ACTION.CHANGE_VISIBILITY:
       return { ...state, isVisible: action.payload };
     case ACTION.CHANGE_NAME:

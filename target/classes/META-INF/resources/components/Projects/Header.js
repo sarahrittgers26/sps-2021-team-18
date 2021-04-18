@@ -26,28 +26,28 @@ const Header = (props) => {
 
   const addAvatar = () => {
     switch (avatar) {
-      case 1:
+      case "1":
         return Icon_1;
 
-      case 2:
+      case "2":
         return Icon_2;
 
-      case 3:
+      case "3":
         return Icon_3;
 
-      case 4:
+      case "4":
         return Icon_4;
 
-      case 5:
+      case "5":
         return Icon_5;
 
-      case 6:
+      case "6":
         return Icon_6;
 
-      case 7:
+      case "7":
         return Icon_7;
 
-      case 8:
+      case "8":
         return Icon_8;
       
       default:
@@ -70,6 +70,7 @@ const Header = (props) => {
         decline={() => decline(notification)}/>
      ));
   }
+
 
   useEffect(() => {
     displayNotifications ? notificationsRef.current.style.display = "flex" : notificationsRef.current.style.display = "none";
@@ -127,7 +128,7 @@ const Header = (props) => {
         <div className="Header_user_icon" 
           ref={userIconRef} 
           onClick={() => setDisplayMenu(prevState => !prevState)}>
-          {avatar !== 0 ?
+          {avatar !== "0" ?
             (<img src={addAvatar()} className="current_icon" alt="Current avatar"/>) : 
             (<AccountCircleIcon style = {{fontSize: 40}} />)}
         </div>

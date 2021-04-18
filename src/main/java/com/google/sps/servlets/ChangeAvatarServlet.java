@@ -34,7 +34,7 @@ public class ChangeAvatarServlet extends HttpServlet {
     Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
     Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
-    Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("avatar", Integer.parseInt(avatar)).build();
+    Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("avatar", avatar).build();
     datastore.update(loggedInUser);
   }
 }

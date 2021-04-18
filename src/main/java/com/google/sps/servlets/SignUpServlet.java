@@ -57,7 +57,7 @@ public class SignUpServlet extends HttpServlet {
 			String newLogin = now.format(formatter);
 			Key userKey = datastore.newKeyFactory().setKind("User").newKey(username);
 			FullEntity user = Entity.newBuilder(userKey).set("username", username).set("password", password)
-					.set("email", email).set("lastActive", newLogin).set("name", name).set("isVisible", true).set("avatar", 0)
+					.set("email", email).set("lastActive", newLogin).set("name", name).set("isVisible", true).set("avatar", "0")
 					.build();
 			datastore.put(user);
 		}

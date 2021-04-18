@@ -30,11 +30,10 @@ public class ChangeVisibilityServlet extends HttpServlet {
 		// Get the username from user
 		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		String visibility = Jsoup.clean(request.getParameter("visibility"), Whitelist.none());
-
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
-		Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-				.set("isVisible", (visibility == "true") ? true : false).build();
+		boolean isVisible = (visibility.equals("true")) ? true : false;
+		Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("isVisible", isVisible).build();
 		datastore.update(loggedInUser);
 	}
 }

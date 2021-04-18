@@ -76,7 +76,7 @@ public class GetUsersServlet extends HttpServlet {
 			// Get display name, email and lastActive
 			String name = user.getString("name");
 			String lastActive = user.getString("lastActive");
-			int avatar = (int) user.getLong("avatar");
+			String avatar = user.getString("avatar");
 
 			// Determine if user is active
 			boolean isActive = userIsActive(lastActive);
@@ -94,7 +94,7 @@ public class GetUsersServlet extends HttpServlet {
 
 			// Get display name, email and lastActive
 			String name = user.getString("name");
-			int avatar = (int) user.getLong("avatar");
+			String avatar = user.getString("avatar");
 			users.add(new FormattedUser(appUser, name, true, false, avatar));
 		}
 

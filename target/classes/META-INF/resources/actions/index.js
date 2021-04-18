@@ -45,6 +45,7 @@ const userSelector = (wantContact, users) => {
 
 // On sign in
 export const signIn = (user) => {
+    console.log(user);
     return {
         type: ACTION.SIGN_IN,
         payload: user

@@ -266,9 +266,10 @@ const Projects = ({ history }) => {
 
   // decline when a user sends collaboration request
   const declineCollaboration = (notification) => {
-    console.log("Declining");
-    const index = notifications.indexOf(notification);
-    notifications.splice(index, 1);
+    const updated = notifications.filter(notif => {
+      return notif !== notification
+    })
+    setNotifications(updated);
   }
 
   useEffect(() => {

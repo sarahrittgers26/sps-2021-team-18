@@ -42,7 +42,7 @@ public class SignInServlet extends HttpServlet {
 		String userEmail = getStringField(username, password, datastore, "email");
 		String name = getStringField(username, password, datastore, "name");
 		String isVisible = getBooleanField(username, password, datastore, "isVisible") ? "true" : "false";
-		String avatar = getLongField(username, password, datastore, "avatar") + "";
+		String avatar = getStringField(username, password, datastore, "avatar");
 
 		// If user exists than userEmail should be an address otherwise empty
 		String userExists = !userEmail.isEmpty() ? "true" : "false";
@@ -89,39 +89,6 @@ public class SignInServlet extends HttpServlet {
 			datastore.update(loggedInUser);
 		}
 
-		return fieldValue;
-	}
-
-	private int getLongField(String username, String password, Datastore datastore, String field)
-			throws DatastoreException {
-		// Field will remain empty string if user does not exist
-		int fieldValue = 0;
-
-		// Check if username/password combination is correct
-		Query<Entity> usernameQuery = Query.newEntityQueryBuilder().setKind("User")
-				.setFilter(
-						CompositeFilter.and(PropertyFilter.eq("username", username), PropertyFilter.eq("password", password)))
-				.build();
-
-		// Run query and retrieve user from datastore
-		QueryResults<Entity> users = datastore.run(usernameQuery);
-
-		if (users.hasNext()) {
-			Entity user = users.next();
-			KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
-
-			// Get user's string field
-			fieldValue = (int) user.getLong(field);
-
-			// Log last login time as current time
-			LocalDateTime now = LocalDateTime.now();
-			DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-			String login = now.format(formatter);
-
-			Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
-			Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("lastActive", login).build();
-			datastore.update(loggedInUser);
-		}
 		return fieldValue;
 	}
 

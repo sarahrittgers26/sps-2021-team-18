@@ -186,8 +186,7 @@ const Auth = ({ history }) => {
       }
       if (usernameExists || emailExists) return;
       dispatch(signIn({
-        username: username, email: email, name: name,
-        appearingOnline: true, avatar: 0
+        username: username, email: email, name: name, avatar: "0"
       }));
       dispatch(loadUsers(username));
       dispatch(loadInitialProjects(username));
@@ -217,6 +216,8 @@ const Auth = ({ history }) => {
       if (response.status === 200) {
         // Direct user to next page
         const errorAndInfo = response.data;
+        console.log(errorAndInfo);
+
         const userExists = errorAndInfo[0] === 'true' ? true : false;
         if (!userExists) {
           setUsernameError(true);
@@ -224,10 +225,10 @@ const Auth = ({ history }) => {
           setPasswordError(true);
           setPasswordErrorMsg('Username or password entered incorrectly');
         } else {
-          const appearingOnline = errorAndInfo[3] === 'true' ? true : false;
+          const isVisible = errorAndInfo[3] === 'true' ? true : false;
           dispatch(signIn({
             username: username, email: errorAndInfo[1],
-            name: errorAndInfo[2], appearingOnline: appearingOnline, avatar: parseInt(errorAndInfo[4])
+            name: errorAndInfo[2], isVisible: isVisible, avatar: errorAndInfo[4]
           }));
           dispatch(loadUsers(username));
           dispatch(loadInitialProjects(username));
