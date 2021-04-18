@@ -166,6 +166,18 @@ export const changeName = (change) => async(dispatch) => {
     })
 };
 
+// On avatar change
+export const changeAvatar = (change) => async(dispatch) => {
+    const username = change.username;
+    const avatar = change.name;
+    let url = `/change-avatar?username=${username}&avatar=${avatar}`;
+    await axios.get(url);
+    dispatch({
+        type: ACTION.CHANGE_AVATAR,
+        payload: avatar
+    })
+};
+
 // On password change
 export const changePassword = (change) => async(dispatch) => {
     const username = change.username;

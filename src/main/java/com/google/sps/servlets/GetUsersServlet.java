@@ -76,10 +76,11 @@ public class GetUsersServlet extends HttpServlet {
 			// Get display name, email and lastActive
 			String name = user.getString("name");
 			String lastActive = user.getString("lastActive");
+			int avatar = (int) user.getLong("avatar");
 
 			// Determine if user is active
 			boolean isActive = userIsActive(lastActive);
-			users.add(new FormattedUser(partner, name, isActive, true));
+			users.add(new FormattedUser(partner, name, isActive, true, avatar));
 		}
 
 		for (String appUser : nonCollaborators) {
@@ -93,7 +94,8 @@ public class GetUsersServlet extends HttpServlet {
 
 			// Get display name, email and lastActive
 			String name = user.getString("name");
-			users.add(new FormattedUser(appUser, name, true, false));
+			int avatar = (int) user.getLong("avatar");
+			users.add(new FormattedUser(appUser, name, true, false, avatar));
 		}
 
 		return users.toArray(new FormattedUser[users.size()]);

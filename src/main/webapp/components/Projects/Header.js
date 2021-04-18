@@ -4,17 +4,56 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Notification from './Notification.js';
-
+import Icon_1 from "../../images/avatar-1.png";
+import Icon_2 from "../../images/avatar-2.png";
+import Icon_3 from "../../images/avatar-3.png";
+import Icon_4 from "../../images/avatar-4.png";
+import Icon_5 from "../../images/avatar-5.png";
+import Icon_6 from "../../images/avatar-6.png";
+import Icon_7 from "../../images/avatar-7.png";
+import Icon_8 from "../../images/avatar-8.png";
 
 
 const Header = (props) => {
-  const { name, email, handleLogout, displayProfile, notifications } = props;
+  const { name, email, handleLogout, displayProfile, notifications, avatar } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
   const notificationsRef = useRef();
   const userIconRef = useRef();
   const notificationIconRef = useRef();
+
+
+  const addAvatar = () => {
+    switch (avatar) {
+      case 1:
+        return Icon_1;
+
+      case 2:
+        return Icon_2;
+
+      case 3:
+        return Icon_3;
+
+      case 4:
+        return Icon_4;
+
+      case 5:
+        return Icon_5;
+
+      case 6:
+        return Icon_6;
+
+      case 7:
+        return Icon_7;
+
+      case 8:
+        return Icon_8;
+      
+      default:
+        return;
+    }   
+  } 
 
 
   const handleClick = callback => {
@@ -85,6 +124,9 @@ const Header = (props) => {
         <div className="Header_user_icon" 
           ref={userIconRef} 
           onClick={() => setDisplayMenu(prevState => !prevState)}>
+          {avatar !== 0 ?
+            (<img src={addAvatar()} className="current_icon" alt="Current avatar"/>) : 
+            (<AccountCircleIcon style = {{fontSize: 40}} />)}
         </div>
 
         <div className="Header_notifications menu" ref={notificationsRef}>

@@ -42,10 +42,12 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: white;
+  color: white;
   position: relative;
   display: flex;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
 }
 
 .Header_notifications_icon {

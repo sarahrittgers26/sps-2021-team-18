@@ -6,6 +6,7 @@ const initialState = {
   email: '',
   name: '',
   isVisible: true,
+  avatar: 0,
 }
 
 export const userReducer = (state = initialState, action) => {
@@ -21,6 +22,8 @@ export const userReducer = (state = initialState, action) => {
       return { ...state, isVisible: action.payload };
     case ACTION.CHANGE_NAME:
       return { ...state, name: action.payload };
+      case ACTION.CHANGE_AVATAR:
+        return { ...state, avatar: action.payload };
     default:
       return state;
   }

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import './ProfileDialog.css'
 import Icon_1 from "../../images/avatar-1.png";
 import Icon_2 from "../../images/avatar-2.png";
@@ -11,10 +12,11 @@ import Icon_7 from "../../images/avatar-7.png";
 import Icon_8 from "../../images/avatar-8.png";
 
 const ProfileDialog = (props) => {
-  const { isOpen, name, currentOnlineStatus, closeDialog, saveProfile } = props;
+  const { isOpen, name, currentOnlineStatus, closeDialog, saveProfile, avatar } = props;
   const [updatedName, setUpdatedName] = useState(name);
   const [updatedPassword, setUpdatedPassword] = useState("");
   const [showOnlineStatus, setShowOnlineStatus] = useState(currentOnlineStatus);
+  const [selectedAvatar, setSelectedAvatar] = useState(avatar);
 
   const updateName = elt => {
     setUpdatedName(elt.target.value)
@@ -23,6 +25,37 @@ const ProfileDialog = (props) => {
   const updatePassword = elt => {
     setUpdatedPassword(elt.target.value)
   }
+
+  const changeAvatar = (avatar) => {
+    switch (avatar) {
+      case 1:
+        return Icon_1;
+
+      case 2:
+        return Icon_2;
+
+      case 3:
+        return Icon_3;
+
+      case 4:
+        return Icon_4;
+
+      case 5:
+        return Icon_5;
+
+      case 6:
+        return Icon_6;
+
+      case 7:
+        return Icon_7;
+
+      case 8:
+        return Icon_8;
+      
+      default:
+        return;
+    }   
+  } 
 
   return (
     <Dialog open={isOpen}>
@@ -35,19 +68,22 @@ const ProfileDialog = (props) => {
 
           <div className="Update_profile_pic">
             <div className="Profile_current">
+              {selectedAvatar !== 0 ? 
+                (<img src={changeAvatar(selectedAvatar)} className="current_icon" alt="Current avatar"/>) : 
+                (<AccountCircleIcon style={{fontSize: 90}}/>)}
             </div>
 
             <div className="Profile_new">    
               <span>Select new avatar</span>
               <div className="profile_icons">              
-                <img src={Icon_1} className="new_icon" alt="Icon Option 1"/>     
-                <img src={Icon_2} className="new_icon" alt="Icon Option 2"/> 
-                <img src={Icon_3} className="new_icon" alt="Icon Option 3"/> 
-                <img src={Icon_4} className="new_icon" alt="Icon Option 4"/> 
-                <img src={Icon_5} className="new_icon" alt="Icon Option 5"/> 
-                <img src={Icon_6} className="new_icon" alt="Icon Option 6"/> 
-                <img src={Icon_7} className="new_icon" alt="Icon Option 7"/> 
-                <img src={Icon_8} className="new_icon" alt="Icon Option 8s"/>          
+                <img src={Icon_1} className="new_icon" alt="Icon Option 1" onClick={() => setSelectedAvatar(1)}/>     
+                <img src={Icon_2} className="new_icon" alt="Icon Option 2" onClick={() => setSelectedAvatar(2)}/> 
+                <img src={Icon_3} className="new_icon" alt="Icon Option 3" onClick={() => setSelectedAvatar(3)}/> 
+                <img src={Icon_4} className="new_icon" alt="Icon Option 4" onClick={() => setSelectedAvatar(4)}/> 
+                <img src={Icon_5} className="new_icon" alt="Icon Option 5" onClick={() => setSelectedAvatar(5)}/> 
+                <img src={Icon_6} className="new_icon" alt="Icon Option 6" onClick={() => setSelectedAvatar(6)}/> 
+                <img src={Icon_7} className="new_icon" alt="Icon Option 7" onClick={() => setSelectedAvatar(7)}/> 
+                <img src={Icon_8} className="new_icon" alt="Icon Option 8" onClick={() => setSelectedAvatar(8)}/>          
               </div>
               
             </div>
@@ -106,7 +142,7 @@ const ProfileDialog = (props) => {
             <button className="ProfileDialog_button left" onClick={closeDialog}>CLOSE</button>
             <button 
               className="ProfileDialog_button right" 
-              onClick={() => saveProfile(updatedName, updatedPassword, showOnlineStatus)}>SAVE</button>
+              onClick={() => saveProfile(updatedName, updatedPassword, showOnlineStatus, selectedAvatar)}>SAVE</button>
           </div>
         </div>
       </DialogContent>

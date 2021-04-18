@@ -1,0 +1,4 @@
+com/google/sps/data/Project.class
+com/google/sps/servlets/UpdateTitleServlet.class
+com/google/sps/ServerMain.class
+com/google/sps/data/FormattedProject.class

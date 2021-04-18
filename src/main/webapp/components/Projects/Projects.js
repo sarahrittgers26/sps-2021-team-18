@@ -11,7 +11,7 @@ import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut,
  changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection,
-  loadProjects, clearProject } from '../../actions';
+  loadProjects, clearProject, changeAvatar } from '../../actions';
 
 const Projects = ({ history }) => {
   // Get user from store
@@ -204,9 +204,13 @@ const Projects = ({ history }) => {
   }
 
   // when the user clicks save after editing Profile
-  const saveProfile = (name, password, isVisible) => {
+  const saveProfile = (name, password, isVisible, avatar) => {
     if (user.name !== name) {
       dispatch(changeName({ username: user.username, name: name }));
+    }
+
+    if (user.avatar !== avatar) {
+      dispatch(changeAvatar({ username: user.username, avatar: avatar }));
     }
     
     if (user.isVisible !== isVisible) {
@@ -301,7 +305,8 @@ const Projects = ({ history }) => {
         email={user.email}
         handleLogout={handleLogout}
         displayProfile={displayProfile}
-        notifications={notifications}/>
+        notifications={notifications}
+        avatar={user.avatar}/>
 
       
       <div className="Projects_main">
@@ -376,7 +381,8 @@ const Projects = ({ history }) => {
           name={user.name} 
           currentOnlineStatus={user.isVisible}
           closeDialog={() => setOpenProfileDialog(false)}
-          saveProfile={saveProfile}/>
+          saveProfile={saveProfile}
+          avatar={user.avatar}/>
       )}
       
     </div>
