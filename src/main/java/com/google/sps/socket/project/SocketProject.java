@@ -2,28 +2,36 @@ package com.google.sps.project;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SocketProject implements Serializable {
-    private String projectid;
+    private Set<String> projects;
+    private String username;
 
     public SocketProject() {
     }
 
-    public SocketProject(String projectid) {
-        this.projectid = projectid;
+    public SocketProject(String username) {
+	projects = new HashSet<>();
+        this.username = username;
     }
 
-    public String getProjectId() {
-        return this.projectid;
+    public void addProjectId(String projectid) {
+	projects.add(projectid);
     }
 
-    public void setProjectId(String projectid) {
-        this.projectid = projectid;
+    public boolean checkProjectId(String projectid) {
+        return projects.contains(projectid);
+    }
+
+    public String getUsername() {
+	return username;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(projectid);
+        return Objects.hash(projects);
     }
 
     @Override
@@ -33,6 +41,7 @@ public class SocketProject implements Serializable {
 
         SocketProject other = (SocketProject) o;
 
-        return Objects.equals(this.projectid, other.projectid);
+        return Objects.equals(this.username, other.getUsername());
+
     }
 }

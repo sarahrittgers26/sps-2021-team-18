@@ -7,24 +7,24 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Message implements Serializable{
 
-    private String projectid;
+    private String id;
     private String type;
     private String data;
 
-    public String getProjectId() {
-        return projectid;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setProjectId(String projectid) {
-        this.projectid = projectid;
-    }
-
-    public String getType() {
-        return type;
+    public String getId() {
+        return id;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public void setData(String data) {

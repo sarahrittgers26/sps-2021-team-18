@@ -48,6 +48,8 @@ public class SignInServlet extends HttpServlet {
 	        String isVisible = getBooleanField(username, password, datastore, 
 				"isVisible") ? "true" : "false";
 
+	        String avatar = getStringField(username, password, datastore, "avatar");
+
 		// If user exists than userEmail should be an address otherwise empty	 
 		String userExists = !userEmail.isEmpty() ? "true" : "false";
 		 
@@ -55,7 +57,7 @@ public class SignInServlet extends HttpServlet {
 
 		// Store error and user email in array to send in response
 		String[] errorAndInfo = new String[] {userExists, userEmail, name,
-		 isVisible};
+		 isVisible, avatar};
 
 		// Let frontend know whether there were errors adding user to datastore
 		response.setContentType("application/json");

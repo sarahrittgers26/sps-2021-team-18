@@ -51,12 +51,7 @@ public class EditorServer extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
         // When connection is closed, remove the project.
-        /*try {
-            //removeProject(conn);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }*/
-
+        //projects.remove(conn)
         logger.info("Connection closed to: " + conn.getRemoteSocketAddress().getHostString());
         System.out.println("Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
     }
@@ -69,15 +64,30 @@ public class EditorServer extends WebSocketServer {
 
             switch (msg.getType()) {
                 case "LOAD_INIT_PROJECTS":
-                    addProject(new SocketProject(msg.getProjectId()), conn);
+                    addProject(msg.getType(), msg.getId(), conn);
 		    break;
-                case "SEND_TEXT":
+                case "SIGN_IN":
+                    addProject(msg.getType(), msg.getId(), conn);
+		    break;
+                case "PING_USER":
+                    pingUser(msg);
+		    break;
+                case "SEND_HTML":
                     broadcastMessage(msg);
+		    break;
+                case "SEND_CSS":
+                    broadcastMessage(msg);
+		    break;
+                case "SEND_JS":
+                    broadcastMessage(msg);
+		    break;
+                case "SEND_TITLE":
+                    broadcastMessage(msg);
+		    break;
             }
 
-            System.out.println("Message from: " + msg.getProjectId() + ", text: " 
-			    + msg.getData() + ", type:" + msg.getType());
-            logger.info("Message from project: " + msg.getProjectId() + ", text: " + msg.getData());
+	    System.out.println("From " + msg.getType() + ": " + msg.getId() + ": " + msg.getData());
+            logger.info("Message from project: " + msg.getId() + ", text: " + msg.getData());
         } catch (IOException e) {
             logger.error("Wrong message format.");
             // return error message to project
@@ -99,11 +109,11 @@ public class EditorServer extends WebSocketServer {
         ObjectMapper mapper = new ObjectMapper();
         try {
 	    String messageJson = mapper.writeValueAsString(msg);
-	    String projectid = msg.getProjectId();
+	    String projectid = msg.getId();
             for (Map.Entry<WebSocket, SocketProject> entry: projects.entrySet()) {
-                if (entry.getValue().getProjectId().equals(projectid)) {
-			entry.getKey().send(messageJson);
-			break;
+                if (entry.getValue().checkProjectId(projectid)) {
+		    entry.getKey().send(messageJson);
+		    System.out.println(msg.getType() + ": " + msg.getId() + ": " + msg.getData());
 		}
             }
         } catch (JsonProcessingException e) {
@@ -111,23 +121,33 @@ public class EditorServer extends WebSocketServer {
         }
     }
 
-    private void addProject(SocketProject project, WebSocket conn) throws JsonProcessingException {
-        projects.put(conn, project);
+    private void pingUser(Message msg) {
+	ObjectMapper mapper = new ObjectMapper();
+	try {
+	    String messageJson = mapper.writeValueAsString(msg);
+	    String username = msg.getId();
+            for (Map.Entry<WebSocket, SocketProject> entry: projects.entrySet()) {
+                if (entry.getValue().getUsername().equals(username)) {
+		    entry.getKey().send(messageJson);
+		    break;
+		}
+            }
+	} catch (JsonProcessingException e) {
+	    logger.error("Cannot convert message to json.");
+	}
+    }
+
+    private void addProject(String type, String id, WebSocket conn) throws JsonProcessingException {
+	    if (type.equals("SIGN_IN")) {
+		projects.put(conn, new SocketProject(id));
+	    } else {
+		SocketProject usersProject = projects.get(conn);
+		usersProject.addProjectId(id);
+	    }
     }
 
     private void removeProject(WebSocket conn) throws JsonProcessingException {
         projects.remove(conn);
     }
     
-    public static void main(String[] args) {
-        int port = 9000;
-        /*try {
-            port = Integer.parseInt(System.getenv("PORT"));
-        } catch (NumberFormatException nfe) {
-            port = 9000;
-        }*/
-        WebSocketServer editorSocket = new EditorServer(port);
-	editorSocket.start();
-	System.out.println("Socket backend started on port: " + port);
-    }
 }

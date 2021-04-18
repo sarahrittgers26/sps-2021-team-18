@@ -8,15 +8,17 @@ public final class User {
 	private final LocalDateTime lastActive;
 	private final boolean isVisible;
 	private final String name;
+	private final String avatar;
 
 	public User(String username, String password, String email, 
 			LocalDateTime lastActive, String name,
-			boolean isVisible) {
+			boolean isVisible, String avatar) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.lastActive = lastActive;
 		this.name = name;
 		this.isVisible = isVisible;
+		this.avatar = avatar;
 	}
 }
