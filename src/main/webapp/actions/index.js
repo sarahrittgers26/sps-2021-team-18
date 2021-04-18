@@ -1,4 +1,5 @@
 import axios from '../components/Api/Api';
+import SocketSingleton from '../middleware/socketMiddleware';
 import { ACTION } from './types';
 
 // Return either online or offline projects
@@ -197,6 +198,33 @@ export const updateTitle = (title) => {
     }
 };
 
+export const htmlReceived = (html) => {
+  return {
+    type: ACTION.REC_HTML,
+    payload: html
+  }
+};
+
+export const cssReceived = (css) => {
+  return {
+    type: ACTION.REC_CSS,
+    payload: css
+  }
+};
+
+export const jsReceived = (js) => {
+  return {
+    type: ACTION.REC_JS,
+    payload: js
+  }
+};
+
+export const titleReceived = (title) => {
+  return {
+    type: ACTION.REC_TITLE,
+    payload: title
+  }
+};
 
 // Create project with user
 export const createProject = (details) => async(dispatch) => {
@@ -205,7 +233,15 @@ export const createProject = (details) => async(dispatch) => {
   const title = details.title;
   let url = `/create?username=${username}&partner=${partner}&title=${title}`;
   const response = await axios.post(url);
-  dispatch({ type: ACTION.CREATE_PROJECT, payload: response.data });
+  let projectid = response.data;
+  const newPaneIDS = [`${projectid}-html`,`${projectid}-css`,`${projectid}-js`,
+  `${projectid}-title`]
+  const socket = SocketSingleton.getInstance();
+  newPaneIDS.forEach(paneID => {
+    let messageDto = JSON.stringify({ projectid: paneID, 
+	type: ACTION.LOAD_INIT_PROJECTS, data: "" })
+    socket.send(messageDto);
+  });
   dispatch(loadProjects(username));
 };
 
