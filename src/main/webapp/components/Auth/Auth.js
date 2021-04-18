@@ -201,7 +201,6 @@ const Auth = ({ history }) => {
       if (response.status === 200) {
         // Direct user to next page
 	const errorAndInfo = response.data;
-	console.log(errorAndInfo);
 	const userExists = errorAndInfo[0] === 'true' ? true : false;
 	if (!userExists) {
 	  setUsernameError(true);
@@ -258,15 +257,15 @@ const Auth = ({ history }) => {
    // Render signup modal with input fields for user
   const renderSignUp = () => {
     return (
-        <div container spacing={1} justify="center" alignItems="center">
-          <div item >
+        <div spacing={1} justify="center">
+          <div>
             <button onClick={showMain}>
             </button>
             <span>
               Sign Up
             </span>
           </div>
-          <div item  className="grid-textfield">
+          <div className="grid-textfield">
             <textarea
               id="name"
               label="Name"

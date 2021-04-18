@@ -169,7 +169,6 @@ const Projects = ({ history }) => {
   
   // when the user want to log out
   const handleLogout = () => {
-    let socket = SocketSingleton.getInstance();
     dispatch(signOut());
     dispatch(clearReducer());
     socket.onclose = () => {

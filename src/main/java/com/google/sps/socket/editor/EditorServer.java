@@ -44,7 +44,7 @@ public class EditorServer extends WebSocketServer {
         conns.add(webSocket);
 
         logger.info("Connection established from: " + webSocket.getRemoteSocketAddress().getHostString());
-        System.out.println("New connection from " + webSocket.getRemoteSocketAddress().getAddress().getHostAddress());
+        System.out.println("New connection from " + webSocket.getRemoteSocketAddress());
     }
 
     @OnClose
@@ -53,7 +53,7 @@ public class EditorServer extends WebSocketServer {
         // When connection is closed, remove the project.
         //projects.remove(conn)
         logger.info("Connection closed to: " + conn.getRemoteSocketAddress().getHostString());
-        System.out.println("Closed connection to " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        System.out.println("Closed connection to " + conn.getRemoteSocketAddress());
     }
 
     @OnMessage
@@ -101,7 +101,7 @@ public class EditorServer extends WebSocketServer {
             conns.remove(conn);
         }
         assert conn != null;
-        System.out.println("ERROR from " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
+        System.out.println("ERROR from " + conn.getRemoteSocketAddress());
 	ex.printStackTrace();
     }
 
@@ -113,6 +113,7 @@ public class EditorServer extends WebSocketServer {
             for (Map.Entry<WebSocket, SocketProject> entry: projects.entrySet()) {
                 if (entry.getValue().checkProjectId(projectid)) {
 		    entry.getKey().send(messageJson);
+		    System.out.println(entry.getKey().getRemoteSocketAddress());
 		    System.out.println(msg.getType() + ": " + msg.getId() + ": " + msg.getData());
 		}
             }
