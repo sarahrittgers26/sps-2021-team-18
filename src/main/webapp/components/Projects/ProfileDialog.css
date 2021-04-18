@@ -155,3 +155,61 @@
 .Profile_toggle_input:checked ~ .Profile_toggle_fill::after {
   transform: translateX(calc(var(--height)));
 }
+
+.Update_profile_pic {
+  width: 100%;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgb(226, 226, 226);
+}
+
+.Profile_current {
+  width: 80px;
+  height: 80px;
+  background-color: gray;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.Profile_new {
+  margin-left: 32px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+}
+
+.Profile_new span {
+  font-size: 1.1em;
+  color: gray;
+  width: 100%;
+  display: inline-block;
+  text-align: start;
+  padding-bottom: 16px;
+}
+
+.profile_icons {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  width: 100%;
+  justify-items: center;
+  align-items: center;
+  grid-auto-flow: column;
+}
+
+.new_icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.new_icon:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}

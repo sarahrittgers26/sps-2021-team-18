@@ -5,6 +5,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Notification from './Notification.js';
 
+
+
 const Header = (props) => {
   const { name, email, handleLogout, displayProfile, notifications } = props;
   const [displayMenu, setDisplayMenu] = useState(false);

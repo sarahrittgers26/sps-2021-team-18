@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
 import './ProfileDialog.css'
+import Icon_1 from "../../images/avatar-1.png";
+import Icon_2 from "../../images/avatar-2.png";
+import Icon_3 from "../../images/avatar-3.png";
+import Icon_4 from "../../images/avatar-4.png";
+import Icon_5 from "../../images/avatar-5.png";
+import Icon_6 from "../../images/avatar-6.png";
+import Icon_7 from "../../images/avatar-7.png";
+import Icon_8 from "../../images/avatar-8.png";
 
 const ProfileDialog = (props) => {
   const { isOpen, name, currentOnlineStatus, closeDialog, saveProfile } = props;
@@ -24,6 +32,26 @@ const ProfileDialog = (props) => {
           <span className="ProfileDialog_header">
             Profile information
           </span>
+
+          <div className="Update_profile_pic">
+            <div className="Profile_current">
+            </div>
+
+            <div className="Profile_new">    
+              <span>Select new avatar</span>
+              <div className="profile_icons">              
+                <img src={Icon_1} className="new_icon" alt="Icon Option 1"/>     
+                <img src={Icon_2} className="new_icon" alt="Icon Option 2"/> 
+                <img src={Icon_3} className="new_icon" alt="Icon Option 3"/> 
+                <img src={Icon_4} className="new_icon" alt="Icon Option 4"/> 
+                <img src={Icon_5} className="new_icon" alt="Icon Option 5"/> 
+                <img src={Icon_6} className="new_icon" alt="Icon Option 6"/> 
+                <img src={Icon_7} className="new_icon" alt="Icon Option 7"/> 
+                <img src={Icon_8} className="new_icon" alt="Icon Option 8s"/>          
+              </div>
+              
+            </div>
+          </div>
 
           <div className="ProfileDialog_inputs">
             <label htmlFor="name_input" className="input_container input_left">
