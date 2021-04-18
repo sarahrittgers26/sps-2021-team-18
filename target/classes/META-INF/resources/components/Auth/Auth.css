@@ -102,9 +102,15 @@
   flex-grow: 1;
   margin-top: 32px;
   position: relative;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: 0;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.Signin_signup::-webkit-scrollbar {
+  display: none;
 }
 
 .dummy_sign_in {
@@ -113,9 +119,6 @@
   min-height: 100%;
   transition: transform 0.5s;
   position: absolute;
-  overflow: scroll;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: 0;
 }
 
 .dummy_sign_up {
@@ -124,9 +127,6 @@
   min-height: 100%;
   transition: transform 0.5s;
   position: absolute;
-  overflow: scroll;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: 0;
 }
 
 .hidden_sign_in {
@@ -178,6 +178,8 @@
 .error {
   color: red;
   padding-top: 8px;
+  font-size: 0.9em;
+  font-style: italic;
 }
 
 .Sign_in_button_container {

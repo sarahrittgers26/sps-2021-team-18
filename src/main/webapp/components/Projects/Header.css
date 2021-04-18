@@ -21,7 +21,6 @@
 .Header_title {
   z-index: 1;
   height: 100%;
-  width: auto;
   text-align: center;
   display: flex;
   flex-direction: row;
@@ -29,14 +28,6 @@
   font-weight: bold;
   font-size: 2em;
   color: white;
-}
-
-.Header_user_details {
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 16px;
 }
 
 .Header_user {
@@ -50,29 +41,17 @@
 .Header_user_icon {
   width: 45px;
   height: 45px;
-  border-radius: 8px;
+  border-radius: 50%;
   background-color: white;
   position: relative;
   display: flex;
   cursor: pointer;
 }
 
-.Header_user_name {
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  color: whitesmoke;
-}
-
-.Header_user_email {
-  font-style: italic;
-  color: black;
-}
-
 .Header_menu {
   position: absolute;
   right: 0;
   top: var(--header_height);
-  width: 200px;
   padding: 16px;
   transition: 0.5s;
   background-color: white;
@@ -85,6 +64,8 @@
   -webkit-box-shadow: 0 0 16px rgb(121, 121, 121);
   box-shadow: 0 0 16px rgb(121, 121, 121);
   display: none;
+  min-width: 220px;
+  width: auto;
 }
 
 .Header_menu::before {
@@ -99,9 +80,36 @@
   transform: rotate(45deg);
 }
 
+.Header_user_details {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgb(190, 190, 190);
+}
+
+.Header_user_name {
+  font-size: 1.1rem;
+  text-transform: capitalize;
+  color: black;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Header_user_email {
+  font-style: italic;
+  color: gray;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .Header_menu ul {
   width: 100%;
-  margin: 0;
+  margin: 8px 0 0 0;
   list-style-type: none;
   padding: 0;
 }

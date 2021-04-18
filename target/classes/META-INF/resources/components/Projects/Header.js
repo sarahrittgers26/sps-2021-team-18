@@ -38,18 +38,18 @@ const Header = (props) => {
       </span>
 
       <div className="Header_user">
-        <div className="Header_user_details">
-          <span className="Header_user_name">
-            {name}
-          </span>
-          <span className="Header_user_email">
-            {email}
-          </span>
-        </div>
         <div className="Header_user_icon" 
           ref={iconRef} 
           onClick={() => setDisplayMenu(prevState => !prevState)}></div>
         <div className="Header_menu" ref={menuRef}>
+          <div className="Header_user_details">
+            <span className="Header_user_name">
+              {name}
+            </span>
+            <span className="Header_user_email">
+              {email}
+            </span>
+          </div>
           <ul>
             <li onClick={() => handleClick(displayProfile)}>
               <AccountCircleIcon className="Header_menu_icon"/>

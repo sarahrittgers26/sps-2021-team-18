@@ -212,6 +212,7 @@ const Auth = ({ history }) => {
       const response = await axios.post(
         `/sign-in?username=${username}
               &password=${password}`);
+      console.log(response);
 
       if (response.status === 200) {
         // Direct user to next page

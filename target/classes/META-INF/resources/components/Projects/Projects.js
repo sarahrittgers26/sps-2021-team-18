@@ -9,6 +9,7 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
+import Notifications from './Notifications.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut,
  changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection,
   loadProjects, clearProject } from '../../actions';
@@ -32,6 +33,8 @@ const Projects = ({ history }) => {
   const [connectionAlert, setConnectionAlert] = useState("");
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
+  const [displayNotifications, setDisplayedNotifications] = useState(true);
+  const [notifications, setNotifications] = useState([]);
 
   // Updates active status, users and projects
   const activeStatusWrapper = useCallback(() => {
@@ -111,8 +114,7 @@ const Projects = ({ history }) => {
 	      activeCollaborator: collaborator, collaboratorName: collaboratorName, 
 	      html: html, css: css, js: js, title: title }));
       setConnectionAlert(
-        `Waiting for ${collaboratorName} to select ${title} 
-	      to continue working on project...`
+        `This will send an invitation to ${collaboratorName} to continue working on ${title}`
         );
 
     } else {
@@ -250,6 +252,7 @@ const Projects = ({ history }) => {
   }
 
   useEffect(() => {
+    console.log(user.name);
     // disable flickering behavious on window resize
     let resizeTimer;
     window.addEventListener("resize", () => {
@@ -303,45 +306,44 @@ const Projects = ({ history }) => {
             query={searchQuery}
             onChange={setSearchQuery}/>
 
-        <span className="Projects_label">
-          Recent Projects
-        </span>
+          <span className="Projects_label">
+            Recent Projects
+          </span>
 
-        {!loadingProjects && allProjects.length === 0 && ( 
-          <div className="card Projects_no_result">
-            <span className="no_result_summary">
-              No projects
-            </span>
-            <span className="no_result_message">
-              You have not collaborated on any projects with anyone. Please select any active user
-              to start collaborating on your first project.
-            </span>
-          </div>
-        )}
+          {!loadingProjects && allProjects.length === 0 && ( 
+            <div className="card Projects_no_result">
+              <span className="no_result_summary">
+                No projects
+              </span>
+              <span className="no_result_message">
+                You have not collaborated on any projects with anyone. Please select any active user
+                to start collaborating on your first project.
+              </span>
+            </div>
+          )}
 
+          {!loadingProjects && allProjects.length !== 0 && displayedProjects.length === 0 && (
+            <div className="card Projects_no_result">
+              <span className="no_result_summary">
+                No results found
+              </span>
+              <span className="no_result_message">
+                You do not have any project that matches the given name. 
+              </span>
+            </div>
+          )}
 
-        {!loadingProjects && allProjects.length !== 0 && displayedProjects.length === 0 && (
-          <div className="card Projects_no_result">
-            <span className="no_result_summary">
-              No results found
-            </span>
-            <span className="no_result_message">
-              You do not have any project that matches the given name. 
-            </span>
-          </div>
-        )}
-
-        {!loadingProjects && ( 
-          <div className="Projects_recent">
-            {getProjectComponents()}
-          </div>
-        )}    
+          {!loadingProjects && displayedProjects.length > 0 && ( 
+            <div className="Projects_recent">
+              {getProjectComponents()}
+            </div>
+          )}    
         </div>
 
         <div className="Projects_sidebar">
           <ConnectedUsers 
-	    activeUsers={activeUsers}
-	    contacts={contacts}
+            activeUsers={activeUsers}
+            contacts={contacts}
             onActiveUserClick={onActiveUserClick}
             onRecentUserClick={onRecentUserClick}/>
         </div>   
@@ -354,8 +356,7 @@ const Projects = ({ history }) => {
           isOpen={openConnectionDialog}
           closeDialog={() => closeConnectionDialog(fromProject)}
           message={connectionAlert}
-          sendInvite={sendInvite}
-	  fromProject={fromProject}/>
+          sendInvite={sendInvite}/>
       )}
         
       {openAlertDialog && (

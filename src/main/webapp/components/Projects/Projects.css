@@ -43,6 +43,7 @@
   padding-right: 48px;
   margin-right: var(--sidebar_width);
   transition: all 0.3s;
+  position: relative;
 }
 
 .Projects_label {
@@ -58,7 +59,6 @@
   display: grid;
   margin-top: 16px;
   grid-template-columns: repeat(2, 1fr);
-  overflow: scroll;
   gap: 36px;
   transition: all 0.3s;
 }
