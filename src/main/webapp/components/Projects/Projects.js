@@ -40,7 +40,7 @@ const Projects = ({ history }) => {
       dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
       isProjectsPage: true }));
       dispatch(loadProjects(user.username));
-      setTimeout(updateActiveStatus, 1 * 30000);
+      setTimeout(updateActiveStatus, 1 * 10000);
     };
     updateActiveStatus();
   }, [dispatch, user.username, user.isVisible]);
@@ -81,7 +81,7 @@ const Projects = ({ history }) => {
         dispatch(updateProjectSelection({ username: user.username, 
 		projectid: activeProject, isSelecting: false }));
         closeConnectionWrapper();
-      }, 60000);
+      }, 29000);
 
       return () => {
         clearInterval(checkProjectActivity);
