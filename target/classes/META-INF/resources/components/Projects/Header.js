@@ -2,12 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import Notification from './Notification.js';
 
 const Header = (props) => {
-  const { name, email, handleLogout, displayProfile } = props;
+  const { name, email, handleLogout, displayProfile, notifications } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
+  const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
-  const iconRef = useRef();
+  const notificationsRef = useRef();
+  const userIconRef = useRef();
+  const notificationIconRef = useRef();
 
 
   const handleClick = callback => {
@@ -15,12 +20,36 @@ const Header = (props) => {
     callback();
   }
 
+  const renderNotifications = () => {
+    return notifications.map((notification) => (
+      <Notification
+         collaboratorName={notification.collaboratorName}/>
+     ));
+  }
+
+  useEffect(() => {
+    displayNotifications ? notificationsRef.current.style.display = "flex" : notificationsRef.current.style.display = "none";
+     const handleClickOutside = (event) => {
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target) && 
+          notificationIconRef.current && !notificationIconRef.current.contains(event.target) && displayNotifications) {      
+        setDisplayNotifications(false);     
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+
+  }, [displayNotifications]);
+
+
   useEffect(() => {
     displayMenu ? menuRef.current.style.display = "flex" : menuRef.current.style.display = "none";
      const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target) && 
-          iconRef.current && !iconRef.current.contains(event.target) && displayMenu) {      
-        setDisplayMenu(prevState => !prevState);     
+          userIconRef.current && !userIconRef.current.contains(event.target) && displayMenu) {      
+        setDisplayMenu(false);     
       }
     };
   
@@ -38,10 +67,40 @@ const Header = (props) => {
       </span>
 
       <div className="Header_user">
+        <div 
+          className={`Header_notifications_icon ${notifications.length > 0 && !displayNotifications ? 
+            "notification_animation" : ""}`}
+          ref={notificationIconRef}>
+          <NotificationsIcon style={{ fontSize: 40 }}
+          onClick={() => setDisplayNotifications(prevState => !prevState)}/>
+
+          {notifications.length > 0 && (
+            <div className="Notifications_count_container">
+              <span className="Notifications_count">{notifications.length}</span>
+            </div>)}
+        </div>
+
         <div className="Header_user_icon" 
-          ref={iconRef} 
-          onClick={() => setDisplayMenu(prevState => !prevState)}></div>
-        <div className="Header_menu" ref={menuRef}>
+          ref={userIconRef} 
+          onClick={() => setDisplayMenu(prevState => !prevState)}>
+        </div>
+
+        <div className="Header_notifications menu" ref={notificationsRef}>
+          {notifications.length > 0 ? ( 
+            <div className="Notification_main">
+              <span className="Notifications_title">Notifications</span>          
+              {renderNotifications()}
+            </div>
+                    
+            ) : (
+            <span className="no_notifications">
+              You do not have any notifications
+            </span>
+          )}       
+        </div>
+
+
+        <div className="Header_menu menu" ref={menuRef}>
           <div className="Header_user_details">
             <span className="Header_user_name">
               {name}

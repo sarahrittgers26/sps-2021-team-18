@@ -9,7 +9,6 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
-import Notifications from './Notifications.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut,
  changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection,
   loadProjects, clearProject } from '../../actions';
@@ -34,7 +33,11 @@ const Projects = ({ history }) => {
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
   const [displayNotifications, setDisplayedNotifications] = useState(true);
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([
+    {collaboratorName: "Mufaro"},
+    {collaboratorName: "Emmanuel"},
+    {collaboratorName: "Makiwa"}
+  ]);
 
   // Updates active status, users and projects
   const activeStatusWrapper = useCallback(() => {
@@ -297,7 +300,8 @@ const Projects = ({ history }) => {
         name={user.name}
         email={user.email}
         handleLogout={handleLogout}
-        displayProfile={displayProfile}/>
+        displayProfile={displayProfile}
+        notifications={notifications}/>
 
       
       <div className="Projects_main">

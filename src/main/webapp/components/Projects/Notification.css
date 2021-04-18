@@ -1,0 +1,70 @@
+.Notification_container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 16px 4px;
+  border-bottom: 1px solid rgb(236, 231, 231);
+  flex-shrink: 0;
+}
+
+.Notification_container:first-of-type {
+  padding-top: 0;
+}
+
+.Notification_container:last-of-type {
+  border-bottom: none;
+}
+
+.Notification_side {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  align-items: flex-start;
+  margin-left: 16px;
+}
+
+.user_icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(206, 202, 202);
+  flex-shrink: 0;
+}
+
+.Notification_title {
+  flex-grow: 1;
+}
+
+.Notification_buttons {
+  margin-top: 16px;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.Notification_button_accept {
+  margin-left: 8px;
+}
+
+.Notification_buttons button {
+  outline: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  border: none;
+  font-weight: bold;
+  transition: all 0.3s;
+  background-color: rgba(202, 213, 218, 0.308);
+}
+
+.Notification_buttons button:hover {
+  background-color: rgba(161, 170, 179, 0.6);
+}
+
+.Notification_button_decline {
+  margin-right: 8px;
+}
