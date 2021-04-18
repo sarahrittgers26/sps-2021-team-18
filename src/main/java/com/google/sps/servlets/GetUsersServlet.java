@@ -46,7 +46,6 @@ public class GetUsersServlet extends HttpServlet {
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		FormattedUser[] users = loadUsers(username, datastore);
-
 		Gson gson = new Gson();
 
 		// Return project objects to frontend
@@ -97,7 +96,6 @@ public class GetUsersServlet extends HttpServlet {
 			String avatar = user.getString("avatar");
 			users.add(new FormattedUser(appUser, name, true, false, avatar));
 		}
-
 		return users.toArray(new FormattedUser[users.size()]);
 	}
 

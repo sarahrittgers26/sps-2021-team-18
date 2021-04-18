@@ -19,7 +19,8 @@ const Projects = ({ history }) => {
   const dispatch = useDispatch();
   const { activeUsers, contacts, onlineProjects, activeProject, canEdit,
 	  offlineProjects } = useSelector((state) => state.projectReducer);
-
+  // console.log(activeUsers);
+  // console.log(contacts);
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
@@ -33,9 +34,27 @@ const Projects = ({ history }) => {
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
   const [notifications, setNotifications] = useState([
-    {collaboratorName: "Mufaro"},
-    {collaboratorName: "Emmanuel"},
-    {collaboratorName: "Makiwa"}
+    {
+      collaboratorName: "Mufaro",
+      isNewProject: false,
+      projectTitle: "Simple HTML",
+      collaboratorAvatar: "1"
+    },
+
+    {
+      collaboratorName: "Emmanuel",
+      isNewProject: true,
+      projectTitle: "",
+      collaboratorAvatar: "2"
+    },
+
+    {
+      collaboratorName: "Michael",
+      isNewProject: false,
+      projectTitle: "CSS grind",
+      collaboratorAvatar: "0"
+    },
+    
   ]);
 
   // Updates active status, users and projects

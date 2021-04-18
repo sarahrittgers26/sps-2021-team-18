@@ -35,6 +35,7 @@
 
 .Notification_title {
   flex-grow: 1;
+  color: gray;
 }
 
 .Notification_buttons {

@@ -91,10 +91,11 @@ public class LoadProjectsServlet extends HttpServlet {
 			Key key = datastore.newKeyFactory().setKind("User").newKey(collaborator);
 			Entity partner = datastore.get(key);
 			String cname = partner.getString("name");
-
+			String collaboratorAvatar = partner.getString("avatar");
 			boolean bothActive = userIsActive(collaborator, datastore);
 
-			projectResults.add(new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js));
+			projectResults.add(
+					new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js, collaboratorAvatar));
 		}
 		return projectResults;
 	}

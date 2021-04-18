@@ -9,9 +9,10 @@ public class FormattedProject {
 	private final String html;
 	private final String css;
 	private final String js;
+	private final String collaboratorAvatar;
 
 	public FormattedProject(String collaborator, String collaboratorName, String projectid, String title,
-			boolean bothActive, String html, String css, String js) {
+			boolean bothActive, String html, String css, String js, String collaboratorAvatar) {
 		this.collaborator = collaborator;
 		this.collaboratorName = collaboratorName;
 		this.projectid = projectid;
@@ -20,5 +21,6 @@ public class FormattedProject {
 		this.html = html;
 		this.css = css;
 		this.js = js;
+		this.collaboratorAvatar = collaboratorAvatar;
 	}
 }

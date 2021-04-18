@@ -39,7 +39,6 @@ public class SignUpServlet extends HttpServlet {
 		String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
 		String email = Jsoup.clean(request.getParameter("email"), Whitelist.none());
 		String name = Jsoup.clean(request.getParameter("name"), Whitelist.none());
-		System.out.println("Creating a new user");
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
 		// Check if username or email have already been used

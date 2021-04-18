@@ -216,8 +216,6 @@ const Auth = ({ history }) => {
       if (response.status === 200) {
         // Direct user to next page
         const errorAndInfo = response.data;
-        console.log(errorAndInfo);
-
         const userExists = errorAndInfo[0] === 'true' ? true : false;
         if (!userExists) {
           setUsernameError(true);

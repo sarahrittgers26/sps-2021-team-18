@@ -10,7 +10,8 @@ const ConnectedUsers = (props) => {
       key={user.username}
       name={user.name}
       isActive={user.isActive}
-      onClick={() => onActiveUserClick(user.name, user.username)}/>
+      onClick={() => onActiveUserClick(user.name, user.username)}
+      avatar={user.avatar}/>
   ));
 
   const recentContacts = contacts.map((user) => (
@@ -18,7 +19,8 @@ const ConnectedUsers = (props) => {
       key={user.username}
       name={user.name}
       isActive={user.isActive}
-      onClick={() => onRecentUserClick(user.username, user.name, user.isActive)}/>
+      onClick={() => onRecentUserClick(user.username, user.name, user.isActive)}
+      avatar={user.avatar}/>
   ));
 
   return (

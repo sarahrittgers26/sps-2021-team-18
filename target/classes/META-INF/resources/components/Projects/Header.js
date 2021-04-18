@@ -67,7 +67,10 @@ const Header = (props) => {
         key={`Notification_${notifications.indexOf(notification)}`}
         collaboratorName={notification.collaboratorName}
         accept={() => accept(notification)}
-        decline={() => decline(notification)}/>
+        decline={() => decline(notification)}
+        isNewProject={notification.isNewProject}
+        projectTitle={notification.projectTitle}
+        collaboratorAvatar={notification.collaboratorAvatar}/>
      ));
   }
 

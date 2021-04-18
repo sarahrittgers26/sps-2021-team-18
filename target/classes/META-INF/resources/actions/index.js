@@ -17,6 +17,7 @@ const projectSelector = (selector, projects) => {
                 html: current.html,
                 css: current.css,
                 js: current.js,
+                collaboratorAvatar: current.collaboratorAvatar,
             };
             selection.push(project);
         }
@@ -28,7 +29,9 @@ const projectSelector = (selector, projects) => {
 const userSelector = (wantContact, users) => {
     const selection = [];
     for (var i = 0; i < users.length; i++) {
+        
         let current = users[i]
+        console.log(current);
             // selector is true/false for online/offline projects
             // if selector is true then only add online projects otherwise add offline
         if (current.isContact === wantContact) {
@@ -36,6 +39,7 @@ const userSelector = (wantContact, users) => {
                 username: current.username,
                 name: current.name,
                 isActive: current.isActive,
+                avatar: current.avatar,
             };
             selection.push(user);
         }
@@ -45,7 +49,6 @@ const userSelector = (wantContact, users) => {
 
 // On sign in
 export const signIn = (user) => {
-    console.log(user);
     return {
         type: ACTION.SIGN_IN,
         payload: user
@@ -210,7 +213,6 @@ export const updateTitle = (title) => {
     }
 };
 
-
 // Create project with user
 export const createProject = (details) => async(dispatch) => {
   const username = details.username;
@@ -229,12 +231,12 @@ export const loadUsers = (username) => async(dispatch) => {
         let url = `/get-users?username=${username}`;
         const response = await axios.get(url);
         dispatch({ 
-		type: ACTION.UPDATE_USERS, 
-		payload: {
-			contacts: userSelector(true, response.data),
-			activeUsers: userSelector(false, response.data)
-		}
-	});
+            type: ACTION.UPDATE_USERS, 
+            payload: {
+                contacts: userSelector(true, response.data),
+                activeUsers: userSelector(false, response.data)
+            }
+        });
     }
 };
 
