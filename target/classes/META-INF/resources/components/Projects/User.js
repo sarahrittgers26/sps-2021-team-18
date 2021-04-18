@@ -65,9 +65,12 @@ const User = (props) => {
           {avatar !== "0" ?
             (<img src={addAvatar()} className="current_icon" alt="Current avatar"/>) : 
             (<AccountCircleIcon style = {{fontSize: 40}} />)}
-	        {isActive ?
-            <div className="User_activity active"></div> :
-            <div className="User_activity inactive"></div>}
+            <div className="User_activity">
+              {isActive ?
+              <div className="active"></div> :
+              <div className="inactive"></div>}
+            </div>
+	          
         </div>
       </div>
       <span className="User_name" ref={nameRef}>

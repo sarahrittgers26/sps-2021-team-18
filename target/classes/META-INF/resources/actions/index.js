@@ -31,7 +31,6 @@ const userSelector = (wantContact, users) => {
     for (var i = 0; i < users.length; i++) {
         
         let current = users[i]
-        console.log(current);
             // selector is true/false for online/offline projects
             // if selector is true then only add online projects otherwise add offline
         if (current.isContact === wantContact) {

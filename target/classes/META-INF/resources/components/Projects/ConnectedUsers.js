@@ -4,7 +4,7 @@ import User from './User.js';
 
 const ConnectedUsers = (props) => {
   
-  const { activeUsers, contacts, onActiveUserClick, onRecentUserClick } = props;
+  const { activeUsers, contacts, onActiveUserClick, onRecentUserClick, isVisible } = props;
   const actives = activeUsers.map((user) => (
    <User
       key={user.username}
@@ -26,11 +26,12 @@ const ConnectedUsers = (props) => {
   return (
     <div className="ConnectedUsers_container card">
       <span className="ConnectedUsers_label">Recent contacts</span>
-      {recentContacts.length > 0 ? 
+      {recentContacts.length > 0 && isVisible? 
         recentContacts : 
         (<span className="no_users">No recent contacts</span>)}
-    <span className="ConnectedUsers_label top">Active users</span>
-      {actives.length > 0 ? 
+
+      <span className="ConnectedUsers_label top">Active users</span>
+      {actives.length > 0 && isVisible? 
         actives : 
         (<span className="no_users">No active users</span>)}
     </div>

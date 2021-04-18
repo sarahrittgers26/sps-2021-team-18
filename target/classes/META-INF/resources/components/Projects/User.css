@@ -42,20 +42,28 @@
 }
 
 .User_activity {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background-color: white;
   border-radius: 50%;
-  bottom: 0px;
-  right: 0px;
+  padding: 3px;
 }
 
 .active {
   background: green;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
 }
 
 .inactive {
   background-color: red;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
 }
 
 .User_container:hover > .marquee {

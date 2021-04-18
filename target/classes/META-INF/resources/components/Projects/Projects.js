@@ -19,8 +19,6 @@ const Projects = ({ history }) => {
   const dispatch = useDispatch();
   const { activeUsers, contacts, onlineProjects, activeProject, canEdit,
 	  offlineProjects } = useSelector((state) => state.projectReducer);
-  // console.log(activeUsers);
-  // console.log(contacts);
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
@@ -388,7 +386,8 @@ const Projects = ({ history }) => {
             activeUsers={activeUsers}
             contacts={contacts}
             onActiveUserClick={onActiveUserClick}
-            onRecentUserClick={onRecentUserClick}/>
+            onRecentUserClick={onRecentUserClick}
+            isVisible={user.isVisible}/>
         </div>   
       </div>
       
