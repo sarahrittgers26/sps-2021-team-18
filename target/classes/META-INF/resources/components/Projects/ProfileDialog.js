@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import './ProfileDialog.css'
@@ -96,7 +96,6 @@ const ProfileDialog = (props) => {
               </span>
               <input 
                 type="text"
-                id="name_input"
                 name="name_input"
                 value={updatedName}
                 onChange={updateName}
@@ -110,7 +109,6 @@ const ProfileDialog = (props) => {
               </span>
               <input 
                 type="password"
-                id="username_input"
                 name="username_input"
                 onChange={updatePassword}
                 placeholder="Change password"

@@ -32,29 +32,30 @@ const Auth = ({ history }) => {
     if (!displaySignIn) {
       setDisplaySignIn(true);
       setDisplaySignUp(false);
-
+      setEmailError(false);
+      setNameError(false);
+      setPasswordError(false);
+      setUsernameError(false);
       signInRef.current.classList.add("visible_sign_in");
       signInRef.current.classList.remove("hidden_sign_in")
-
       signUpRef.current.classList.remove("visible_sign_up");
       signUpRef.current.classList.add("hidden_sign_up");
-      ;
     }
-    console.log("Opened sign in")
   }
 
   const openSignUp = () => {
     if (!displaySignUp) {
       setDisplaySignIn(false);
       setDisplaySignUp(true);
-
+      setEmailError(false);
+      setNameError(false);
+      setPasswordError(false);
+      setUsernameError(false);
       signInRef.current.classList.remove("visible_sign_in");
       signInRef.current.classList.add("hidden_sign_in")
-
       signUpRef.current.classList.add("visible_sign_up");
       signUpRef.current.classList.remove("hidden_sign_up");
     }
-    console.log("Openned signup")
   }
 
 
@@ -186,7 +187,7 @@ const Auth = ({ history }) => {
       if (usernameExists || emailExists) return;
       dispatch(signIn({
         username: username, email: email, name: name,
-        appearingOnline: true
+        appearingOnline: true, avatar: 0
       }));
       dispatch(loadUsers(username));
       dispatch(loadInitialProjects(username));
@@ -212,7 +213,6 @@ const Auth = ({ history }) => {
       const response = await axios.post(
         `/sign-in?username=${username}
               &password=${password}`);
-      console.log(response);
 
       if (response.status === 200) {
         // Direct user to next page
@@ -227,7 +227,7 @@ const Auth = ({ history }) => {
           const appearingOnline = errorAndInfo[3] === 'true' ? true : false;
           dispatch(signIn({
             username: username, email: errorAndInfo[1],
-            name: errorAndInfo[2], appearingOnline: appearingOnline
+            name: errorAndInfo[2], appearingOnline: appearingOnline, avatar: parseInt(errorAndInfo[4])
           }));
           dispatch(loadUsers(username));
           dispatch(loadInitialProjects(username));
@@ -279,7 +279,6 @@ const Auth = ({ history }) => {
         <div className="input">
           <input
             type="text"
-            id="username_input"
             label="username_input"
             placeholder="Username"
             className="Auth_input"
@@ -301,7 +300,6 @@ const Auth = ({ history }) => {
         <div className="input">
           <input
             type="text"
-            id="password_input"
             label="password_input"
             placeholder="Password"
             className="Auth_input"
@@ -324,7 +322,6 @@ const Auth = ({ history }) => {
         <div className="input">
           <input
             type="text"
-            id="email_input"
             label="email_input"
             placeholder="Email"
             className="Auth_input"
@@ -363,7 +360,6 @@ const Auth = ({ history }) => {
         <div className="input">
           <input
             type="text"
-            id="username_input"
             name="username_input"
             placeholder="Username"
             className="Auth_input"
@@ -385,7 +381,6 @@ const Auth = ({ history }) => {
         <div className="input">
           <input
             type="password"
-            id="password_input"
             name="password_input"
             placeholder="Password"
             className="Auth_input"

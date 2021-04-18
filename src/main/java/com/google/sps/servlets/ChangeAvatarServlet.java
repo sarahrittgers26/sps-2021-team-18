@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-@WebServlet("/change-name")
+@WebServlet("/change-avatar")
 public class ChangeAvatarServlet extends HttpServlet {
 
   @Override

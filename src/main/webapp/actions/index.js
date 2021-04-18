@@ -11,7 +11,7 @@ const projectSelector = (selector, projects) => {
         if (current.bothActive === selector) {
             let project = {
                 collaborator: current.collaborator,
-		collaboratorName: current.collaboratorName,
+		        collaboratorName: current.collaboratorName,
                 projectid: current.projectid,
                 title: current.title,
                 html: current.html,
@@ -169,7 +169,7 @@ export const changeName = (change) => async(dispatch) => {
 // On avatar change
 export const changeAvatar = (change) => async(dispatch) => {
     const username = change.username;
-    const avatar = change.name;
+    const avatar = change.avatar;
     let url = `/change-avatar?username=${username}&avatar=${avatar}`;
     await axios.get(url);
     dispatch({

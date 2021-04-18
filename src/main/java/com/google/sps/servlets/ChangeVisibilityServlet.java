@@ -15,31 +15,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-		
+
 @WebServlet("/change-vis")
 public class ChangeVisibilityServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws IOException {
-    		 // Allow CORS so frontend can access it			
-		 response.addHeader("Access-Control-Allow-Origin", "*");
-		 response.addHeader("Access-Control-Allow-Headers", 
-				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
-		 response.addHeader("Access-Control-Allow-Credentials", "true");
-		 response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
-		 
-		 // Get the username from user
-		 String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
-		 String visibility = Jsoup.clean(request.getParameter("visibility"), Whitelist.none());
-		
-		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		 
-		 Key thisUser = datastore.newKeyFactory()
-			.setKind("User")
-			.newKey(username);
-		 Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
-			 .set("isVisible", visibility).build(); 
-		 datastore.update(loggedInUser);
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Allow CORS so frontend can access it
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Credentials", "true");
+		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+
+		// Get the username from user
+		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
+		String visibility = Jsoup.clean(request.getParameter("visibility"), Whitelist.none());
+
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
+		Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
+				.set("isVisible", (visibility == "true") ? true : false).build();
+		datastore.update(loggedInUser);
 	}
 }

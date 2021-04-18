@@ -32,7 +32,6 @@ const Projects = ({ history }) => {
   const [connectionAlert, setConnectionAlert] = useState("");
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
-  const [displayNotifications, setDisplayedNotifications] = useState(true);
   const [notifications, setNotifications] = useState([
     {collaboratorName: "Mufaro"},
     {collaboratorName: "Emmanuel"},
@@ -214,7 +213,7 @@ const Projects = ({ history }) => {
     }
     
     if (user.isVisible !== isVisible) {
-      dispatch(changeVisibility(isVisible));
+      dispatch(changeVisibility({ username: user.username, visibility: isVisible }));
     }
     
     if (password.length >= 8 && password.length <= 60) {
@@ -258,8 +257,21 @@ const Projects = ({ history }) => {
     return projects;
   }
 
+  // accept when a user sends collaboration request
+  const acceptCollaboration = (notification) => {
+    
+
+  }
+
+
+  // decline when a user sends collaboration request
+  const declineCollaboration = (notification) => {
+    console.log("Declining");
+    const index = notifications.indexOf(notification);
+    notifications.splice(index, 1);
+  }
+
   useEffect(() => {
-    console.log(user.name);
     // disable flickering behavious on window resize
     let resizeTimer;
     window.addEventListener("resize", () => {
@@ -306,7 +318,9 @@ const Projects = ({ history }) => {
         handleLogout={handleLogout}
         displayProfile={displayProfile}
         notifications={notifications}
-        avatar={user.avatar}/>
+        avatar={user.avatar}
+        accept={acceptCollaboration}
+        decline={declineCollaboration}/>
 
       
       <div className="Projects_main">

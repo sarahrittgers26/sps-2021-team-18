@@ -3,7 +3,7 @@ import "./Notification.css"
 
 
 function Notification(props) {
-  const {collaboratorName } = props;
+  const {collaboratorName, accept, decline } = props;
   
   return (
     <div className="Notification_container">
@@ -15,8 +15,8 @@ function Notification(props) {
         </span>
 
         <div className="Notification_buttons">
-        <button className="Notification_button_decline">DECLINE</button>
-        <button className="Notification_button_accept">ACCEPT</button>
+        <button className="Notification_button_decline" onClick={decline}>DECLINE</button>
+        <button className="Notification_button_accept" onClick={accept}>ACCEPT</button>
       </div>   
       </div> 
     </div>

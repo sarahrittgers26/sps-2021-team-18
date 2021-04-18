@@ -15,7 +15,7 @@ import Icon_8 from "../../images/avatar-8.png";
 
 
 const Header = (props) => {
-  const { name, email, handleLogout, displayProfile, notifications, avatar } = props;
+  const { name, email, handleLogout, displayProfile, notifications, avatar, accept, decline } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
@@ -64,7 +64,10 @@ const Header = (props) => {
   const renderNotifications = () => {
     return notifications.map((notification) => (
       <Notification
-         collaboratorName={notification.collaboratorName}/>
+        key={`Notification_${notifications.indexOf(notification)}`}
+        collaboratorName={notification.collaboratorName}
+        accept={() => accept(notification)}
+        decline={() => decline(notification)}/>
      ));
   }
 
