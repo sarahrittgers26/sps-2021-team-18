@@ -5,7 +5,6 @@ import Navbar from './Navbar.js';
 import './Editor.css';
 import { handleSave } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
-import { ACTION } from '../../actions/types.js';
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,13 +28,6 @@ const Editor = ({ history }) => {
   const [projectName, setProjectName] = useState(title);
 
   const socket = SocketSingleton.getInstance();
-
-  /*const handleChange = (value, editor, projectid) => {
-    let project = projectid + "-" + editor.toLowerCase();
-    let msgTo = JSON.stringify({ type: ACTION.SEND_TEXT, data: value, projectid: projectid })
-    socket.send(msgTo);
-    return editor;
-  }*/
   
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -58,6 +50,8 @@ const Editor = ({ history }) => {
 	history={history}
 	title={title}
 	projectName={projectName}
+	socket={socket}
+	projectid={activeProject}
 	handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
 		js: projectjs, projectid: activeProject, title: projectName }))}/>
 
@@ -67,6 +61,7 @@ const Editor = ({ history }) => {
          displayName="HTML"
          value={projecthtml}
          onChange={setProjectHtml}
+	 socket={socket}
 	 projectid={activeProject}/>
 
         <Pane 
@@ -74,6 +69,7 @@ const Editor = ({ history }) => {
          displayName="CSS"
          value={projectcss}
          onChange={setProjectCss}
+	 socket={socket}
 	 projectid={activeProject}/>
 
         <Pane 
@@ -81,6 +77,7 @@ const Editor = ({ history }) => {
          displayName="JS"
          value={projectjs}
          onChange={setProjectJs}
+	 socket={socket}
 	 projectid={activeProject}/>
 
       </div>

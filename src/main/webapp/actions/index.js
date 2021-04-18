@@ -237,11 +237,13 @@ export const createProject = (details) => async(dispatch) => {
   const newPaneIDS = [`${projectid}-html`,`${projectid}-css`,`${projectid}-js`,
   `${projectid}-title`]
   const socket = SocketSingleton.getInstance();
-  newPaneIDS.forEach(paneID => {
-    let messageDto = JSON.stringify({ projectid: paneID, 
+  socket.onmessage = () => {
+    newPaneIDS.forEach(paneID => {
+      let messageDto = JSON.stringify({ id: paneID, 
 	type: ACTION.LOAD_INIT_PROJECTS, data: "" })
-    socket.send(messageDto);
-  });
+      socket.send(messageDto);
+    });
+  }
   dispatch(loadProjects(username));
 };
 

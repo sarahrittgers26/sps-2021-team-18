@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import axios from '../Api/Api';
-import { ACTION } from '../../actions/types.js';
 import { loadInitialProjects, loadUsers, signIn, htmlReceived, cssReceived,
  jsReceived, titleReceived } from '../../actions';
-import SocketSingleton from '../../middleware/socketMiddleware.js';
-
 
 const Auth = ({ history }) => {
   // Dispatch for react-redux store
@@ -36,70 +33,6 @@ const Auth = ({ history }) => {
   const [nameError, setNameError] = useState(false);
   const [nameErrorMsg, setNameErrorMsg] = useState('');
 
-  // Setup socket
-  const registerSocket = () => {
-    let socket = SocketSingleton.getInstance();
-    socket.onmessage = (response) => {
-      let message = JSON.parse(response.data);
-
-      switch (message.type) {
-        case ACTION.REC_HTML:
-          htmlReceived(message.data);
-          break;
-        case ACTION.REC_CSS:
-          cssReceived(message.data);
-          break;
-        case ACTION.REC_JS:
-          jsReceived(message.data);
-          break;
-        case ACTION.REC_TITLE:
-          titleReceived(message.data);
-          break;
-        default:
-      }
-    }
-
-    const onOpen = (event) => {
-      // Enumerate socket ids for each editor pane for each project
-      let offlinePaneIDS = [];
-      let onlinePaneIDS = [];
-
-      offlineProjects.forEach((project) => {
-        // Setup socket for each editor pane with specified project 
-        let projectid = project.projectid;
-        offlinePaneIDS.push(`${projectid}-html`);
-	offlinePaneIDS.push(`${projectid}-css`);
-	offlinePaneIDS.push(`${projectid}-js`);
-	offlinePaneIDS.push(`${projectid}-title`);
-      });
-
-      onlineProjects.forEach((project) => {
-        // Setup socket for each editor pane with specified project 
-        let projectid = project.projectid;
-        onlinePaneIDS.push(`${projectid}-html`);
-	onlinePaneIDS.push(`${projectid}-css`);
-	onlinePaneIDS.push(`${projectid}-js`);
-	onlinePaneIDS.push(`${projectid}-title`);
-      });
-
-      // Subscribe to each server (Creates a connection on socket io)
-      offlinePaneIDS.forEach(paneID => {
-	let messageDto = JSON.stringify({ projectid: paneID, 
-		type: ACTION.LOAD_INIT_PROJECTS, data: "" })
-        socket.send(messageDto);
-      });
-
-      onlinePaneIDS.forEach(paneID => {
-	let messageDto = JSON.stringify({ projectid: paneID, 
-		type: ACTION.LOAD_INIT_PROJECTS, data: "" })
-        socket.send(messageDto);
-      });
-    }
-    socket.onopen = onOpen;
-    
-    window.onbeforeunload = () => {
-    }
-  }
 
   // Show main modal which gives user the option to signin or signup
   const showMain = () => {
@@ -242,7 +175,6 @@ const Auth = ({ history }) => {
       	appearingOnline: true }));
       dispatch(loadUsers(username));
       dispatch(loadInitialProjects(username));
-      registerSocket();
       history.push('/projects');
     } catch (err) {
       // If error occurs notify user
@@ -269,6 +201,7 @@ const Auth = ({ history }) => {
       if (response.status === 200) {
         // Direct user to next page
 	const errorAndInfo = response.data;
+	console.log(errorAndInfo);
 	const userExists = errorAndInfo[0] === 'true' ? true : false;
 	if (!userExists) {
 	  setUsernameError(true);
@@ -281,7 +214,6 @@ const Auth = ({ history }) => {
 		  name: errorAndInfo[2], appearingOnline: appearingOnline }));
 	  dispatch(loadUsers(username));
 	  dispatch(loadInitialProjects(username));
-      	  registerSocket();
 	  history.push('/projects'); 
 	}
       } else {

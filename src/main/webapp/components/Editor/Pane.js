@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import MinimizeIcon from '@material-ui/icons/Minimize';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
@@ -11,11 +10,20 @@ import './Pane.css';
 import { ACTION } from '../../actions/types.js';
 
 const Pane = (props) => {
-  const { language, displayName, value, onChange, projectid } = props;
-  const { html, css, js } = useSelector((state) => state.projectReducer.js);
+  const { language, displayName, value, onChange, socket, projectid } = props;
   
   const handleChange = (editor, data, value) => {
-    onChange(value);
+    let type = "SEND_" + displayName;
+    let msg = JSON.stringify({ id: projectid, type: type, data: value })
+    socket.send(msg);
+    socket.onmessage = (response) => {
+      let message = JSON.parse(response.data);
+      console.log(message);
+      let currentEditor = "SEND_" + displayName;
+      if (currentEditor === message.type) {
+	onChange(message.data);
+      }
+    }
   }
 
   return (

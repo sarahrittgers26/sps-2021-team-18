@@ -1,18 +1,22 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import iReact from 'react';
+import { useSelector } from 'react-redux';
 import './Navbar.css';
 import Profile from './Profile.js';
-import { updateTitle } from '../../actions';
+import { ACTION } from '../../actions/types.js';
 
 const Navbar = (props) => {
-  const { title, updateName, projectName, handleSave, history } = props;
+  const { title, updateName, projectName, handleSave, 
+	  history, socket, projectid } = props;
   const user = useSelector((state) => state.userReducer);
   const { collaboratorName } = useSelector((state) => state.projectReducer);
-  const dispatch = useDispatch();
 
   const handleChange = elt => {
-    updateName(elt.target.value);
-    dispatch(updateTitle(elt.target.value));
+    socket.send(JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 
+	    data: elt.target.value }));
+    socket.onmessage = (response) => {
+      let message = JSON.parse(response.data);
+      updateName(message.data);
+    }
   }
 
   return (
