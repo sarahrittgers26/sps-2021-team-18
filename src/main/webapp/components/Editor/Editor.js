@@ -9,7 +9,8 @@ import { ACTION } from '../../actions/types.js';
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
-  const { html, css, js, title, activeProject } = 
+  const user = useSelector((state) => state.userReducer);
+  const { html, css, js, title, activeProject, collaboratorId, collaboratorName, collaboratorAvatar } = 
 		useSelector((state) => state.projectReducer);
   
   // I don't think we can use the "projecthtml" useState variables
@@ -67,13 +68,13 @@ const Editor = ({ history }) => {
     <>
       <Navbar
         updateName={setProjectName}
-	history={history}
-	projectName={projectName}
-	socket={socket}
-	title={title}
-	projectid={activeProject}
-	handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
-		js: projectjs, projectid: activeProject, title: projectName }))}/>
+        history={history}
+        projectName={projectName}
+        socket={socket}
+        title={title}
+        projectid={activeProject}
+        handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
+		    js: projectjs, projectid: activeProject, title: projectName }))}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 

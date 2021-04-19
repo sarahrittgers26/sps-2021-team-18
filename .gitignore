@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /.pnp
+target
 .pnp.js
 
 # testing

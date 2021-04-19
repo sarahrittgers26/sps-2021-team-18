@@ -10,7 +10,7 @@ import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut,
- changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection,
+ changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection, changeAvatar,
   loadProjects, clearProject } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware.js';
 import { ACTION } from '../../actions/types.js';
@@ -21,7 +21,6 @@ const Projects = ({ history }) => {
   const dispatch = useDispatch();
   const { activeUsers, contacts, onlineProjects, activeProject, canEdit,
 	  offlineProjects } = useSelector((state) => state.projectReducer);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
@@ -34,6 +33,29 @@ const Projects = ({ history }) => {
   const [connectionAlert, setConnectionAlert] = useState("");
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
+  const [notifications, setNotifications] = useState([
+    {
+      collaboratorName: "Mufaro",
+      isNewProject: false,
+      projectTitle: "Simple HTML",
+      collaboratorAvatar: "1"
+    },
+
+    {
+      collaboratorName: "Emmanuel",
+      isNewProject: true,
+      projectTitle: "",
+      collaboratorAvatar: "2"
+    },
+
+    {
+      collaboratorName: "Michael",
+      isNewProject: false,
+      projectTitle: "CSS grind",
+      collaboratorAvatar: "0"
+    },
+    
+  ]);
 
   let socket = SocketSingleton.getInstance();
   socket.onopen = () => {
@@ -127,8 +149,7 @@ const Projects = ({ history }) => {
 	      activeCollaborator: collaborator, collaboratorName: collaboratorName, 
 	      html: html, css: css, js: js, title: title }));
       setConnectionAlert(
-        `Waiting for ${collaboratorName} to select ${title} 
-	      to continue working on project...`
+        `This will send an invitation to ${collaboratorName} to continue working on ${title}`
         );
 
     } else {
@@ -217,13 +238,17 @@ const Projects = ({ history }) => {
   }
 
   // when the user clicks save after editing Profile
-  const saveProfile = (name, password, isVisible) => {
+  const saveProfile = (name, password, isVisible, avatar) => {
     if (user.name !== name) {
       dispatch(changeName({ username: user.username, name: name }));
     }
+
+    if (user.avatar !== avatar) {
+      dispatch(changeAvatar({ username: user.username, avatar: avatar }));
+    }
     
     if (user.isVisible !== isVisible) {
-      dispatch(changeVisibility(isVisible));
+      dispatch(changeVisibility({ username: user.username, visibility: isVisible }));
     }
     
     if (password.length >= 8 && password.length <= 60) {
@@ -265,6 +290,21 @@ const Projects = ({ history }) => {
         )}/>
     ));
     return projects;
+  }
+
+  // accept when a user sends collaboration request
+  const acceptCollaboration = (notification) => {
+    
+
+  }
+
+
+  // decline when a user sends collaboration request
+  const declineCollaboration = (notification) => {
+    const updated = notifications.filter(notif => {
+      return notif !== notification
+    })
+    setNotifications(updated);
   }
 
   useEffect(() => {
@@ -326,7 +366,11 @@ const Projects = ({ history }) => {
         name={user.name}
         email={user.email}
         handleLogout={handleLogout}
-        displayProfile={displayProfile}/>
+        displayProfile={displayProfile}
+        notifications={notifications}
+        avatar={user.avatar}
+        accept={acceptCollaboration}
+        decline={declineCollaboration}/>
 
       
       <div className="Projects_main">
@@ -335,47 +379,47 @@ const Projects = ({ history }) => {
             query={searchQuery}
             onChange={setSearchQuery}/>
 
-        <span className="Projects_label">
-          Recent Projects
-        </span>
+          <span className="Projects_label">
+            Recent Projects
+          </span>
 
-        {!loadingProjects && allProjects.length === 0 && ( 
-          <div className="card Projects_no_result">
-            <span className="no_result_summary">
-              No projects
-            </span>
-            <span className="no_result_message">
-              You have not collaborated on any projects with anyone. Please select any active user
-              to start collaborating on your first project.
-            </span>
-          </div>
-        )}
+          {!loadingProjects && allProjects.length === 0 && ( 
+            <div className="card Projects_no_result">
+              <span className="no_result_summary">
+                No projects
+              </span>
+              <span className="no_result_message">
+                You have not collaborated on any projects with anyone. Please select any active user
+                to start collaborating on your first project.
+              </span>
+            </div>
+          )}
 
+          {!loadingProjects && allProjects.length !== 0 && displayedProjects.length === 0 && (
+            <div className="card Projects_no_result">
+              <span className="no_result_summary">
+                No results found
+              </span>
+              <span className="no_result_message">
+                You do not have any project that matches the given name. 
+              </span>
+            </div>
+          )}
 
-        {!loadingProjects && allProjects.length !== 0 && displayedProjects.length === 0 && (
-          <div className="card Projects_no_result">
-            <span className="no_result_summary">
-              No results found
-            </span>
-            <span className="no_result_message">
-              You do not have any project that matches the given name. 
-            </span>
-          </div>
-        )}
-
-        {!loadingProjects && ( 
-          <div className="Projects_recent">
-            {getProjectComponents()}
-          </div>
-        )}    
+          {!loadingProjects && displayedProjects.length > 0 && ( 
+            <div className="Projects_recent">
+              {getProjectComponents()}
+            </div>
+          )}    
         </div>
 
         <div className="Projects_sidebar">
           <ConnectedUsers 
-	    activeUsers={activeUsers}
-	    contacts={contacts}
+            activeUsers={activeUsers}
+            contacts={contacts}
             onActiveUserClick={onActiveUserClick}
-            onRecentUserClick={onRecentUserClick}/>
+            onRecentUserClick={onRecentUserClick}
+            isVisible={user.isVisible}/>
         </div>   
       </div>
       
@@ -386,8 +430,7 @@ const Projects = ({ history }) => {
           isOpen={openConnectionDialog}
           closeDialog={() => closeConnectionDialog(fromProject)}
           message={connectionAlert}
-          sendInvite={sendInvite}
-	  fromProject={fromProject}/>
+          sendInvite={sendInvite}/>
       )}
         
       {openAlertDialog && (
@@ -403,7 +446,8 @@ const Projects = ({ history }) => {
           name={user.name} 
           currentOnlineStatus={user.isVisible}
           closeDialog={() => setOpenProfileDialog(false)}
-          saveProfile={saveProfile}/>
+          saveProfile={saveProfile}
+          avatar={user.avatar}/>
       )}
       
     </div>

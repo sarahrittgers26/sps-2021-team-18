@@ -1,10 +1,10 @@
 package com.google.sps.servlets;
 
-import java.io.IOException;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
+import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-@WebServlet("/change-pass")
-public class ChangePasswordServlet extends HttpServlet {
+@WebServlet("/change-avatar")
+public class ChangeAvatarServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -25,12 +25,12 @@ public class ChangePasswordServlet extends HttpServlet {
 
     // Get the username from user
     String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
-    String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
+    String avatar = Jsoup.clean(request.getParameter("avatar"), Whitelist.none());
 
     Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
     Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
-    Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("password", password).build();
+    Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("avatar", avatar).build();
     datastore.update(loggedInUser);
   }
 }

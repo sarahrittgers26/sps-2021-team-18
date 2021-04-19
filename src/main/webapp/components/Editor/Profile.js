@@ -1,14 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 import SaveIcon from '@material-ui/icons/Save';
 import './Profile.css';
 import { clearProject, updateCanEdit, updateProjectSelection } from '../../actions';
+import Icon_1 from "../../images/avatar-1.png";
+import Icon_2 from "../../images/avatar-2.png";
+import Icon_3 from "../../images/avatar-3.png";
+import Icon_4 from "../../images/avatar-4.png";
+import Icon_5 from "../../images/avatar-5.png";
+import Icon_6 from "../../images/avatar-6.png";
+import Icon_7 from "../../images/avatar-7.png";
+import Icon_8 from "../../images/avatar-8.png";
 
 // Change email to some other parameter later, don't want to expose
 // people's emails unnecessarily
 const Profile = (props) => {
-  const {name, email, side, active, isUser, handleSave, history} = props;
+  const {name, avatar, email, side, active, isUser, handleSave, history} = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer);
@@ -20,6 +30,37 @@ const Profile = (props) => {
     setDisplayMenu(prevState => !prevState);
     callback();
   }
+
+  const addAvatar = () => {
+    switch (avatar) {
+      case "1":
+        return Icon_1;
+
+      case "2":
+        return Icon_2;
+
+      case "3":
+        return Icon_3;
+
+      case "4":
+        return Icon_4;
+
+      case "5":
+        return Icon_5;
+
+      case "6":
+        return Icon_6;
+
+      case "7":
+        return Icon_7;
+
+      case "8":
+        return Icon_8;
+      
+      default:
+        return;
+    }   
+  } 
  
   // called when user clicks on Profile
   const handleReturn = () => {
@@ -50,11 +91,13 @@ const Profile = (props) => {
   return (
     <div className={`Profile_container ${side === "R" ? "Profile_flipped" : ""}`}>
       <div className="Profile_image"
-          ref={iconRef} 
-          onClick={() => setDisplayMenu(prevState => !prevState)}>
-        <div className={`Profile_activity ${active ? "active" : "inactive"} ${side === "R" ? "right" : "left"}`}></div>
-      </div>
-      <div className={`Profile_details ${side === "R" ? "details_right" : "details_left"}`}>
+        ref={iconRef} 
+        onClick={() => setDisplayMenu(prevState => !prevState)}>
+          {avatar !== "0" ?
+          (<img src={addAvatar()} className="current_icon" alt="avatar"/>) : 
+          (<AccountCircleIcon style = {{fontSize: 40}} />)}
+          <div className={`Profile_activity ${active ? "active_user" : "inactive_user"} ${side === "R" ? "right" : "left"}`}></div>      </div>
+      <div className={`Profile_details  ${side === "R" ? "details_right" : "details_left"}`}>
         <span className="Profile_name">
           {name}
         </span>

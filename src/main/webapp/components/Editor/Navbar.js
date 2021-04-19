@@ -25,19 +25,22 @@ const Navbar = (props) => {
     <div>
       <div className="Navbar_container">
         <Profile
-          name={collaboratorName}
+          // name={collaboratorName}
+          // avatar={collaboratorAvatar}
+          name="Michael Lawes"
+          avatar="3"
           email=""
           side="L"
           active={true}
-	  isUser={false}
-	  handleSave={handleSave}
-	  history={history}/>
+          isUser={false}
+          handleSave={handleSave}
+          history={history}/>
 
         <div className="Navbar_title_container">
           <input 
             type="text"
             className="Navbar_title"
-            placeholder={title} 
+            placeholder={title}
             name="title_input" 
             autoComplete="off" 
             id="title_input"
@@ -46,13 +49,15 @@ const Navbar = (props) => {
         </div>
         
         <Profile
-          name={user.name}
-          email={user.username}
+          // name={user.name}
+          // avatar={user.avatar}
+          name="Mufaro Makiwa"
+          avatar="1"
           side="R"
           active={true}
-	  isUser={true}
-	  handleSave={handleSave}
-	  history={history}/>
+          isUser={true}
+          handleSave={handleSave}
+          history={history}/>
       </div>
     </div>
   );

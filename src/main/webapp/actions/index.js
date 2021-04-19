@@ -12,12 +12,13 @@ const projectSelector = (selector, projects) => {
         if (current.bothActive === selector) {
             let project = {
                 collaborator: current.collaborator,
-		collaboratorName: current.collaboratorName,
+		        collaboratorName: current.collaboratorName,
                 projectid: current.projectid,
                 title: current.title,
                 html: current.html,
                 css: current.css,
                 js: current.js,
+                collaboratorAvatar: current.collaboratorAvatar,
             };
             selection.push(project);
         }
@@ -29,6 +30,7 @@ const projectSelector = (selector, projects) => {
 const userSelector = (wantContact, users) => {
     const selection = [];
     for (var i = 0; i < users.length; i++) {
+        
         let current = users[i]
             // selector is true/false for online/offline projects
             // if selector is true then only add online projects otherwise add offline
@@ -37,6 +39,7 @@ const userSelector = (wantContact, users) => {
                 username: current.username,
                 name: current.name,
                 isActive: current.isActive,
+                avatar: current.avatar,
             };
             selection.push(user);
         }
@@ -167,6 +170,18 @@ export const changeName = (change) => async(dispatch) => {
     })
 };
 
+// On avatar change
+export const changeAvatar = (change) => async(dispatch) => {
+    const username = change.username;
+    const avatar = change.avatar;
+    let url = `/change-avatar?username=${username}&avatar=${avatar}`;
+    await axios.get(url);
+    dispatch({
+        type: ACTION.CHANGE_AVATAR,
+        payload: avatar
+    })
+};
+
 // On password change
 export const changePassword = (change) => async(dispatch) => {
     const username = change.username;
@@ -198,34 +213,6 @@ export const updateTitle = (title) => {
     }
 };
 
-export const htmlReceived = (html) => {
-  return {
-    type: ACTION.REC_HTML,
-    payload: html
-  }
-};
-
-export const cssReceived = (css) => {
-  return {
-    type: ACTION.REC_CSS,
-    payload: css
-  }
-};
-
-export const jsReceived = (js) => {
-  return {
-    type: ACTION.REC_JS,
-    payload: js
-  }
-};
-
-export const titleReceived = (title) => {
-  return {
-    type: ACTION.REC_TITLE,
-    payload: title
-  }
-};
-
 // Create project with user
 export const createProject = (details) => async(dispatch) => {
   const username = details.username;
@@ -254,12 +241,12 @@ export const loadUsers = (username) => async(dispatch) => {
         let url = `/get-users?username=${username}`;
         const response = await axios.get(url);
         dispatch({ 
-		type: ACTION.UPDATE_USERS, 
-		payload: {
-			contacts: userSelector(true, response.data),
-			activeUsers: userSelector(false, response.data)
-		}
-	});
+            type: ACTION.UPDATE_USERS, 
+            payload: {
+                contacts: userSelector(true, response.data),
+                activeUsers: userSelector(false, response.data)
+            }
+        });
     }
 };
 

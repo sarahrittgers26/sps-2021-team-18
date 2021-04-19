@@ -1,4 +1,4 @@
-package com.google.sps.project;
+package com.google.sps.socket.project;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,12 +13,12 @@ public class SocketProject implements Serializable {
     }
 
     public SocketProject(String username) {
-	projects = new HashSet<>();
+        projects = new HashSet<>();
         this.username = username;
     }
 
     public void addProjectId(String projectid) {
-	projects.add(projectid);
+        projects.add(projectid);
     }
 
     public boolean checkProjectId(String projectid) {
@@ -26,7 +26,7 @@ public class SocketProject implements Serializable {
     }
 
     public String getUsername() {
-	return username;
+        return username;
     }
 
     @Override
@@ -36,8 +36,10 @@ public class SocketProject implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if(null == o || o.getClass() != this.getClass()) return false;
+        if (o == this)
+            return true;
+        if (null == o || o.getClass() != this.getClass())
+            return false;
 
         SocketProject other = (SocketProject) o;
 

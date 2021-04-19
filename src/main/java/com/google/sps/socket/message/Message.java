@@ -1,11 +1,11 @@
-package com.google.sps.message;
+package com.google.sps.socket.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Message implements Serializable{
+public class Message implements Serializable {
 
     private String id;
     private String type;
@@ -31,7 +31,7 @@ public class Message implements Serializable{
         this.data = data;
     }
 
-    public String getData(){
+    public String getData() {
         return data;
     }
 }

@@ -3,7 +3,7 @@
   height: var(--header_height);
   background: linear-gradient(
     to bottom,
-    rgb(63, 74, 97),
+    rgb(36, 42, 56),
     var(--profile_background)
   );
   display: flex;
@@ -18,10 +18,28 @@
   z-index: 10;
 }
 
+.Banner {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.Banner:hover {
+  cursor: pointer;
+  transform: scale(0.95);
+}
+
+.main_icon {
+  max-width: 100%;
+  max-height: 50%;
+}
+
 .Header_title {
   z-index: 1;
   height: 100%;
-  width: auto;
   text-align: center;
   display: flex;
   flex-direction: row;
@@ -29,14 +47,6 @@
   font-weight: bold;
   font-size: 2em;
   color: white;
-}
-
-.Header_user_details {
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 16px;
 }
 
 .Header_user {
@@ -48,43 +58,138 @@
 }
 
 .Header_user_icon {
-  width: 45px;
-  height: 45px;
-  border-radius: 8px;
-  background-color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
   position: relative;
   display: flex;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
 }
 
-.Header_user_name {
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  color: whitesmoke;
+.Header_user_icon:hover {
+  padding: 2px;
+  background-color: gray;
 }
 
-.Header_user_email {
-  font-style: italic;
-  color: black;
+.Header_notifications_icon {
+  margin-right: 16px;
+  display: flex;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  position: relative;
 }
 
-.Header_menu {
+.Header_notifications_icon:hover {
+  animation-play-state: paused;
+}
+
+.notification_animation {
+  animation: notification 0.4s linear infinite;
+}
+
+@keyframes notification {
+  0% {
+    transform: translateX(0) scale(1);
+    color: white;
+  }
+
+  50% {
+    transform: translateX(-8px) scale(0.8);
+    color: rgb(194, 194, 194);
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+    color: white;
+  }
+}
+
+.Notifications_count_container {
+  position: absolute;
+  background-color: red;
+  top: -4px;
+  right: 0;
+  padding: 4px;
+  width: 1.2em;
+  height: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1em;
+  font-weight: normal;
+}
+
+.Notifications_count {
+  color: white;
+  font-size: 0.9em;
+}
+
+.Notification_main {
+  width: 100%;
+}
+
+.Notifications_title {
+  font-weight: bold;
+  font-size: 1.3em;
+  display: inline-block;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.menu {
   position: absolute;
   right: 0;
   top: var(--header_height);
-  width: 200px;
   padding: 16px;
   transition: 0.5s;
   background-color: white;
   border-radius: 8px;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
   -moz-box-shadow: 0 0 16px rgb(121, 121, 121);
   -webkit-box-shadow: 0 0 16px rgb(121, 121, 121);
   box-shadow: 0 0 16px rgb(121, 121, 121);
+}
+
+.Header_menu {
+  flex-direction: column;
+  justify-content: flex-start;
   display: none;
+  min-width: 220px;
+  width: auto;
+}
+
+.Header_notifications {
+  min-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Header_notifications::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  top: -5px;
+  right: 66px;
+  z-index: -1;
+  transform: rotate(45deg);
+}
+
+.no_notifications {
+  display: flex;
+  color: gray;
+  padding: 24px 0;
 }
 
 .Header_menu::before {
@@ -99,9 +204,36 @@
   transform: rotate(45deg);
 }
 
+.Header_user_details {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgb(218, 215, 215);
+}
+
+.Header_user_name {
+  font-size: 1.1rem;
+  text-transform: capitalize;
+  color: black;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Header_user_email {
+  font-style: italic;
+  color: gray;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .Header_menu ul {
   width: 100%;
-  margin: 0;
+  margin: 12px 0 0 0;
   list-style-type: none;
   padding: 0;
 }
@@ -130,4 +262,12 @@
 
 .Header_menu_icon {
   color: gray;
+}
+
+.dismiss_notifications {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 24px;
 }

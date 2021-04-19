@@ -2,8 +2,8 @@ package com.google.sps.socket.editor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.sps.message.Message;
-import com.google.sps.project.SocketProject;
+import com.google.sps.socket.message.Message;
+import com.google.sps.socket.project.SocketProject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
@@ -51,7 +51,7 @@ public class EditorServer extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
         // When connection is closed, remove the project.
-        //projects.remove(conn)
+        // projects.remove(conn)
         logger.info("Connection closed to: " + conn.getRemoteSocketAddress().getHostString());
         System.out.println("Closed connection to " + conn.getRemoteSocketAddress());
     }
@@ -63,33 +63,33 @@ public class EditorServer extends WebSocketServer {
             Message msg = mapper.readValue(message, Message.class);
 
             switch (msg.getType()) {
-                case "LOAD_INIT_PROJECTS":
-                    addProject(msg.getType(), msg.getId(), conn);
-		    break;
-                case "SIGN_IN":
-                    addProject(msg.getType(), msg.getId(), conn);
-		    break;
-                case "SIGN_OUT":
-                    removeProject(conn);
-		    break;
-                case "PING_USER":
-                    pingUser(msg);
-		    break;
-                case "SEND_HTML":
-                    broadcastMessage(msg);
-		    break;
-                case "SEND_CSS":
-                    broadcastMessage(msg);
-		    break;
-                case "SEND_JS":
-                    broadcastMessage(msg);
-		    break;
-                case "SEND_TITLE":
-                    broadcastMessage(msg);
-		    break;
+            case "LOAD_INIT_PROJECTS":
+                addProject(msg.getType(), msg.getId(), conn);
+                break;
+            case "SIGN_IN":
+                addProject(msg.getType(), msg.getId(), conn);
+                break;
+            case "SIGN_OUT":
+                removeProject(conn);
+                break;
+            case "PING_USER":
+                pingUser(msg);
+                break;
+            case "SEND_HTML":
+                broadcastMessage(msg);
+                break;
+            case "SEND_CSS":
+                broadcastMessage(msg);
+                break;
+            case "SEND_JS":
+                broadcastMessage(msg);
+                break;
+            case "SEND_TITLE":
+                broadcastMessage(msg);
+                break;
             }
 
-	    System.out.println("From " + msg.getType() + ": " + msg.getId() + ": " + msg.getData());
+            System.out.println("From " + msg.getType() + ": " + msg.getId() + ": " + msg.getData());
             logger.info("Message from project: " + msg.getId() + ", text: " + msg.getData());
         } catch (IOException e) {
             logger.error("Wrong message format.");
@@ -105,20 +105,20 @@ public class EditorServer extends WebSocketServer {
         }
         assert conn != null;
         System.out.println("ERROR from " + conn.getRemoteSocketAddress());
-	ex.printStackTrace();
+        ex.printStackTrace();
     }
 
     private void broadcastMessage(Message msg) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-	    String messageJson = mapper.writeValueAsString(msg);
-	    String projectid = msg.getId();
-            for (Map.Entry<WebSocket, SocketProject> entry: projects.entrySet()) {
+            String messageJson = mapper.writeValueAsString(msg);
+            String projectid = msg.getId();
+            for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
                 if (entry.getValue().checkProjectId(projectid)) {
-		    entry.getKey().send(messageJson);
-		    System.out.println(entry.getKey().getRemoteSocketAddress());
-		    System.out.println(msg.getType() + ": " + msg.getId() + ": " + msg.getData());
-		}
+                    entry.getKey().send(messageJson);
+                    System.out.println(entry.getKey().getRemoteSocketAddress());
+                    System.out.println(msg.getType() + ": " + msg.getId() + ": " + msg.getData());
+                }
             }
         } catch (JsonProcessingException e) {
             logger.error("Cannot convert message to json.");
@@ -126,32 +126,32 @@ public class EditorServer extends WebSocketServer {
     }
 
     private void pingUser(Message msg) {
-	ObjectMapper mapper = new ObjectMapper();
-	try {
-	    String messageJson = mapper.writeValueAsString(msg);
-	    String username = msg.getId();
-            for (Map.Entry<WebSocket, SocketProject> entry: projects.entrySet()) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String messageJson = mapper.writeValueAsString(msg);
+            String username = msg.getId();
+            for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
                 if (entry.getValue().getUsername().equals(username)) {
-		    entry.getKey().send(messageJson);
-		    break;
-		}
+                    entry.getKey().send(messageJson);
+                    break;
+                }
             }
-	} catch (JsonProcessingException e) {
-	    logger.error("Cannot convert message to json.");
-	}
+        } catch (JsonProcessingException e) {
+            logger.error("Cannot convert message to json.");
+        }
     }
 
     private void addProject(String type, String id, WebSocket conn) throws JsonProcessingException {
-	    if (type.equals("SIGN_IN")) {
-		projects.put(conn, new SocketProject(id));
-	    } else {
-		SocketProject usersProject = projects.get(conn);
-		usersProject.addProjectId(id);
-	    }
+        if (type.equals("SIGN_IN")) {
+            projects.put(conn, new SocketProject(id));
+        } else {
+            SocketProject usersProject = projects.get(conn);
+            usersProject.addProjectId(id);
+        }
     }
 
     private void removeProject(WebSocket conn) throws JsonProcessingException {
         projects.remove(conn);
     }
-    
+
 }
