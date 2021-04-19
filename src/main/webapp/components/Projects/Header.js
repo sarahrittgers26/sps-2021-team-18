@@ -12,6 +12,7 @@ import Icon_5 from "../../images/avatar-5.png";
 import Icon_6 from "../../images/avatar-6.png";
 import Icon_7 from "../../images/avatar-7.png";
 import Icon_8 from "../../images/avatar-8.png";
+import Banner from "../../images/banner.png";
 
 
 const Header = (props) => {
@@ -110,9 +111,9 @@ const Header = (props) => {
 
   return (
     <div className="Header_container">
-      <span className="Header_title">
-        COLLABCODE
-      </span>
+      <div className="Banner">
+        <img src={Banner} alt="Banner" className="main_icon"/>
+      </div>
 
       <div className="Header_user">
         <div 
