@@ -9,9 +9,10 @@ import { ACTION } from '../../actions/types.js'
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
   const { collaboratorId, collaboratorName, isOpen, closeDialog, 
-	  message, socket } = props;
+	  message, socket, fromProject } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
+  const defaultImage = "https://storage.googleapis.com/spring21-sps-18.appspot.com/css.jpg";
 
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data)
@@ -39,6 +40,15 @@ const ConnectionDialog = (props) => {
 	    collaborator: collaboratorId, title: "New Project" }));
     closeDialog();
     dispatch(loadUsers(user.username));
+  }
+
+  const onPositiveClick = () => {
+    if (!fromProject) {
+      newProject()
+    } else {
+      
+    }
+    
   }
 
   return (
@@ -70,7 +80,7 @@ const ConnectionDialog = (props) => {
             {message}
           </span>
           <div className="Connection_confirm_button_container">
-            <button className="Connection_confirm_button left" onClick={displayConnectionStatus}>
+            <button className="Connection_confirm_button left" onClick={onPositiveClick}>
               YES
             </button>
             <button className="Connection_confirm_button right" onClick={closeDialog}>

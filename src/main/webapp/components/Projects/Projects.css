@@ -111,13 +111,3 @@
     transition: all 0.3s;
   }
 }
-
-@media screen and (max-width: 750px) {
-  .Projects_content {
-    margin-right: 0;
-  }
-
-  .Projects_sidebar {
-    transform: translateX(1000%);
-  }
-}

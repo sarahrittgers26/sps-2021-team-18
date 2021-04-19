@@ -95,11 +95,11 @@ const Profile = (props) => {
 
   return (
     <div className={`Profile_container ${side === "R" ? "Profile_flipped" : ""}`}>
-      <div className="Profile_image"
+      <div className={`Profile_image ${!isUser ? "other_user" : ""}`}
         ref={iconRef} 
-        onClick={() => setDisplayMenu(prevState => !prevState)}>
+          onClick={() => setDisplayMenu(prevState => !prevState)}>
           {avatar !== "0" ?
-          (<img src={addAvatar()} className="current_icon" alt="avatar"/>) : 
+          (<img src={addAvatar()} className="Profile_icon" alt="avatar"/>) : 
           (<AccountCircleIcon style = {{fontSize: 40}} />)}
           <div className={`Profile_activity ${active ? "active_user" : "inactive_user"} ${side === "R" ? "right" : "left"}`}></div>      </div>
       <div className={`Profile_details  ${side === "R" ? "details_right" : "details_left"}`}>

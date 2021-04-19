@@ -19,6 +19,7 @@ const projectSelector = (selector, projects) => {
                 css: current.css,
                 js: current.js,
                 collaboratorAvatar: current.collaboratorAvatar,
+                image: current.image,
             };
             selection.push(project);
         }
@@ -79,22 +80,28 @@ export const chooseProject = (project) => {
 
 // Function to handle saving project to database
 export const handleSave = (proj) => async(dispatch) => {
-  const newHtml = proj.html;
-  const newCss = proj.css;
-  const newJs = proj.js;
-  const newTitle = proj.title;
+  const newHtml = encodeURIComponent(proj.html);
+  const newCss = encodeURIComponent(proj.css);
+  const newJs = encodeURIComponent(proj.js);
+  const newTitle = encodeURIComponent(proj.title);
   const projectid = proj.projectid;
   const image = proj.image;
   let htmlUrl = `/save-html?projectid=${projectid}&html=${newHtml}`;
   let cssUrl = `/save-css?projectid=${projectid}&css=${newCss}`;
   let jsUrl = `/save-js?projectid=${projectid}&js=${newJs}`;
   let titleUrl = `/update-title?projectid=${projectid}&title=${newTitle}`;
-  let imageUrl = `/save-image?projectid=${projectid}&image=${image}`;
+  let imageUrl = `/save-image?projectid=${projectid}`;
   await axios.get(htmlUrl);
   await axios.get(cssUrl);
   await axios.get(jsUrl);
   await axios.get(titleUrl);
-  await axios.get(imageUrl);
+  await axios.post(imageUrl, image, {
+    headers: {
+      'accept': 'application/json',
+      'Accept-Language': 'en-US,en;q=0.8',
+      'Content-Type': `multipart/form-data`,
+    }
+  })
 }
 
 // On project deselection

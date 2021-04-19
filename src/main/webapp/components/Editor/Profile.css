@@ -17,6 +17,27 @@
   color: gray;
 }
 
+.other_user > * {
+  cursor: not-allowed;
+  animation: none;
+}
+
+.other_user .Profile_icon:hover {
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.Profile_icon {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.Profile_icon:hover {
+  transform: scale(0.85);
+}
+
 .Profile_activity {
   width: 16px;
   height: 16px;

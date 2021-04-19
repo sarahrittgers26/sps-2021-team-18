@@ -1,5 +1,7 @@
 package com.google.sps.servlets;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import com.google.gson.Gson;
 import java.io.PrintWriter;
+
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -23,21 +27,35 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+import org.w3c.dom.html.HTMLImageElement;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.Key;
 
 @WebServlet("/save-image")
+@MultipartConfig
 public class SaveProjectImageServlet extends HttpServlet {
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     // Allow CORS so frontend can access it
     response.addHeader("Access-Control-Allow-Origin", "*");
     response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     response.addHeader("Access-Control-Allow-Credentials", "true");
     response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+    response.addHeader("Content-Type", "multipart/form-data");
 
     String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
-    String canvasImage = Jsoup.clean(request.getParameter("image"), Whitelist.none());
-    System.out.println(canvasImage);
+    Part filePart = request.getPart("image");
+    InputStream fileInputStream = filePart.getInputStream();
+    String link = uploadToCloudStorage(projectid, fileInputStream);
+
+    // upload link to datastore
+    Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+    Key thisProject = datastore.newKeyFactory().setKind("Project").newKey(projectid);
+    Entity project = Entity.newBuilder(datastore.get(thisProject)).set("image", link).build();
+    datastore.update(project);
   }
 
   /** Uploads a file to Cloud Storage and returns the uploaded file's URL. */
@@ -47,11 +65,7 @@ public class SaveProjectImageServlet extends HttpServlet {
     Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
     BlobId blobId = BlobId.of(bucketName, fileName);
     BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-
-    // Upload the file to Cloud Storage.
     Blob blob = storage.create(blobInfo, fileInputStream);
-
-    // Return the uploaded file's URL.
     return blob.getMediaLink();
   }
 }

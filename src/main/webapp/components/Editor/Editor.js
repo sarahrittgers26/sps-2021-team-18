@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Pane from './Pane.js';
 import Navbar from './Navbar.js';
@@ -7,6 +7,7 @@ import { handleSave } from '../../actions';
 import html2canvas from 'html2canvas';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
+import FormData from 'form-data'
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,8 +30,7 @@ const Editor = ({ history }) => {
   const [projectjs, setProjectJs] = useState(js);
   const [srcDoc, setSrcDoc] = useState("");
   const [projectName, setProjectName] = useState(title);
-  const socket = SocketSingleton.getInstance();
-  const renderRef = useRef();
+  // const socket = SocketSingleton.getInstance();
   
   // socket.onmessage = (response) => {
   //   let message = JSON.parse(response.data);
@@ -51,22 +51,22 @@ const Editor = ({ history }) => {
   //   }
   // }
 
-  const handleSave = () => {
-    const options = {
-      // width: 1000,
-      // height: 600,
-    }
-    html2canvas(document.querySelector("#render_pane"), options).then(function(canvas) {
-      document.body.appendChild(canvas)
+  const save = () => {
+    
+    html2canvas(document.querySelector("#render_pane")).then(canvas => {
+      let formData = new FormData();
+      let image = canvas.toDataURL("image/png");
+      formData.append("image", image);
+      
       dispatch(handleSave({
-         html: projecthtml, 
-         css: projectcss,
-         js: projectjs, 
-         projectid: activeProject, 
-         title: projectName,
-         image: canvas,
-        }))
-    });
+        html: projecthtml, 
+        css: projectcss,
+        js: projectjs, 
+        projectid: activeProject, 
+        title: projectName,
+        image: formData,
+        }));
+    });  
     // dispatch(handleSave({ html: projecthtml, css: projectcss,
     //   js: projectjs, projectid: activeProject, title: projectName }))
   }
@@ -92,10 +92,10 @@ const Editor = ({ history }) => {
         updateName={setProjectName}
         history={history}
         projectName={projectName}
-        socket={socket}
+        // socket={socket}
         title={title}
         projectid={activeProject}
-        handleSave={handleSave}/>
+        handleSave={save}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 
@@ -103,7 +103,7 @@ const Editor = ({ history }) => {
          displayName="HTML"
          value={projecthtml}
          onChange={setProjectHtml}
-        socket={socket}
+        // socket={socket}
         projectid={activeProject}/>
 
         <Pane 
@@ -111,7 +111,7 @@ const Editor = ({ history }) => {
          displayName="CSS"
          value={projectcss}
          onChange={setProjectCss}
-         socket={socket}
+        //  socket={socket}
          projectid={activeProject}/>
 
         <Pane 
@@ -119,9 +119,8 @@ const Editor = ({ history }) => {
          displayName="JS"
          value={projectjs}
          onChange={setProjectJs}
-	       socket={socket}
+	      //  socket={socket}
 	       projectid={activeProject}/>
-
       </div>
 
       <div className="Editor_pane Editor_bottom_pane" id="render_pane">

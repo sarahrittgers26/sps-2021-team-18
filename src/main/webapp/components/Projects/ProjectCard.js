@@ -3,13 +3,26 @@ import './ProjectCard.css';
 import AspectRatio from './AspectRatio.js';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import Default from "../../images/css.jpg"; 
 
 const ProjectCard = (props) => {
-  const { title, collaboratorName, downloadProject, continueProject } = props;
+  const { title, collaboratorName, downloadProject, continueProject, image } = props;
+
+  const getImageSrc = () => {
+    if (image === "0") {
+      return Default;
+    } else {
+      return image;
+    }
+  }
 
   return (
     <div className="Project_container card">
-      {AspectRatio(<div className="Project_icon"></div>)}    
+      {AspectRatio(
+        <div className="Project_icon">
+          <img src={getImageSrc()} alt="Project Icon" className="Project_image"/>
+        </div>
+      )}    
       <span className="Project_title">
         {title}
       </span>

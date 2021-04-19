@@ -77,6 +77,7 @@ public class LoadProjectsServlet extends HttpServlet {
 			String html = project.getString("html");
 			String css = project.getString("css");
 			String js = project.getString("js");
+			String image = project.getString("image");
 
 			// Determine whether collaborator is stored as user1 or user2
 			String collaborator = user1.equals(username) ? user2 : user1;
@@ -88,8 +89,8 @@ public class LoadProjectsServlet extends HttpServlet {
 			String collaboratorAvatar = partner.getString("avatar");
 			boolean bothActive = userIsActive(collaborator, datastore);
 
-			projectResults.add(
-					new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js, collaboratorAvatar));
+			projectResults.add(new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js,
+					collaboratorAvatar, image));
 		}
 		return projectResults;
 	}

@@ -10,7 +10,7 @@ import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut,
- changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection, changeAvatar,
+ changeVisibility, changePassword, chooseUser, checkProject, changeAvatar,
   loadProjects, clearProject } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware.js';
 import { ACTION } from '../../actions/types.js';
@@ -103,54 +103,51 @@ const Projects = ({ history }) => {
   // Ping server every second for a minute to see if both users
   // selected the same project. If not stop backend call. If both
   // users 
-  useEffect(() => {
-    // Check if activeProject is empty (nothing selected) or if
-    // user can already edit
-    if (activeProject.length === 0) {
-      return;
-    }
-    if (!canEdit) {
-      const checkProjectActivity = setInterval(() => {
-        dispatch(checkProject(activeProject));
-      }, 1000);
+  // useEffect(() => {
+  //   // Check if activeProject is empty (nothing selected) or if
+  //   // user can already edit
+  //   if (activeProject.length === 0) {
+  //     return;
+  //   }
+  //   if (!canEdit) {
+  //     const checkProjectActivity = setInterval(() => {
+  //       dispatch(checkProject(activeProject));
+  //     }, 1000);
+ 
+  //     const timeout = setTimeout(() => { 
+  //       clearInterval(checkProjectActivity);
+  //       closeConnectionWrapper();
+  //     }, 29000);
 
-      const timeout = setTimeout(() => { 
-        clearInterval(checkProjectActivity);
-        dispatch(updateProjectSelection({ username: user.username, 
-		projectid: activeProject, isSelecting: false }));
-        closeConnectionWrapper();
-      }, 29000);
+  //     return () => {
+  //       clearInterval(checkProjectActivity);
+  //       clearTimeout(timeout);
+  //     }
+  //   } else {
+  //     history.push('/editor');
+  //     return;
+  //   }
 
-      return () => {
-        clearInterval(checkProjectActivity);
-        clearTimeout(timeout);
-      }
-    } else {
-      history.push('/editor');
-      return;
-    }
-
-  }, [dispatch, activeProject, canEdit, closeConnectionWrapper, history, 
-	  user.username]);
+  // }, [dispatch, activeProject, canEdit, closeConnectionWrapper, history, 
+	//   user.username]);
 
   // this displays the connection dialog for the user to confirm they want to send the invite
   const continueProject = (projectid, title, collaborator, collaboratorName, 
 	  html, css, js) => {
     if (isOnline(collaborator)) {
       setFromProject(true);
-      setOpenConnectionDialog(true);
+      // setOpenConnectionDialog(true);
       setCurrentConnection({
         name: collaboratorName, 
         username: collaborator
       });
-      dispatch(updateProjectSelection({ username: user.username, 
-	    projectid: projectid, isSelecting: true })); 
       dispatch(chooseProject({ projectid: projectid, 
 	      activeCollaborator: collaborator, collaboratorName: collaboratorName, 
 	      html: html, css: css, js: js, title: title }));
-      setConnectionAlert(
-        `This will send an invitation to ${collaboratorName} to continue working on ${title}`
-        );
+      // setConnectionAlert(
+      //   `This will send an invitation to ${collaboratorName} to continue working on ${title}`
+      //   );
+      history.push('/editor');
 
     } else {
       setOpenAlertDialog(true);
@@ -260,8 +257,6 @@ const Projects = ({ history }) => {
   const closeConnectionDialog = (fromProject) => {
     setOpenConnectionDialog(false);
     if (fromProject) {
-      dispatch(updateProjectSelection({ username: user.username, 
-		projectid: activeProject, isSelecting: false }));
       dispatch(clearProject());
     }
     setConnectionAlert("");
@@ -278,6 +273,7 @@ const Projects = ({ history }) => {
       <ProjectCard
         key={project.projectid}
         title={project.title}
+        image={project.image}
         collaboratorName={project.collaboratorName}
         downloadProject={() => downloadProject(project.projectid)}
         continueProject={() => continueProject(

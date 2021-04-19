@@ -14,6 +14,7 @@ const initialState = {
   activeUsers: [], 
   contacts: [],
   canEdit: false,
+  image: "0"
 }
 
 export const projectReducer = (state = initialState, action) => {
@@ -23,11 +24,11 @@ export const projectReducer = (state = initialState, action) => {
 	      html: action.payload.html, css: action.payload.css,
       js: action.payload.js, collaboratorName: action.payload.collaboratorName,
       title: action.payload.title, collaboratorId: action.payload.collaborator, 
-      collaboratorAvatar: action.payload.collaboratorAvatar };
+      collaboratorAvatar: action.payload.collaboratorAvatar, image: action.payload.image };
 
     case ACTION.CLEAR_PROJECT:
       return { ...state, html: "", css: "", js: "", collaboratorName: "",
-      title: "", activeProject: "", collaboratorId: "", collaboratorAvatar: "0" };
+      title: "", activeProject: "", collaboratorId: "", collaboratorAvatar: "0" , image: "0"};
 
     case ACTION.CHOOSE_USER:
       return { ...state, collaboratorId: action.payload };
@@ -50,7 +51,7 @@ export const projectReducer = (state = initialState, action) => {
       return { ...state, activeProject: '', onlineProjects: [], title: '',
       offlineProjects: [], activeUsers: [], contacts: [], html: '',
       css: '', js: '', canEdit: false, collaboratorId: '', 
-	      collaboratorName: '', collaboratorAvatar: "0"};
+	      collaboratorName: '', collaboratorAvatar: "0", image: "0"};
 
     default:
       return state;

@@ -10,15 +10,16 @@ const Navbar = (props) => {
   const user = useSelector((state) => state.userReducer);
   const { collaboratorName } = useSelector((state) => state.projectReducer);
   
-  socket.onmessage = (response) => {
-    let message = JSON.parse(response.data);
-    updateName(message.data);
-  } 
+  // socket.onmessage = (response) => {
+  //   let message = JSON.parse(response.data);
+  //   updateName(message.data);
+  // } 
 
   const handleChange = elt => {
-    let msg = JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 
-	    data: elt.target.value })
-    socket.send(msg);
+    // let msg = JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 
+	  //   data: elt.target.value })
+    // socket.send(msg);
+    updateName(elt.target.value);
   }
 
   return (
