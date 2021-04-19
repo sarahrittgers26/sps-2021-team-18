@@ -32,7 +32,7 @@ public class SaveCssServlet extends HttpServlet {
 		 
 		 // Get the projectid and html text from user
 		 String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
-		 String css = Jsoup.clean(request.getParameter("css"), Whitelist.none());
+		 String css = request.getParameter("css");
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 

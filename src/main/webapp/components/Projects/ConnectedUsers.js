@@ -10,7 +10,7 @@ const ConnectedUsers = (props) => {
       key={user.username}
       name={user.name}
       isActive={user.isActive}
-      onClick={() => onActiveUserClick(user.name, user.username)}
+      onClick={() => onActiveUserClick(user.name, user.username, user.avatar)}
       avatar={user.avatar}/>
   ));
 
@@ -19,7 +19,7 @@ const ConnectedUsers = (props) => {
       key={user.username}
       name={user.name}
       isActive={user.isActive}
-      onClick={() => onRecentUserClick(user.username, user.name, user.isActive)}
+      onClick={() => onRecentUserClick(user.username, user.name, user.isActive, user.avatar)}
       avatar={user.avatar}/>
   ));
 

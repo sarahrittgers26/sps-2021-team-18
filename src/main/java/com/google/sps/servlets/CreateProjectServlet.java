@@ -12,6 +12,7 @@ import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.UUID;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,13 +43,17 @@ public class CreateProjectServlet extends HttpServlet {
 		if (partnerExists) {
 			// Generate projectid for project
 			projectid = generateProjectID(datastore);
-
+			String html = "<h1>Hello World</h1>";
+			String css = "h1 {\n  font-size: 24px;\n}";
 			// Add project to datastore
 			Key projectKey = datastore.newKeyFactory().setKind("Project").newKey(projectid);
 			FullEntity project = Entity.newBuilder(projectKey).set("user1", username).set("user2", partner)
-					.set("projectid", projectid).set("title", title).set("html", "<h1>Hello World</h1>")
-					.set("css", "h1 {\n  font-size: 24px;\n}").set("js", "").set("user1Selected", false)
-					.set("user2Selected", false).build();
+					.set("projectid", projectid)
+					.set("title", title)
+					.set("html", html)
+					.set("css", css)
+					.set("js", "")
+					.build();
 			datastore.put(project);
 		}
 
@@ -76,5 +81,29 @@ public class CreateProjectServlet extends HttpServlet {
 			uniqueID = generateProjectID(datastore);
 		}
 		return uniqueID;
+	}
+
+	// Reference:
+	// https://stackoverflow.com/questions/607176/java-equivalent-to-
+	// javascripts-encodeuricomponent-that-produces-identical-outpu
+	private String encodeURIComponent(String str) {
+	    String HEX = "0123456789ABCDEF";
+	    if (str == null) return null;
+
+	    byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+	    StringBuilder builder = new StringBuilder(bytes.length);
+
+	    for (byte c : bytes) {
+		if (c >= 'a' ? c <= 'z' || c == '~' :
+		    c >= 'A' ? c <= 'Z' || c == '_' :
+		    c >= '0' ? c <= '9' :  c == '-' || c == '.')
+		    builder.append((char)c);
+		else
+		    builder.append('%')
+			   .append(HEX.charAt(c >> 4 & 0xf))
+			   .append(HEX.charAt(c & 0xf));
+	    }
+
+	    return builder.toString();
 	}
 }

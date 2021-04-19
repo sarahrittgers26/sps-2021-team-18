@@ -47,9 +47,9 @@ const Notification = (props) => {
 
   const getMessage = (create) => {
     if (create) {
-      return `${collaboratorName} is inviting you to collaborate on a new project`
+      return `${collaboratorName} is inviting you to CREATE a new project`
     } else {
-      return `${collaboratorName} is inviting you to continue working on ${projectTitle}`
+      return `${collaboratorName} is inviting you to CONTINUTE working on ${projectTitle}`
     }
   }
   

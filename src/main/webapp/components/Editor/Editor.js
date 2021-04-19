@@ -6,11 +6,11 @@ import './Editor.css';
 import { handleSave } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
-
+import { updateCanEdit } from '../../actions';
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.userReducer);
-  const { html, css, js, title, activeProject, collaboratorId, collaboratorName, collaboratorAvatar } = 
+  const { html, css, js, title, activeProject, collaboratorId, 
+	  collaboratorName, collaboratorAvatar } = 
 		useSelector((state) => state.projectReducer);
   
   // I don't think we can use the "projecthtml" useState variables
@@ -46,11 +46,14 @@ const Editor = ({ history }) => {
 	setProjectName(message.data);
 	break;
       case ACTION.SEND_LEFT:
-	// Call function to render everything below the navbar greyed out/untouchable
-	// Can also leave a prompt instructing the user to save or leave
-	console.log(message.data /*collaboratorName*/);
-	console.log(message.id /*collaborator username*/);
-	break;
+        alert(`${message.data} left`)
+        console.log(message.data /*collaboratorName*/);
+        console.log(message.id /*collaborator username*/);
+        // Call function to render everything below the navbar greyed out/untouchable
+        // Can also leave a prompt instructing the user to save or leave
+	dispatch(updateCanEdit(false));
+	history.push('/projects');
+        break;
       default:
     }
   }
@@ -73,12 +76,13 @@ const Editor = ({ history }) => {
   return (
     <>
       <Navbar
-        updateName={setProjectName}
         history={history}
         projectName={projectName}
         socket={socket}
         title={title}
 	collaborator={collaboratorId}
+	collaboratorName={collaboratorName}
+	collaboratorAvatar={collaboratorAvatar}
         projectid={activeProject}
         handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
 		    js: projectjs, projectid: activeProject, title: projectName }))}/>
@@ -88,15 +92,13 @@ const Editor = ({ history }) => {
          language="xml"
          displayName="HTML"
          value={projecthtml}
-         onChange={setProjectHtml}
-        socket={socket}
-        projectid={activeProject}/>
+         socket={socket}
+         projectid={activeProject}/>
 
         <Pane 
          language="css"
          displayName="CSS"
          value={projectcss}
-         onChange={setProjectCss}
 	 socket={socket}
 	 projectid={activeProject}/>
 
@@ -104,7 +106,6 @@ const Editor = ({ history }) => {
          language="javascript"
          displayName="JS"
          value={projectjs}
-         onChange={setProjectJs}
 	 socket={socket}
 	 projectid={activeProject}/>
 

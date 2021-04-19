@@ -1,22 +1,22 @@
-import iReact from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import './Navbar.css';
 import Profile from './Profile.js';
-import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
+import { updateCanEdit, clearProject } from '../../actions';
 
 const Navbar = (props) => {
-  const { title, updateName, projectName, handleSave, 
-	  history, socket, projectid, collaborator } = props;
+  const { title, projectName, handleSave, 
+	  history, socket, projectid, collaborator, collaboratorName, 
+	  collaboratorAvatar } = props;
   const user = useSelector((state) => state.userReducer);
-  const { collaboratorName } = useSelector((state) => state.projectReducer);
+  const dispatch = useDispatch();
 
   const handleChange = elt => {
     let msg = JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 
 	    data: elt.target.value })
     socket.send(msg);
   }
-  const socket = SocketSingleton.getInstance();
 
   // called when user clicks on Profile
   const handleReturn = () => {
@@ -35,14 +35,14 @@ const Navbar = (props) => {
         <Profile
           // name={collaboratorName}
           // avatar={collaboratorAvatar}
-          name="Michael Lawes"
-          avatar="3"
+          name={collaboratorName}
+          avatar={collaboratorAvatar}
           email=""
           side="L"
           active={true}
           isUser={false}
-          handleSave={handleSave}
-          history={history}/>
+	  handleReturn={handleReturn}
+          handleSave={handleSave}/>
 
         <div className="Navbar_title_container">
           <input 
@@ -59,13 +59,13 @@ const Navbar = (props) => {
         <Profile
           // name={user.name}
           // avatar={user.avatar}
-          name="Mufaro Makiwa"
-          avatar="1"
+          name={user.name}
+          avatar={user.avatar}
           side="R"
           active={true}
           isUser={true}
-          handleSave={handleSave}
-          history={history}/>
+	  handleReturn={handleReturn}
+          handleSave={handleSave}/>
       </div>
     </div>
   );

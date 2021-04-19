@@ -32,7 +32,7 @@ public class SaveJsServlet extends HttpServlet {
 		 
 		 // Get the projectid and html text from user
 		 String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
-		 String js = Jsoup.clean(request.getParameter("js"), Whitelist.none());
+		 String js = request.getParameter("js");
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 

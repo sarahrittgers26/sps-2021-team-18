@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadUsers, updateCanEdit } from '../../actions';
+import { createProject, loadUsers, selectCollab, updateCanEdit } from '../../actions';
 import { ACTION } from '../../actions/types.js'
 
 const ConnectionDialog = (props) => {
@@ -16,20 +16,26 @@ const ConnectionDialog = (props) => {
 
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data)
+    let type = message.data.split("-")
+    let answer = type[0];
     switch (message.type) {
       case "REC_CREATE_PING":
-        if(message.data === "yes"){
+        if(answer === "yes"){
 	   newProject();
         } else {
           closeDialog();
         }
 	break;
       case "REC_CONTINUE_PING":
-        if(message.data === "yes"){
+        if(answer === "yes"){
+	  dispatch(selectCollab({ username: collaboratorId, name: collaboratorName, 
+		  avatar: type[1] }));
 	  dispatch(updateCanEdit(true)); 
         } else {
           closeDialog();
         }
+	break;
+      default:
     }
   }
 

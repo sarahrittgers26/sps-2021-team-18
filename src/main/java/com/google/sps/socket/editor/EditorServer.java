@@ -51,7 +51,7 @@ public class EditorServer extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
         // When connection is closed, remove the project.
-        projects.remove(conn)
+        projects.remove(conn);
         logger.info("Connection closed to: " + conn.getRemoteSocketAddress().getHostString());
         System.out.println("Closed connection to " + conn.getRemoteSocketAddress());
     }
@@ -61,41 +61,41 @@ public class EditorServer extends WebSocketServer {
         ObjectMapper mapper = new ObjectMapper();
         try {
             Message msg = mapper.readValue(message, Message.class);
-
             switch (msg.getType()) {
-            case "LOAD_INIT_PROJECTS":
-                addProject(msg.getType(), msg.getId(), conn);
-                break;
-            case "SIGN_IN":
-                addProject(msg.getType(), msg.getId(), conn);
-                break;
-            case "SIGN_OUT":
-                removeProject(conn);
-                break;
-            case "PING_USER":
-                pingUser(msg);
-                break;
-            case "REC_CREATE_PING":
-                pingUser(msg);
-                break;
-            case "REC_CONTINUE_PING":
-                pingUser(msg);
-                break;
-            case "SEND_HTML":
-                broadcastMessage(msg);
-                break;
-            case "SEND_CSS":
-                broadcastMessage(msg);
-                break;
-            case "SEND_JS":
-                broadcastMessage(msg);
-                break;
-            case "SEND_TITLE":
-                broadcastMessage(msg);
-                break;
-	    case "SEND_LEFT":
-		pingUser(msg);
-		break;
+		    case "LOAD_INIT_PROJECTS":
+			addProject(msg.getType(), msg.getId(), conn);
+			break;
+		    case "SIGN_IN":
+			addProject(msg.getType(), msg.getId(), conn);
+			break;
+		    case "SIGN_OUT":
+			removeProject(conn);
+			break;
+		    case "PING_USER":
+			pingUser(msg);
+			break;
+		    case "REC_CREATE_PING":
+			pingUser(msg);
+			break;
+		    case "REC_CONTINUE_PING":
+			pingUser(msg);
+			break;
+		    case "SEND_LEFT":
+			pingUser(msg);
+			break;
+		    case "SEND_HTML":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_CSS":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_JS":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_TITLE":
+			broadcastMessage(msg);
+			break;
+		    default:
             }
 
             System.out.println("From " + msg.getType() + ": " + msg.getId() + ": " + msg.getData());
@@ -162,7 +162,7 @@ public class EditorServer extends WebSocketServer {
     private void removeProject(WebSocket conn) throws JsonProcessingException {
         conns.remove(conn);
         // When connection is closed, remove the project.
-        projects.remove(conn)
+        projects.remove(conn);
     }
 
 }

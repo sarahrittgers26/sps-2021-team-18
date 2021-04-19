@@ -9,10 +9,9 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
-import Notification from './Notification.js';
-import { changeName, chooseProject, clearReducer, updateActive, signOut,
- changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection, changeAvatar,
-  loadProjects, clearProject, updateCanEdit } from '../../actions';
+import { changeName, chooseProject, clearReducer, updateActive, signOut, 
+	loadProjects, clearProject, updateCanEdit, changeAvatar, 
+	changeVisibility, changePassword, selectCollab } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware.js';
 import { ACTION } from '../../actions/types.js';
 
@@ -20,7 +19,7 @@ const Projects = ({ history }) => {
   // Get user from store
   const user = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  const { activeUsers, contacts, onlineProjects, activeProject, canEdit,
+  const { activeUsers, contacts, onlineProjects, canEdit,
 	  offlineProjects } = useSelector((state) => state.projectReducer);
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
@@ -61,7 +60,6 @@ const Projects = ({ history }) => {
     switch (msg.type) {
       case ACTION.PING_USER:
 	let info_arr = msg.data.split("=");
-	console.log(info_arr);
 	let ping_type = info_arr[0];
 	let collaboratorId = info_arr[1];
 	let collaboratorName = info_arr[2];
@@ -82,7 +80,6 @@ const Projects = ({ history }) => {
 	  let css = "";
 	  let js = "";
           for(var i = 0; i < onlineProjects.length; i++) {
-		console.log(onlineProjects[i]);
 		if (onlineProjects[i].projectid === projectid) {
 			html = onlineProjects[i].html
 			css = onlineProjects[i].css
@@ -90,9 +87,17 @@ const Projects = ({ history }) => {
 			break;
 		}
 	  }
+	  let avatar = "0";
+          for(var j = 0; j < contacts.length; i++) {
+		if (contacts[j].username === collaboratorId) {
+			avatar = contacts[j].avatar
+			break;
+		}
+	  }
 	  let title = info_arr[5];
 	  let proj = { collaborator: collaboratorId, collaboratorName: collaboratorName,
-		  title: title, projectid: projectid, html: html, css: css, js: js }
+		  title: title, projectid: projectid, html: html, css: css, js: js,
+	  avatar: avatar }
           setNotifications([...notifications,
 		  { collaboratorName: collaboratorName,
 		    collaborator: collaboratorId,
@@ -103,6 +108,8 @@ const Projects = ({ history }) => {
 		    collaboratorAvatar: collabAvatar,
 		  }]);
 	}
+	break;
+      default:
     }
   }
  
@@ -115,7 +122,6 @@ const Projects = ({ history }) => {
   // Updates active status, users and projects
   const activeStatusWrapper = useCallback(() => {
     const updateActiveStatus = () => {
-      //dispatch(updateActiveState());
       dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
       isProjectsPage: true }));
       dispatch(loadProjects(user.username));
@@ -130,7 +136,7 @@ const Projects = ({ history }) => {
       activeStatusWrapper();
     }
   }, [activeStatusWrapper, user.isSignedIn]);
-
+/*
   const closeConnectionWrapper = useCallback(() => {
     const closeDialogInTimeout = () => {
       setOpenConnectionDialog(false);
@@ -140,7 +146,7 @@ const Projects = ({ history }) => {
     }
     closeDialogInTimeout();
   }, [dispatch]);
-
+*/
   // Ping server every second for a minute to see if both users
   // selected the same project. If not stop backend call. If both
   // users
@@ -190,15 +196,23 @@ const Projects = ({ history }) => {
     if (isOnline(collaborator)) {
       setFromProject(true);
       setOpenConnectionDialog(true);
+      let avatar = "0";
+      for(var i = 0; i < contacts.length; i++) {
+	if (contacts[i].username === collaborator) {
+		avatar = contacts[i].avatar
+		break;
+	}
+      }
       setCurrentConnection({
         name: collaboratorName, 
-        username: collaborator
+        username: collaborator,
+	avatar: avatar
       });
-      dispatch(updateProjectSelection({ username: user.username, 
-	    projectid: projectid, isSelecting: true })); 
+      dispatch(selectCollab({ name: collaboratorName, username: collaborator,
+	      avatar: avatar }));
       dispatch(chooseProject({ projectid: projectid, 
-	      activeCollaborator: collaborator, collaboratorName: collaboratorName, 
-	      html: html, css: css, js: js, title: title }));
+	      collaborator: collaborator, collaboratorName: collaboratorName, 
+	      html: html, css: css, js: js, title: title, collaboratorAvatar: avatar }));
       setConnectionAlert(
         `This will send an invitation to ${collaboratorName} to continue working on ${title}`
         );
@@ -213,28 +227,29 @@ const Projects = ({ history }) => {
   }
 
   // this displays the connection dialog for the user to confirm they want to send the invite
-  const onActiveUserClick = (name, username) => {
+  const onActiveUserClick = (name, username, avatar) => {
     setFromProject(false);
     setOpenConnectionDialog(true);
     setCurrentConnection({
       name: name, 
-      username: username
+      username: username,
+      avatar: avatar
     });
-    dispatch(chooseUser(username));
+    dispatch(selectCollab({ name: name, username: username, avatar: avatar }));
     setConnectionAlert(
-      `This will create a new project with ${name}.`
+      `This will CREATE a new project with ${name}.`
     );
   }
 
   // this is called when the user tries to connect with a recent user
-  const onRecentUserClick = (collaborator, collaboratorName, isActive) => {
+  const onRecentUserClick = (collaborator, collaboratorName, isActive, avatar) => {
     if (isActive) {
-      onActiveUserClick(collaboratorName, collaborator);
+      onActiveUserClick(collaboratorName, collaborator, avatar);
       return;
     }
     setOpenAlertDialog(true);
     setAlertWarning(
-      `${collaboratorName} is currently offline. You can only collaborate on new projects with active users.`
+      `${collaboratorName} is currently offline. You can only CREATE new projects with ACTIVE users.`
     );
   }
 
@@ -311,8 +326,6 @@ const Projects = ({ history }) => {
   const closeConnectionDialog = (fromProject) => {
     setOpenConnectionDialog(false);
     if (fromProject) {
-      dispatch(updateProjectSelection({ username: user.username, 
-		projectid: activeProject, isSelecting: false }));
       dispatch(clearProject());
     }
     setConnectionAlert("");
@@ -356,11 +369,13 @@ const Projects = ({ history }) => {
       socket.send(msg);
       dispatch(loadProjects(user.username))
     } else {
-      let msg = JSON.stringify({ id: info.collaborator, type: ACTION.REC_CONTINUE_PING, data: "yes" })
+      let data = `yes-${info.avatar}`;
+      let msg = JSON.stringify({ id: info.collaborator, type: ACTION.REC_CONTINUE_PING, 
+	      data: data })
       socket.send(msg);
       dispatch(chooseProject({ projectid: info.projectid, 
-	  activeCollaborator: info.collaborator, collaboratorName: info.collaboratorName, 
-	  html: info.html, css: info.css, js: info.js, title: info.title }));
+	  collaborator: info.collaborator, collaboratorName: info.collaboratorName, 
+	  html: info.html, css: info.css, js: info.js, title: info.title, avatar: info.avatar }));
       dispatch(updateCanEdit(true));
     }
   }

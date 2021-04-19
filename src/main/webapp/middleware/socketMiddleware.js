@@ -1,5 +1,3 @@
-import baseUrl from '../components/Api/Api';
-
 const AppConfig = {
   PROTOCOL: "ws://",
   HOST: 'localhost',
