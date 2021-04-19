@@ -171,8 +171,8 @@ const Projects = ({ history }) => {
   const handleLogout = () => {
     dispatch(signOut());
     dispatch(clearReducer());
-    socket.onclose = () => {
-    }
+    let msg = JSON.stringify({ id: user.username, type: ACTION.SIGN_OUT, data: "" })
+    socket.send(msg);
     history.push('/');
   }
 
