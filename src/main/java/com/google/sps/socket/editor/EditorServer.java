@@ -51,7 +51,7 @@ public class EditorServer extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
         // When connection is closed, remove the project.
-        // projects.remove(conn)
+        projects.remove(conn)
         logger.info("Connection closed to: " + conn.getRemoteSocketAddress().getHostString());
         System.out.println("Closed connection to " + conn.getRemoteSocketAddress());
     }
@@ -75,6 +75,12 @@ public class EditorServer extends WebSocketServer {
             case "PING_USER":
                 pingUser(msg);
                 break;
+            case "REC_CREATE_PING":
+                pingUser(msg);
+                break;
+            case "REC_CONTINUE_PING":
+                pingUser(msg);
+                break;
             case "SEND_HTML":
                 broadcastMessage(msg);
                 break;
@@ -87,6 +93,9 @@ public class EditorServer extends WebSocketServer {
             case "SEND_TITLE":
                 broadcastMessage(msg);
                 break;
+	    case "SEND_LEFT":
+		pingUser(msg);
+		break;
             }
 
             System.out.println("From " + msg.getType() + ": " + msg.getId() + ": " + msg.getData());
@@ -151,7 +160,9 @@ public class EditorServer extends WebSocketServer {
     }
 
     private void removeProject(WebSocket conn) throws JsonProcessingException {
-        projects.remove(conn);
+        conns.remove(conn);
+        // When connection is closed, remove the project.
+        projects.remove(conn)
     }
 
 }

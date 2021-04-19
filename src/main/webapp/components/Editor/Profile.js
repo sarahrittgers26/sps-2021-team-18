@@ -18,7 +18,7 @@ import Icon_8 from "../../images/avatar-8.png";
 // Change email to some other parameter later, don't want to expose
 // people's emails unnecessarily
 const Profile = (props) => {
-  const {name, avatar, email, side, active, isUser, handleSave, history} = props;
+  const {name, avatar, email, side, active, isUser, handleSave, handleReturn, history} = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer);
@@ -62,15 +62,6 @@ const Profile = (props) => {
     }   
   } 
  
-  // called when user clicks on Profile
-  const handleReturn = () => {
-    dispatch(updateProjectSelection({ username: user.username, 
-		projectid: activeProject, isSelecting: false }));
-    dispatch(updateCanEdit(false));
-    dispatch(clearProject());
-    history.push('/projects');
-  }
-
   useEffect(() => {
     displayMenu ? menuRef.current.style.display = "flex" : menuRef.current.style.display = "none";
      const handleClickOutside = (event) => {

@@ -9,9 +9,10 @@ import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
+import Notification from './Notification.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut,
  changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection, changeAvatar,
-  loadProjects, clearProject } from '../../actions';
+  loadProjects, clearProject, updateCanEdit } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware.js';
 import { ACTION } from '../../actions/types.js';
 
@@ -25,7 +26,7 @@ const Projects = ({ history }) => {
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
   const [currentConnection, setCurrentConnection] = useState({});
   const [displayedProjects, setDisplayedProjects] = useState([]);
-  const [allProjects, setAllProjects] = useState([]);
+  const [allProjects, setAllProjects] = useState(onlineProjects.concat(offlineProjects));
   const [alertWarning, setAlertWarning] = useState("");
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
@@ -33,38 +34,78 @@ const Projects = ({ history }) => {
   const [connectionAlert, setConnectionAlert] = useState("");
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
-  const [notifications, setNotifications] = useState([
-    {
-      collaboratorName: "Mufaro",
-      isNewProject: false,
-      projectTitle: "Simple HTML",
-      collaboratorAvatar: "1"
-    },
-
-    {
-      collaboratorName: "Emmanuel",
-      isNewProject: true,
-      projectTitle: "",
-      collaboratorAvatar: "2"
-    },
-
-    {
-      collaboratorName: "Michael",
-      isNewProject: false,
-      projectTitle: "CSS grind",
-      collaboratorAvatar: "0"
-    },
-    
-  ]);
-
+  const [notifications, setNotifications] = useState([]);
+  
   let socket = SocketSingleton.getInstance();
   socket.onopen = () => {
-    // Add user to socket
     let mes = JSON.stringify({ id: user.username, type: ACTION.SIGN_IN,
       data: "" });
     socket.send(mes);
-  }
+    let allPaneIDS = []
+    allProjects.forEach((project) => {
+      // Setup socket for each editor pane with specified project 
+      let projectid = project.projectid;
+      allPaneIDS.push(projectid);
+    });
 
+    allPaneIDS.forEach(paneID => {
+      let messageDto = JSON.stringify({ id: paneID, 
+	  type: ACTION.LOAD_INIT_PROJECTS, data: "" })
+      socket.send(messageDto);
+    });
+
+  };
+
+  socket.onmessage = (response) => {
+    let msg = JSON.parse(response.data);
+    switch (msg.type) {
+      case ACTION.PING_USER:
+	let info_arr = msg.data.split("=");
+	console.log(info_arr);
+	let ping_type = info_arr[0];
+	let collaboratorId = info_arr[1];
+	let collaboratorName = info_arr[2];
+	let collabAvatar = info_arr[3];
+	if (ping_type === "create") {
+          setNotifications([...notifications,
+		  { collaboratorName: collaboratorName,
+		    collaborator: collaboratorId,
+	            isNewProject: true,
+		    projectTitle: "New Project",
+		    type: ping_type,
+		    proj: collaboratorId,
+		    collaboratorAvatar: collabAvatar,
+		  }]);
+	} else {
+	  let projectid = info_arr[4];
+	  let html = "";
+	  let css = "";
+	  let js = "";
+          for(var i = 0; i < onlineProjects.length; i++) {
+		console.log(onlineProjects[i]);
+		if (onlineProjects[i].projectid === projectid) {
+			html = onlineProjects[i].html
+			css = onlineProjects[i].css
+			js = onlineProjects[i].js
+			break;
+		}
+	  }
+	  let title = info_arr[5];
+	  let proj = { collaborator: collaboratorId, collaboratorName: collaboratorName,
+		  title: title, projectid: projectid, html: html, css: css, js: js }
+          setNotifications([...notifications,
+		  { collaboratorName: collaboratorName,
+		    collaborator: collaboratorId,
+	            isNewProject: false,
+		    projectTitle: proj.title,
+		    type: ping_type,
+		    proj: proj,
+		    collaboratorAvatar: collabAvatar,
+		  }]);
+	}
+    }
+  }
+ 
   window.onbeforeunload = () => {
     socket.onclose = () => {
     }
@@ -102,7 +143,8 @@ const Projects = ({ history }) => {
 
   // Ping server every second for a minute to see if both users
   // selected the same project. If not stop backend call. If both
-  // users 
+  // users
+  /*
   useEffect(() => {
     // Check if activeProject is empty (nothing selected) or if
     // user can already edit
@@ -132,7 +174,16 @@ const Projects = ({ history }) => {
 
   }, [dispatch, activeProject, canEdit, closeConnectionWrapper, history, 
 	  user.username]);
+  */
 
+  useEffect(() => {
+    if (!canEdit) {
+      return;
+    } else {
+      history.push('/editor');
+      return;
+    }
+  }, [canEdit, history]);
   // this displays the connection dialog for the user to confirm they want to send the invite
   const continueProject = (projectid, title, collaborator, collaboratorName, 
 	  html, css, js) => {
@@ -288,19 +339,51 @@ const Projects = ({ history }) => {
     return projects;
   }
 
-  // accept when a user sends collaboration request
-  const acceptCollaboration = (notification) => {
-    
 
-  }
-
-
-  // decline when a user sends collaboration request
-  const declineCollaboration = (notification) => {
+  // 
+  const acceptCollaboration = (notification, callBack) => {
     const updated = notifications.filter(notif => {
       return notif !== notification
     })
     setNotifications(updated);
+    callBack();
+  }
+
+  // accept when a user sends collaboration request
+  const acceptCallBack = (not_type, info) => {
+    if (not_type === "create") {
+      let msg = JSON.stringify({ id: info, type: ACTION.REC_CREATE_PING, data: "yes" })
+      socket.send(msg);
+      dispatch(loadProjects(user.username))
+    } else {
+      let msg = JSON.stringify({ id: info.collaborator, type: ACTION.REC_CONTINUE_PING, data: "yes" })
+      socket.send(msg);
+      dispatch(chooseProject({ projectid: info.projectid, 
+	  activeCollaborator: info.collaborator, collaboratorName: info.collaboratorName, 
+	  html: info.html, css: info.css, js: info.js, title: info.title }));
+      dispatch(updateCanEdit(true));
+    }
+  }
+
+
+  // decline when a user sends collaboration request
+  const declineCallBack = (collabId, ping_type) => {
+    if (ping_type === "create") {
+      let msg = JSON.stringify({ id: collabId, type: ACTION.REC_CREATE_PING, data: "no" })
+      socket.send(msg);
+    } else {
+      let msg = JSON.stringify({ id: collabId, type: ACTION.REC_CONTINUE_PING, data: "no" })
+      socket.send(msg);
+    }
+
+  }
+
+  const declineCollaboration = (notification, callBack) => {
+    const updated = notifications.filter(notif => {
+      return notif !== notification
+    })
+    setNotifications(updated);
+    callBack();
   }
 
   useEffect(() => {
@@ -338,7 +421,7 @@ const Projects = ({ history }) => {
 
     setAllUsers(allUsersReloaded);
     setAllProjects(allProjectsReloaded);
-  }, [contacts, onlineProjects, offlineProjects, activeUsers]);
+  }, [contacts, onlineProjects, offlineProjects, activeUsers, socket]);
 
 
   useEffect(() => {
@@ -366,6 +449,8 @@ const Projects = ({ history }) => {
         notifications={notifications}
         avatar={user.avatar}
         accept={acceptCollaboration}
+	acceptCallBack={acceptCallBack}
+	declineCallBack={declineCallBack}
         decline={declineCollaboration}/>
 
       

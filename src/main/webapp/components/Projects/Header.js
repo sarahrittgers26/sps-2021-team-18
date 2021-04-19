@@ -16,7 +16,8 @@ import Banner from "../../images/banner.png";
 
 
 const Header = (props) => {
-  const { name, email, handleLogout, displayProfile, notifications, avatar, accept, decline } = props;
+  const { name, email, handleLogout, displayProfile, notifications, avatar, accept, decline,
+  acceptCallBack, declineCallBack } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
@@ -67,8 +68,10 @@ const Header = (props) => {
       <Notification
         key={`Notification_${notifications.indexOf(notification)}`}
         collaboratorName={notification.collaboratorName}
-        accept={() => accept(notification)}
-        decline={() => decline(notification)}
+        accept={() => accept(notification, 
+		() => acceptCallBack(notification.type, notification.proj))}
+        decline={() => decline(notification, 
+		() => declineCallBack(notification.collaborator, notification.type))}
         isNewProject={notification.isNewProject}
         projectTitle={notification.projectTitle}
         collaboratorAvatar={notification.collaboratorAvatar}/>

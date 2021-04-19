@@ -45,6 +45,12 @@ const Editor = ({ history }) => {
       case ACTION.SEND_TITLE:
 	setProjectName(message.data);
 	break;
+      case ACTION.SEND_LEFT:
+	// Call function to render everything below the navbar greyed out/untouchable
+	// Can also leave a prompt instructing the user to save or leave
+	console.log(message.data /*collaboratorName*/);
+	console.log(message.id /*collaborator username*/);
+	break;
       default:
     }
   }
@@ -72,6 +78,7 @@ const Editor = ({ history }) => {
         projectName={projectName}
         socket={socket}
         title={title}
+	collaborator={collaboratorId}
         projectid={activeProject}
         handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
 		    js: projectjs, projectid: activeProject, title: projectName }))}/>

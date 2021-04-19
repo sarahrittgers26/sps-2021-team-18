@@ -3,23 +3,30 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadUsers } from '../../actions';
+import { createProject, loadUsers, updateCanEdit } from '../../actions';
 import { ACTION } from '../../actions/types.js'
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
-  const { collaboratorId, collaboratorName, isOpen, closeDialog, 
+  const { collaboratorId, collaboratorName, isOpen, closeDialog, fromProject, 
 	  message, socket } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
+  const { activeProject, title } = useSelector((state) => state.projectReducer);
 
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data)
     switch (message.type) {
-      case "REC_PING":
+      case "REC_CREATE_PING":
         if(message.data === "yes"){
-          dispatch(createProject({ username: user.username, 
-            collaborator: collaboratorId, title: "New Project" }))
+	   newProject();
+        } else {
+          closeDialog();
+        }
+	break;
+      case "REC_CONTINUE_PING":
+        if(message.data === "yes"){
+	  dispatch(updateCanEdit(true)); 
         } else {
           closeDialog();
         }
@@ -28,7 +35,14 @@ const ConnectionDialog = (props) => {
 
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: "create" })
+    let msg = {};
+    if (fromProject) {
+      let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
+      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    } else {
+      let data = `create=${user.username}=${user.name}=${user.avatar}`;
+      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    }
     socket.send(msg)
   }
 
