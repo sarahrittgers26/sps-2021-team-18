@@ -69,6 +69,9 @@ public class EditorServer extends WebSocketServer {
                 case "SIGN_IN":
                     addProject(msg.getType(), msg.getId(), conn);
 		    break;
+                case "SIGN_OUT":
+                    removeProject(conn);
+		    break;
                 case "PING_USER":
                     pingUser(msg);
 		    break;

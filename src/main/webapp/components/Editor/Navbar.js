@@ -9,14 +9,16 @@ const Navbar = (props) => {
 	  history, socket, projectid } = props;
   const user = useSelector((state) => state.userReducer);
   const { collaboratorName } = useSelector((state) => state.projectReducer);
+  
+  socket.onmessage = (response) => {
+    let message = JSON.parse(response.data);
+    updateName(message.data);
+  }
 
   const handleChange = elt => {
-    socket.send(JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 
-	    data: elt.target.value }));
-    socket.onmessage = (response) => {
-      let message = JSON.parse(response.data);
-      updateName(message.data);
-    }
+    let msg = JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 
+	    data: elt.target.value })
+    socket.send(msg);
   }
 
   return (
