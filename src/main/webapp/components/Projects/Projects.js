@@ -257,10 +257,6 @@ const Projects = ({ history }) => {
     setOpenProfileDialog(false);
   }
 
-  const sendInvite = () => {
-    ;
-  }
-
   const closeConnectionDialog = (fromProject) => {
     setOpenConnectionDialog(false);
     if (fromProject) {
@@ -428,9 +424,10 @@ const Projects = ({ history }) => {
           collaboratorName={currentConnection.name}
           collaboratorId={currentConnection.username}
           isOpen={openConnectionDialog}
+          fromProject={fromProject}
           closeDialog={() => closeConnectionDialog(fromProject)}
           message={connectionAlert}
-          sendInvite={sendInvite}/>
+          socket={socket}/>
       )}
         
       {openAlertDialog && (

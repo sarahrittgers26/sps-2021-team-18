@@ -82,8 +82,8 @@ const Editor = ({ history }) => {
          displayName="HTML"
          value={projecthtml}
          onChange={setProjectHtml}
-	 socket={socket}
-	 projectid={activeProject}/>
+        socket={socket}
+        projectid={activeProject}/>
 
         <Pane 
          language="css"

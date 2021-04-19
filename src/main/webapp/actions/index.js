@@ -221,16 +221,13 @@ export const createProject = (details) => async(dispatch) => {
   let url = `/create?username=${username}&partner=${partner}&title=${title}`;
   const response = await axios.post(url);
   let projectid = response.data;
-  const newPaneIDS = [`${projectid}-html`,`${projectid}-css`,`${projectid}-js`,
-  `${projectid}-title`]
   const socket = SocketSingleton.getInstance();
-  socket.onmessage = () => {
-    newPaneIDS.forEach(paneID => {
-      let messageDto = JSON.stringify({ id: paneID, 
+  let messageDto = JSON.stringify({ id: projectid, 
 	type: ACTION.LOAD_INIT_PROJECTS, data: "" })
-      socket.send(messageDto);
-    });
-  }
+  socket.send(messageDto);
+  let collabMesg = JSON.stringify({ id: partner, 
+	type: ACTION.COLLAB_ADD_PROJECT, data: projectid })
+  socket.send(collabMesg);
   dispatch(loadProjects(username));
 };
 

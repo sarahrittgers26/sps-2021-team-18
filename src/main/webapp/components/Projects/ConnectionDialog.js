@@ -4,17 +4,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
 import { createProject, loadUsers } from '../../actions';
+import { ACTION } from '../../actions/types.js'
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
   const { collaboratorId, collaboratorName, isOpen, closeDialog, 
-	  message, sendInvite } = props;
+	  message, socket } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
 
+  socket.onmessage = (response) => {
+    let message = JSON.parse(response.data)
+    switch (message.type) {
+      case "REC_PING":
+        if(message.data === "yes"){
+          dispatch(createProject({ username: user.username, 
+            collaborator: collaboratorId, title: "New Project" }))
+        } else {
+          closeDialog();
+        }
+    }
+  }
+
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    sendInvite(collaboratorId);
+    let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: "create" })
+    socket.send(msg)
   }
 
   const newProject = () => {
