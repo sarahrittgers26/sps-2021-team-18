@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Pane from './Pane.js';
 import Navbar from './Navbar.js';
 import './Editor.css';
 import { handleSave } from '../../actions';
+import html2canvas from 'html2canvas';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 
@@ -29,24 +30,45 @@ const Editor = ({ history }) => {
   const [srcDoc, setSrcDoc] = useState("");
   const [projectName, setProjectName] = useState(title);
   const socket = SocketSingleton.getInstance();
+  const renderRef = useRef();
   
-  socket.onmessage = (response) => {
-    let message = JSON.parse(response.data);
-    switch (message.type) {
-      case ACTION.SEND_HTML:
-	setProjectHtml(message.data)
-	break;
-      case ACTION.SEND_CSS:
-	setProjectCss(message.data)
-	break;
-      case ACTION.SEND_JS:
-	setProjectJs(message.data)
-	break;
-      case ACTION.SEND_TITLE:
-	setProjectName(message.data);
-	break;
-      default:
+  // socket.onmessage = (response) => {
+  //   let message = JSON.parse(response.data);
+  //   switch (message.type) {
+  //     case ACTION.SEND_HTML:
+  //       setProjectHtml(message.data)
+  //       break;
+  //     case ACTION.SEND_CSS:
+  //       setProjectCss(message.data)
+  //       break;
+  //     case ACTION.SEND_JS:
+  //       setProjectJs(message.data)
+  //       break;
+  //     case ACTION.SEND_TITLE:
+  //       setProjectName(message.data);
+  //       break;
+  //     default:
+  //   }
+  // }
+
+  const handleSave = () => {
+    const options = {
+      // width: 1000,
+      // height: 600,
     }
+    html2canvas(document.querySelector("#render_pane"), options).then(function(canvas) {
+      document.body.appendChild(canvas)
+      dispatch(handleSave({
+         html: projecthtml, 
+         css: projectcss,
+         js: projectjs, 
+         projectid: activeProject, 
+         title: projectName,
+         image: canvas,
+        }))
+    });
+    // dispatch(handleSave({ html: projecthtml, css: projectcss,
+    //   js: projectjs, projectid: activeProject, title: projectName }))
   }
 
   
@@ -65,7 +87,7 @@ const Editor = ({ history }) => {
   }, [projecthtml, projectcss, projectjs]);
 
   return (
-    <>
+    <div className="Editor_container">
       <Navbar
         updateName={setProjectName}
         history={history}
@@ -73,8 +95,7 @@ const Editor = ({ history }) => {
         socket={socket}
         title={title}
         projectid={activeProject}
-        handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
-		    js: projectjs, projectid: activeProject, title: projectName }))}/>
+        handleSave={handleSave}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 
@@ -90,20 +111,20 @@ const Editor = ({ history }) => {
          displayName="CSS"
          value={projectcss}
          onChange={setProjectCss}
-	 socket={socket}
-	 projectid={activeProject}/>
+         socket={socket}
+         projectid={activeProject}/>
 
         <Pane 
          language="javascript"
          displayName="JS"
          value={projectjs}
          onChange={setProjectJs}
-	 socket={socket}
-	 projectid={activeProject}/>
+	       socket={socket}
+	       projectid={activeProject}/>
 
       </div>
 
-      <div className="Editor_pane Editor_bottom_pane">
+      <div className="Editor_pane Editor_bottom_pane" id="render_pane">
         <iframe 
           title="output"
           srcDoc={srcDoc}
@@ -112,7 +133,7 @@ const Editor = ({ history }) => {
           height="100%"/>
 
       </div>
-    </>
+    </div>
   );
 }
 

@@ -203,11 +203,14 @@
 
 .Sign_up_button {
   padding: 8px 8px;
+  outline: none;
+  text-decoration: none;
+  border: none;
   width: 25%;
   cursor: pointer;
   border-radius: 8px;
   background-color: rgb(180, 179, 179);
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transition: all 0.3s;
 }
 

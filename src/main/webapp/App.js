@@ -34,7 +34,7 @@ function App() {
       <HashRouter history={history}>
         <Route path="/" exact component={Auth} />
         <Route path="/editor" exact component={Editor} />
-        <Route path="/projects" exact component={Projects} />
+        <Route path="/projects" exact component={Editor} />
       </HashRouter>
     </ThemeProvider>
   );

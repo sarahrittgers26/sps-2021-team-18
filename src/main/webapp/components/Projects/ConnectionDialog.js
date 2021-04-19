@@ -23,6 +23,8 @@ const ConnectionDialog = (props) => {
         } else {
           closeDialog();
         }
+        break;
+      default:
     }
   }
 

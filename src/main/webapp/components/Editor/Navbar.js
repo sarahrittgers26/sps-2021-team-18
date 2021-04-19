@@ -22,43 +22,41 @@ const Navbar = (props) => {
   }
 
   return (
-    <div>
-      <div className="Navbar_container">
-        <Profile
-          // name={collaboratorName}
-          // avatar={collaboratorAvatar}
-          name="Michael Lawes"
-          avatar="3"
-          email=""
-          side="L"
-          active={true}
-          isUser={false}
-          handleSave={handleSave}
-          history={history}/>
+    <div className="Navbar_container">
+      <Profile
+        // name={collaboratorName}
+        // avatar={collaboratorAvatar}
+        name="Michael Lawes"
+        avatar="3"
+        email=""
+        side="L"
+        active={true}
+        isUser={false}
+        handleSave={handleSave}
+        history={history}/>
 
-        <div className="Navbar_title_container">
-          <input 
-            type="text"
-            className="Navbar_title"
-            placeholder={title}
-            name="title_input" 
-            autoComplete="off" 
-            id="title_input"
-            value={projectName}
-            onChange={handleChange}/>
-        </div>
-        
-        <Profile
-          // name={user.name}
-          // avatar={user.avatar}
-          name="Mufaro Makiwa"
-          avatar="1"
-          side="R"
-          active={true}
-          isUser={true}
-          handleSave={handleSave}
-          history={history}/>
+      <div className="Navbar_title_container">
+        <input 
+          type="text"
+          className="Navbar_title"
+          placeholder={title}
+          name="title_input" 
+          autoComplete="off" 
+          id="title_input"
+          value={projectName}
+          onChange={handleChange}/>
       </div>
+      
+      <Profile
+        // name={user.name}
+        // avatar={user.avatar}
+        name={user.name}
+        avatar={user.avatar}
+        side="R"
+        active={true}
+        isUser={true}
+        handleSave={handleSave}
+        history={history}/>
     </div>
   );
 }

@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-
 import SaveIcon from '@material-ui/icons/Save';
+
 import './Profile.css';
 import { clearProject, updateCanEdit, updateProjectSelection } from '../../actions';
 import Icon_1 from "../../images/avatar-1.png";
@@ -64,6 +64,7 @@ const Profile = (props) => {
  
   // called when user clicks on Profile
   const handleReturn = () => {
+    setDisplayMenu(false);
     dispatch(updateProjectSelection({ username: user.username, 
 		projectid: activeProject, isSelecting: false }));
     dispatch(updateCanEdit(false));
@@ -87,6 +88,10 @@ const Profile = (props) => {
 
   }, [displayMenu]);
 
+  const saveProject = () => {
+    setDisplayMenu(false);
+    handleSave();
+  }
 
   return (
     <div className={`Profile_container ${side === "R" ? "Profile_flipped" : ""}`}>
@@ -106,9 +111,12 @@ const Profile = (props) => {
         </span>
       </div>
       {isUser ?
-        <div className="Editor_profile_menu" ref={menuRef}>
+        <div className="Editor_profile_menu" ref={menuRef}>       
+          <span className="Editor_options">
+            Options
+          </span>         
           <ul>
-            <li onClick={() => handleClick(handleSave)}>
+            <li onClick={() => handleClick(saveProject)}>
               <SaveIcon className="Editor_profile_menu_icon"/>
               <span>
                 Save project
