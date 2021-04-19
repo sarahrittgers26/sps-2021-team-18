@@ -12,6 +12,8 @@ import ProfileDialog from './ProfileDialog.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut,
  changeVisibility, changePassword, chooseUser, checkProject, updateProjectSelection,
   loadProjects, clearProject } from '../../actions';
+import SocketSingleton from '../../middleware/socketMiddleware.js';
+import { ACTION } from '../../actions/types.js';
 
 const Projects = ({ history }) => {
   // Get user from store
@@ -33,6 +35,20 @@ const Projects = ({ history }) => {
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
 
+  let socket = SocketSingleton.getInstance();
+  socket.onopen = () => {
+    // Add user to socket
+    let mes = JSON.stringify({ id: user.username, type: ACTION.SIGN_IN,
+      data: "" });
+    socket.send(mes);
+  }
+
+  window.onbeforeunload = () => {
+    socket.onclose = () => {
+    }
+  }
+
+
   // Updates active status, users and projects
   const activeStatusWrapper = useCallback(() => {
     const updateActiveStatus = () => {
@@ -40,7 +56,7 @@ const Projects = ({ history }) => {
       dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
       isProjectsPage: true }));
       dispatch(loadProjects(user.username));
-      setTimeout(updateActiveStatus, 1 * 30000);
+      setTimeout(updateActiveStatus, 1 * 10000);
     };
     updateActiveStatus();
   }, [dispatch, user.username, user.isVisible]);
@@ -81,7 +97,7 @@ const Projects = ({ history }) => {
         dispatch(updateProjectSelection({ username: user.username, 
 		projectid: activeProject, isSelecting: false }));
         closeConnectionWrapper();
-      }, 60000);
+      }, 29000);
 
       return () => {
         clearInterval(checkProjectActivity);
@@ -155,6 +171,8 @@ const Projects = ({ history }) => {
   const handleLogout = () => {
     dispatch(signOut());
     dispatch(clearReducer());
+    let msg = JSON.stringify({ id: user.username, type: ACTION.SIGN_OUT, data: "" })
+    socket.send(msg);
     history.push('/');
   }
 
@@ -268,6 +286,20 @@ const Projects = ({ history }) => {
     setAllProjects([]);
     let allUsersReloaded = contacts.concat(activeUsers);
     let allProjectsReloaded = onlineProjects.concat(offlineProjects);
+    let allPaneIDS = []
+    
+    allProjectsReloaded.forEach((project) => {
+      // Setup socket for each editor pane with specified project 
+      let projectid = project.projectid;
+      allPaneIDS.push(projectid);
+    });
+
+    allPaneIDS.forEach(paneID => {
+      let messageDto = JSON.stringify({ id: paneID, 
+	  type: ACTION.LOAD_INIT_PROJECTS, data: "" })
+      socket.send(messageDto);
+    });
+
     setAllUsers(allUsersReloaded);
     setAllProjects(allProjectsReloaded);
   }, [contacts, onlineProjects, offlineProjects, activeUsers]);

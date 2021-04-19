@@ -131,7 +131,7 @@ public class LoadProjectsServlet extends HttpServlet {
 			DateTimeFormatter.ISO_DATE_TIME;
 		LocalDateTime loginTime = LocalDateTime
 			.parse(lastActive, formatter);
-		LocalDateTime now = LocalDateTime.now().minusSeconds(30);
+		LocalDateTime now = LocalDateTime.now().minusSeconds(10);
 		return loginTime.isAfter(now);
 	}
 }

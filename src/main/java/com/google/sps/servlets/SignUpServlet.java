@@ -70,6 +70,7 @@ public class SignUpServlet extends HttpServlet {
 					.set("lastActive", newLogin)
 					.set("name", name)
 					.set("isVisible", true)
+					.set("avatar", "0")
 					.build();
 			 datastore.put(user);
 		 }

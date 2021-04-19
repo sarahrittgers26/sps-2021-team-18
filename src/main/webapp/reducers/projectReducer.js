@@ -16,6 +16,12 @@ const initialState = {
 }
 
 export const projectReducer = (state = initialState, action) => {
+  /* Add socket text to project editor
+  const concatToHtml = state.html.create.concat;
+  const concatToCss = state.css.create.concat;
+  const concatToJs = state.js.create.concat;
+  const concatToTitle = state.title.create.concat;
+  */
   switch (action.type) {
     case ACTION.CHOOSE_PROJECT:
       return { ...state, activeProject: action.payload.projectid, 
@@ -39,13 +45,13 @@ export const projectReducer = (state = initialState, action) => {
     case ACTION.CAN_EDIT:
       return { ...state, canEdit: action.payload };
     case ACTION.REC_HTML:
-      return { ...state, html: action.payload };
+      return { ...state, html: state.html.concat(action.payload) };
     case ACTION.REC_CSS:
-      return { ...state, css: action.payload };
+      return { ...state, css: state.css.concat(action.payload) };
     case ACTION.REC_JS:
-      return { ...state, js: action.payload };
+      return { ...state, js: state.js.concat(action.payload) };
     case ACTION.REC_TITLE:
-      return { ...state, title: action.payload };
+      return { ...state, title: state.title.concat(action.payload) };
     case ACTION.CLEAR_REDUCER:
       return { ...state, activeProject: '', onlineProjects: [], title: '',
       offlineProjects: [], activeUsers: [], contacts: [], html: '',
@@ -54,4 +60,6 @@ export const projectReducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
+
+

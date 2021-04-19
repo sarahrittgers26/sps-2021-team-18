@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from '../Api/Api';
-import { loadInitialProjects, loadUsers, signIn } from '../../actions';
+import { loadInitialProjects, loadUsers, signIn, htmlReceived, cssReceived,
+ jsReceived, titleReceived } from '../../actions';
 
 const Auth = ({ history }) => {
   // Dispatch for react-redux store
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.userReducer);
+  const { onlineProjects, offlineProjects } = useSelector(
+	  (state) => state.projectReducer);
 	
   // Local state control of displaying sign-in or sign-up info
   const [mainVisible, setMainVisible] = useState(true);
@@ -29,6 +33,7 @@ const Auth = ({ history }) => {
   const [nameError, setNameError] = useState(false);
   const [nameErrorMsg, setNameErrorMsg] = useState('');
 
+
   // Show main modal which gives user the option to signin or signup
   const showMain = () => {
     setMainDirection('left');
@@ -37,40 +42,6 @@ const Auth = ({ history }) => {
     setSignUpDirection('right');
     setSignInVisible(false);
     setSignInDirection('right');
-  };
-
-  // Handles showing the signup window
-  const showSignUp = () => {
-    setSignUpDirection('left');
-    setMainDirection('right');
-    setSignUpVisible(true);
-    setMainVisible(false);
-    setSignInDirection('right');
-    setSignInVisible(false);
-    setUsernameErrorMsg('');
-    setUsernameError(false);
-    setPasswordErrorMsg('');
-    setPasswordError(false);
-    setEmailErrorMsg('');
-    setEmailError(false);
-    setNameErrorMsg('');
-    setNameError(false);
-  };
-
-  // Handles showing the signIn window
-  const showSignIn = () => {
-    setSignInDirection('left');
-    setMainDirection('right');
-    setSignInVisible(true);
-    setMainVisible(false);
-    setSignUpDirection('right');
-    setSignUpVisible(false);
-    setUsernameErrorMsg('');
-    setUsernameError(false);
-    setPasswordErrorMsg('');
-    setPasswordError(false);
-    setEmailErrorMsg('');
-    setEmailError(false);
   };
 
   // Handles and checks keypress and calls the callback method
@@ -286,15 +257,15 @@ const Auth = ({ history }) => {
    // Render signup modal with input fields for user
   const renderSignUp = () => {
     return (
-        <div container spacing={1} justify="center" alignItems="center">
-          <div item >
+        <div spacing={1} justify="center">
+          <div>
             <button onClick={showMain}>
             </button>
             <span>
               Sign Up
             </span>
           </div>
-          <div item  className="grid-textfield">
+          <div className="grid-textfield">
             <textarea
               id="name"
               label="Name"
