@@ -16,7 +16,7 @@ const Pane = (props) => {
     let type = "SEND_" + displayName;
     let msg = JSON.stringify({ id: projectid, type: type, data: value })
     socket.send(msg);
-  }
+  } 
 
   return (
     <div className="Pane_container">

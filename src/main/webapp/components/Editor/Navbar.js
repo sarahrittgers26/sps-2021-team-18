@@ -13,7 +13,7 @@ const Navbar = (props) => {
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data);
     updateName(message.data);
-  }
+  } 
 
   const handleChange = elt => {
     let msg = JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 

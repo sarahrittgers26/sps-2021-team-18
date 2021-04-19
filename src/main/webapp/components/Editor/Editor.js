@@ -27,7 +27,6 @@ const Editor = ({ history }) => {
   const [projectjs, setProjectJs] = useState(js);
   const [srcDoc, setSrcDoc] = useState("");
   const [projectName, setProjectName] = useState(title);
-
   const socket = SocketSingleton.getInstance();
   
   socket.onmessage = (response) => {
