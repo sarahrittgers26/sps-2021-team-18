@@ -5,6 +5,7 @@ import Navbar from './Navbar.js';
 import './Editor.css';
 import { handleSave } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
+import { ACTION } from '../../actions/types.js';
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,26 @@ const Editor = ({ history }) => {
 
   const socket = SocketSingleton.getInstance();
   
+  socket.onmessage = (response) => {
+    let message = JSON.parse(response.data);
+    switch (message.type) {
+      case ACTION.SEND_HTML:
+	setProjectHtml(message.data)
+	break;
+      case ACTION.SEND_CSS:
+	setProjectCss(message.data)
+	break;
+      case ACTION.SEND_JS:
+	setProjectJs(message.data)
+	break;
+      case ACTION.SEND_TITLE:
+	setProjectName(message.data);
+	break;
+      default:
+    }
+  }
+
+  
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`
@@ -48,9 +69,9 @@ const Editor = ({ history }) => {
       <Navbar
         updateName={setProjectName}
 	history={history}
-	title={title}
 	projectName={projectName}
 	socket={socket}
+	title={title}
 	projectid={activeProject}
 	handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
 		js: projectjs, projectid: activeProject, title: projectName }))}/>

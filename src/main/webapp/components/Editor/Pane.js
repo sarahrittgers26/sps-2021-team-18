@@ -12,14 +12,6 @@ import { ACTION } from '../../actions/types.js';
 const Pane = (props) => {
   const { language, displayName, value, onChange, socket, projectid } = props;
   
-  socket.onmessage = (response) => {
-    let message = JSON.parse(response.data);
-    let currentEditor = "SEND_" + displayName;
-    if (currentEditor === message.type) {
-      onChange(message.data);
-    }
-  }
-
   const handleChange = (editor, data, value) => {
     let type = "SEND_" + displayName;
     let msg = JSON.stringify({ id: projectid, type: type, data: value })
