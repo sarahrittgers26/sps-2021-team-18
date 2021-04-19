@@ -269,11 +269,9 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {nameError ?
-            <span>
-              {nameErrorMsg}
-            </span> : <div></div>
-          }
+          {nameError && (
+            <span className="error">{nameErrorMsg}</span>)}
+          <div></div>
         </div>
         <div className="input">
           <input
@@ -291,10 +289,10 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {usernameError ?
-            <span>{usernameErrorMsg}</span>
-            : <div></div>
-          }
+          {usernameError && (
+            <span className="error">{usernameErrorMsg}</span>)}
+          <div></div>
+
         </div>
         <div className="input">
           <input
@@ -312,11 +310,10 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {passwordError ?
-            <span>
-              {passwordErrorMsg}
-            </span>
-            : <div></div>}
+          {passwordError && (
+            <span className="error">{passwordErrorMsg}</span>)}
+
+          <div></div>
         </div>
         <div className="input">
           <input
@@ -334,13 +331,14 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {emailError ?
-            <span>{emailErrorMsg}</span>
-            : <div></div>
-          }
+          {emailError && (
+            <span className="error">{emailErrorMsg}</span>)}
+          <div></div>
+
         </div>
-        <div className="grid-button">
+        <div className="Sign_up_button_container">
           <button
+            className="Sign_up_button"
             onClick={() => handleOnSignUpSubmit(username, password, email, name,
               () => handleSignUp(username, password, email, name))}
           >
@@ -400,10 +398,10 @@ const Auth = ({ history }) => {
 
         <div className="Sign_in_button_container">
           <button
-            className="Sign_in_button"
+            className="Sign_up_button"
             onClick={() => handleOnSignInSubmit(username, password,
               () => handleSignIn(username, password))}>
-            Sign In
+            Log In
           </button>
         </div>
       </div>
@@ -414,8 +412,11 @@ const Auth = ({ history }) => {
   return (
     <div className="Auth_container">
       <div className="Auth_header">
-        <div className="Auth_title">
-          <div>COLLABCODE</div>
+
+        <div class="nine">
+          <h1>COLLABCODE<span> code, create, and collaborate</span></h1>
+
+
 
         </div>
       </div>
@@ -423,14 +424,15 @@ const Auth = ({ history }) => {
 
       <div className="Auth_main">
         <div className="Auth_content card">
-          <p>Login Using Your Username and Password or Sign Up!</p>
           <div className="Auth_buttons_container">
+            {displaySignIn ? (
             <button className="Auth_button left_button" onClick={openSignIn}>
               SIGN IN
-              </button>
-            <button className="Auth_button right_button " onClick={openSignUp}>
+            </button>) :
+
+            <button className="Auth_button left_button " onClick={openSignUp}>
               SIGN UP
-              </button>
+            </button> }
           </div>
 
           <div className="Signin_signup">
@@ -442,8 +444,24 @@ const Auth = ({ history }) => {
               {renderSignUp()}
             </div>
           </div>
+          
+          {displaySignIn ? 
+            (<h5><span>New to CollabCode?</span></h5>) :
+            (<h5><span>Already have an account?</span></h5>)}
+          
+          {!displaySignIn ? (
+            <button className="Auth_button right_button" onClick={openSignIn}>
+              SIGN IN
+            </button>) :
+
+            <button className="Auth_button right_button " onClick={openSignUp}>
+              SIGN UP
+            </button> }
+
         </div>
+
       </div>
+
     </div>
 
 
