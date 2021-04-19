@@ -7,7 +7,8 @@ import { handleSave } from '../../actions';
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
-  const { html, css, js, title, activeProject } = 
+  const user = useSelector((state) => state.userReducer);
+  const { html, css, js, title, activeProject, collaboratorId, collaboratorName, collaboratorAvatar } = 
 		useSelector((state) => state.projectReducer);
   
   const [projecthtml, setProjecthtml] = useState(html);
@@ -34,11 +35,14 @@ const Editor = ({ history }) => {
     <>
       <Navbar
         updateName={setProjectName}
-	history={history}
-	title={title}
-	projectName={projectName}
-	handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
-		js: projectjs, projectid: activeProject, title: projectName }))}/>
+        history={history}
+        projectName={projectName}
+        handleSave={() => dispatch(handleSave({ 
+          html: projecthtml,
+          css: projectcss,
+          js: projectjs,
+          projectid: activeProject, 
+          title: projectName }))}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 

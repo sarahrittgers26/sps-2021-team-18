@@ -19,9 +19,6 @@ const Pane = (props) => {
     <div className="Pane_container">
       <div className="Pane_title">
         {displayName}
-        <button className="Pane_minimize_button">
-          <MinimizeIcon />
-        </button>
       </div>
 
       <ControlledEditor
