@@ -74,7 +74,6 @@ public class SignInServlet extends HttpServlet {
 
 		if (users.hasNext()) {
 			Entity user = users.next();
-			KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
 			// Get user's string field
 			fieldValue = user.getString(field);
@@ -109,7 +108,6 @@ public class SignInServlet extends HttpServlet {
 
 		if (users.hasNext()) {
 			Entity user = users.next();
-			KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
 
 			// Get user's isVisible status
 			fieldValue = user.getBoolean(field);

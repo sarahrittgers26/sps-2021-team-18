@@ -42,9 +42,6 @@ public class EditorServer extends WebSocketServer {
     @OnOpen
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
         conns.add(webSocket);
-
-        logger.info("Connection established from: " + webSocket.getRemoteSocketAddress().getHostString());
-        System.out.println("New connection from " + webSocket.getRemoteSocketAddress());
     }
 
     @OnClose
@@ -52,8 +49,6 @@ public class EditorServer extends WebSocketServer {
         conns.remove(conn);
         // When connection is closed, remove the project.
         projects.remove(conn);
-        logger.info("Connection closed to: " + conn.getRemoteSocketAddress().getHostString());
-        System.out.println("Closed connection to " + conn.getRemoteSocketAddress());
     }
 
     @OnMessage
@@ -97,12 +92,9 @@ public class EditorServer extends WebSocketServer {
 			break;
 		    default:
             }
-
-            System.out.println("From " + msg.getType() + ": " + msg.getId() + ": " + msg.getData());
-            logger.info("Message from project: " + msg.getId() + ", text: " + msg.getData());
         } catch (IOException e) {
-            logger.error("Wrong message format.");
             // return error message to project
+            logger.error("Error receiving message from client");
         }
     }
 
@@ -113,7 +105,6 @@ public class EditorServer extends WebSocketServer {
             conns.remove(conn);
         }
         assert conn != null;
-        System.out.println("ERROR from " + conn.getRemoteSocketAddress());
         ex.printStackTrace();
     }
 
@@ -125,12 +116,9 @@ public class EditorServer extends WebSocketServer {
             for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
                 if (entry.getValue().checkProjectId(projectid)) {
                     entry.getKey().send(messageJson);
-                    System.out.println(entry.getKey().getRemoteSocketAddress());
-                    System.out.println(msg.getType() + ": " + msg.getId() + ": " + msg.getData());
                 }
             }
         } catch (JsonProcessingException e) {
-            logger.error("Cannot convert message to json.");
         }
     }
 

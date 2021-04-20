@@ -13,14 +13,10 @@ import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.gson.Gson;
 import com.google.sps.data.FormattedProject;
-import com.google.sps.data.Project;
-import com.google.sps.data.User;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -113,29 +109,5 @@ public class LoadProjectsServlet extends HttpServlet {
 		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
 		LocalDateTime now = LocalDateTime.now().minusSeconds(10);
 		return loginTime.isAfter(now);
-	}
-
-	// Reference:
-	// https://stackoverflow.com/questions/607176/java-equivalent-to-
-	// javascripts-encodeuricomponent-that-produces-identical-outpu
-	private String encodeURIComponent(String str) {
-	    String HEX = "0123456789ABCDEF";
-	    if (str == null) return null;
-
-	    byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-	    StringBuilder builder = new StringBuilder(bytes.length);
-
-	    for (byte c : bytes) {
-		if (c >= 'a' ? c <= 'z' || c == '~' :
-		    c >= 'A' ? c <= 'Z' || c == '_' :
-		    c >= '0' ? c <= '9' :  c == '-' || c == '.')
-		    builder.append((char)c);
-		else
-		    builder.append('%')
-			   .append(HEX.charAt(c >> 4 & 0xf))
-			   .append(HEX.charAt(c & 0xf));
-	    }
-
-	    return builder.toString();
 	}
 }
