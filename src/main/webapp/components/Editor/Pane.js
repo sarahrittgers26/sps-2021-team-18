@@ -11,11 +11,15 @@ import './Pane.css';
 const Pane = (props) => {
   const { language, displayName, value, socket, projectid } = props;
   
+  // const handleChange = (editor, data, value) => {
+  //   let type = "SEND_" + displayName;
+  //   let msg = JSON.stringify({ id: projectid, type: type, data: value })
+  //   socket.send(msg);
+  // } 
+
   const handleChange = (editor, data, value) => {
-    let type = "SEND_" + displayName;
-    let msg = JSON.stringify({ id: projectid, type: type, data: value })
-    socket.send(msg);
-  } 
+    onChange(value);
+  }
 
   return (
     <div className="Pane_container">

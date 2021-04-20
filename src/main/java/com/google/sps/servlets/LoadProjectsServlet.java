@@ -5,12 +5,9 @@ import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
-import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
-import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.gson.Gson;
 import com.google.sps.data.FormattedProject;
 import java.io.IOException;
@@ -80,6 +77,7 @@ public class LoadProjectsServlet extends HttpServlet {
 			String html = project.getString("html");
 			String css = project.getString("css");
 			String js = project.getString("js");
+			String image = project.getString("image");
 
 			// Determine whether collaborator is stored as user1 or user2
 			String collaborator = user1.equals(username) ? user2 : user1;
@@ -91,8 +89,8 @@ public class LoadProjectsServlet extends HttpServlet {
 			String collaboratorAvatar = partner.getString("avatar");
 			boolean bothActive = userIsActive(collaborator, datastore);
 
-			projectResults.add(
-					new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js, collaboratorAvatar));
+			projectResults.add(new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js,
+					collaboratorAvatar, image));
 		}
 		return projectResults;
 	}

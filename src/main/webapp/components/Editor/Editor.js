@@ -4,6 +4,7 @@ import Pane from './Pane.js';
 import Navbar from './Navbar.js';
 import './Editor.css';
 import { handleSave } from '../../actions';
+import html2canvas from 'html2canvas';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import { updateCanEdit } from '../../actions';
@@ -57,7 +58,6 @@ const Editor = ({ history }) => {
       default:
     }
   }
-
   
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -74,20 +74,19 @@ const Editor = ({ history }) => {
   }, [projecthtml, projectcss, projectjs]);
 
   return (
-    <>
+    <div className="Editor_container">
       <Navbar
         history={history}
         projectName={projectName}
         socket={socket}
         title={title}
-	collaborator={collaboratorId}
-	collaboratorName={collaboratorName}
-	collaboratorAvatar={collaboratorAvatar}
+        collaborator={collaboratorId}
+        collaboratorName={collaboratorName}
+        collaboratorAvatar={collaboratorAvatar}
         projectid={activeProject}
-        handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
-		    js: projectjs, projectid: activeProject, title: projectName }))}/>
+        handleSave={handleSave}/>
 
-      <div className="Editor_pane Editor_top_pane">
+      <div className="Editor_pane Editor_top_pane" id="render_pane">
         <Pane 
          language="xml"
          displayName="HTML"
@@ -99,15 +98,15 @@ const Editor = ({ history }) => {
          language="css"
          displayName="CSS"
          value={projectcss}
-	 socket={socket}
-	 projectid={activeProject}/>
+         socket={socket}
+         projectid={activeProject}/>
 
         <Pane 
          language="javascript"
          displayName="JS"
          value={projectjs}
-	 socket={socket}
-	 projectid={activeProject}/>
+	       socket={socket}
+       	 projectid={activeProject}/>
 
       </div>
 
@@ -120,7 +119,7 @@ const Editor = ({ history }) => {
           height="100%"/>
 
       </div>
-    </>
+    </div>
   );
 }
 

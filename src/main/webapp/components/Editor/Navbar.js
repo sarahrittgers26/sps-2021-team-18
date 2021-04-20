@@ -33,15 +33,13 @@ const Navbar = (props) => {
     <div>
       <div className="Navbar_container">
         <Profile
-          // name={collaboratorName}
-          // avatar={collaboratorAvatar}
           name={collaboratorName}
           avatar={collaboratorAvatar}
           email=""
           side="L"
           active={true}
           isUser={false}
-	  handleReturn={handleReturn}
+	        handleReturn={handleReturn}
           handleSave={handleSave}/>
 
         <div className="Navbar_title_container">
@@ -57,14 +55,12 @@ const Navbar = (props) => {
         </div>
         
         <Profile
-          // name={user.name}
-          // avatar={user.avatar}
           name={user.name}
           avatar={user.avatar}
           side="R"
           active={true}
           isUser={true}
-	  handleReturn={handleReturn}
+	        handleReturn={handleReturn}
           handleSave={handleSave}/>
       </div>
     </div>

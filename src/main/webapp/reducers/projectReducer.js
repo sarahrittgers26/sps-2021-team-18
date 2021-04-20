@@ -23,7 +23,7 @@ export const projectReducer = (state = initialState, action) => {
 	      html: action.payload.html, css: action.payload.css,
       js: action.payload.js, collaboratorName: action.payload.collaboratorName,
       title: action.payload.title, collaboratorId: action.payload.collaborator, 
-      collaboratorAvatar: action.payload.avatar };
+      collaboratorAvatar: action.payload.collaboratorAvatar };
 
     case ACTION.CLEAR_PROJECT:
       return { ...state, html: "", css: "", js: "", collaboratorName: "",
@@ -36,7 +36,7 @@ export const projectReducer = (state = initialState, action) => {
       return { ...state, collaboratorId: action.payload.username, 
       collaboratorName: action.payload.name, collaboratorAvatar: action.payload.avatar };
     
-    case ACTION.LOAD_INIT_PROJECTS:
+    case ACTION.LOAD_INIT_PROJECTS: 
       return { ...state, onlineProjects: action.payload.onlineProjects,
       offlineProjects: action.payload.offlineProjects };
 
@@ -54,7 +54,7 @@ export const projectReducer = (state = initialState, action) => {
       return { ...state, activeProject: '', onlineProjects: [], title: '',
       offlineProjects: [], activeUsers: [], contacts: [], html: '',
       css: '', js: '', canEdit: false, collaboratorId: '', 
-	      collaboratorName: '', collaboratorAvatar: "0"};
+	      collaboratorName: '', collaboratorAvatar: "0" };
 
     default:
       return state;

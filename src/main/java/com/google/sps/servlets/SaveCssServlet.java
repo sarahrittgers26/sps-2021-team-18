@@ -12,32 +12,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-		
+
 @WebServlet("/save-css")
 public class SaveCssServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws IOException {
-    		 // Allow CORS so frontend can access it			
-		 response.addHeader("Access-Control-Allow-Origin", "*");
-		 response.addHeader("Access-Control-Allow-Headers", 
-				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
-		 response.addHeader("Access-Control-Allow-Credentials", "true");
-		 response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
-		 
-		 // Get the projectid and html text from user
-		 String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
-		 String css = request.getParameter("css");
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Allow CORS so frontend can access it
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Credentials", "true");
+		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
 
-		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		// Get the projectid and html text from user
+		String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
+		String css = request.getParameter("css");
 
-		 // Update stored html to new string
-		 Key thisProject = datastore.newKeyFactory()
-			.setKind("Project")
-			.newKey(projectid);
-		 Entity project = Entity.newBuilder(datastore.get(thisProject))
-			 .set("css", css).build(); 
-		 datastore.update(project);
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+		// Update stored html to new string
+		Key thisProject = datastore.newKeyFactory().setKind("Project").newKey(projectid);
+		Entity project = Entity.newBuilder(datastore.get(thisProject)).set("css", css).build();
+		datastore.update(project);
 	}
 }

@@ -17,6 +17,27 @@
   color: gray;
 }
 
+.other_user > * {
+  cursor: not-allowed;
+  animation: none;
+}
+
+.other_user .Profile_icon:hover {
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.Profile_icon {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.Profile_icon:hover {
+  transform: scale(0.85);
+}
+
 .Profile_activity {
   width: 16px;
   height: 16px;
@@ -76,7 +97,8 @@
   position: absolute;
   right: 0;
   top: var(--header_height);
-  width: 200px;
+  max-width: 250px;
+  width: 100%;
   padding: 16px;
   transition: 0.5s;
   background-color: white;
@@ -89,6 +111,7 @@
   -webkit-box-shadow: 0 0 16px rgb(121, 121, 121);
   box-shadow: 0 0 16px rgb(121, 121, 121);
   display: none;
+  margin-right: 16px;
 }
 
 .Editor_profile_menu::before {
@@ -112,6 +135,7 @@
 
 .Editor_profile_menu ul li {
   display: flex;
+  width: 100%;
   flex-direction: row;
   text-decoration: none;
   justify-content: flex-start;
@@ -119,22 +143,32 @@
   border-radius: 8px;
   padding: 8px;
   transition: all 0.3s;
+  cursor: pointer;
+}
+
+.Editor_options {
+  font-size: 1.1rem;
+  text-transform: capitalize;
   color: black;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  padding: 8px 0;
 }
 
 .Editor_profile_menu ul li:hover {
   background-color: rgb(238, 238, 238);
-  cursor: pointer;
 }
 
 .Editor_profile_menu ul li span {
   flex-grow: 1;
   padding: 8px;
   margin-left: 8px;
-  color: black;
-  font-color: black;
+  color: gray;
 }
 
 .Editor_profile_menu_icon {
-  font-color: gray;
+  color: gray;
 }

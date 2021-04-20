@@ -296,7 +296,7 @@ const Auth = ({ history }) => {
         </div>
         <div className="input">
           <input
-            type="text"
+            type="password"
             label="password_input"
             placeholder="Password"
             className="Auth_input"
@@ -355,6 +355,9 @@ const Auth = ({ history }) => {
 
       <div className="user_details">
         <div className="input">
+          <span className="placeholder">
+            Username
+          </span>
           <input
             type="text"
             name="username_input"

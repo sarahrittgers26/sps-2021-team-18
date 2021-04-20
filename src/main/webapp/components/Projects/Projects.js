@@ -342,6 +342,7 @@ const Projects = ({ history }) => {
       <ProjectCard
         key={project.projectid}
         title={project.title}
+        image={project.image}
         collaboratorName={project.collaboratorName}
         downloadProject={() => downloadProject(project.projectid)}
         continueProject={() => continueProject(
