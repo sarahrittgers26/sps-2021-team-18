@@ -36,6 +36,8 @@
 .Notification_title {
   flex-grow: 1;
   color: gray;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .Notification_buttons {

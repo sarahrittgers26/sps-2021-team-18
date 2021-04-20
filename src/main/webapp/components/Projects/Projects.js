@@ -64,8 +64,15 @@ const Projects = ({ history }) => {
 	let collaboratorId = info_arr[1];
 	let collaboratorName = info_arr[2];
 	let collabAvatar = info_arr[3];
-	if (ping_type === "create") {
-          setNotifications([...notifications,
+  if (ping_type === "cancel") {
+    const updatedNotifications = notifications.filter((notification) => {
+      return notification.collaboratorId === collaboratorId;
+    })
+    setNotifications(updatedNotifications);
+  }
+
+	else if (ping_type === "create") {
+    setNotifications([...notifications,
 		  { collaboratorName: collaboratorName,
 		    collaborator: collaboratorId,
 	            isNewProject: true,
@@ -370,13 +377,13 @@ const Projects = ({ history }) => {
       socket.send(msg);
       dispatch(loadProjects(user.username))
     } else {
-      let data = `yes-${info.avatar}`;
+      let data = `yes-${user.avatar}`;
       let msg = JSON.stringify({ id: info.collaborator, type: ACTION.REC_CONTINUE_PING, 
 	      data: data })
       socket.send(msg);
       dispatch(chooseProject({ projectid: info.projectid, 
 	  collaborator: info.collaborator, collaboratorName: info.collaboratorName, 
-	  html: info.html, css: info.css, js: info.js, title: info.title, avatar: info.avatar }));
+	  html: info.html, css: info.css, js: info.js, title: info.title, collaboratorAvatar: info.avatar }));
       dispatch(updateCanEdit(true));
     }
   }
@@ -465,8 +472,8 @@ const Projects = ({ history }) => {
         notifications={notifications}
         avatar={user.avatar}
         accept={acceptCollaboration}
-	acceptCallBack={acceptCallBack}
-	declineCallBack={declineCallBack}
+        acceptCallBack={acceptCallBack}
+        declineCallBack={declineCallBack}
         decline={declineCollaboration}/>
 
       

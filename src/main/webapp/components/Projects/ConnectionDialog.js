@@ -60,6 +60,14 @@ const ConnectionDialog = (props) => {
     dispatch(loadUsers(user.username));
   }
 
+  const cancelInvite = () => {
+    let msg = {};
+    let data = `cancel=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
+    msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    socket.send(msg);
+    closeDialog();
+  }
+
   return (
     <Dialog open={isOpen}>
       <DialogContent>
@@ -73,7 +81,7 @@ const ConnectionDialog = (props) => {
           </span>
           <ProgressSpinner />
           <div className="ConnectionDialog_button_container">
-            <button className="ConnectionDialog_button" onClick={closeDialog}>
+            <button className="ConnectionDialog_button" onClick={cancelInvite}>
               CANCEL
             </button>
           </div>

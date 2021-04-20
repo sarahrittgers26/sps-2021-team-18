@@ -1,7 +1,6 @@
 import axios from '../components/Api/Api';
 import SocketSingleton from '../middleware/socketMiddleware';
 import { ACTION } from './types';
-import html2canvas from 'html2canvas';
 //import { uploadImage } from '../helpers/helpers.js'
 // var fs = require('fs')
 // var gcloud = require('@google-cloud/storage')

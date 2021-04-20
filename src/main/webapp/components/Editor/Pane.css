@@ -41,7 +41,13 @@
   flex-grow: 1;
   border-bottom-left-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
-  overflow: scroll;
+  overflow-y: scroll;
+  scrollbar-width: 0;
+  -ms-overflow-style: none;
+}
+
+.Pane_code_mirror_wrapper::-webkit-scrollbar {
+  display: none;
 }
 
 iframe {
