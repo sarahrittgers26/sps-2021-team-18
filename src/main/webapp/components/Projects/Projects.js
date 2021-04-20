@@ -8,6 +8,7 @@ import Header from './Header.js';
 import ProjectCard from './ProjectCard.js';
 import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
+import About from './About.js';
 import ProfileDialog from './ProfileDialog.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut, 
 	loadProjects, clearProject, changeAvatar, 
@@ -34,6 +35,7 @@ const Projects = ({ history }) => {
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [displayAbout, setDisplayAbout] = useState(false);
 
   let socket = SocketSingleton.getInstance();
   socket.onopen = () => {
@@ -425,7 +427,8 @@ const Projects = ({ history }) => {
         acceptCallBack={acceptCallBack}
         declineCallBack={declineCallBack}
         decline={declineCollaboration}
-        history={history}/>
+        history={history}
+        displayAbout={() => setDisplayAbout(true)}/>
 
       
       <div className="Projects_main">
@@ -507,7 +510,14 @@ const Projects = ({ history }) => {
           closeDialog={() => setOpenProfileDialog(false)}
           saveProfile={saveProfile}
           avatar={user.avatar}/>
-      )}      
+      )}  
+
+      {displayAbout && (
+        <About 
+          isOpen={displayAbout}
+          closeDialog={() => setDisplayAbout(false)}
+        />
+      )}    
     </div>
   );
 }

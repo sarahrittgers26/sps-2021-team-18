@@ -3,6 +3,7 @@ import './Header.css';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import InfoIcon from '@material-ui/icons/Info';
 import Notification from './Notification.js';
 import Icon_1 from "../../images/avatar-1.png";
 import Icon_2 from "../../images/avatar-2.png";
@@ -17,7 +18,7 @@ import Banner from "../../images/banner.png";
 
 const Header = (props) => {
   const { name, email, handleLogout, displayProfile, notifications, avatar, accept, decline,
-  acceptCallBack, declineCallBack, history } = props;
+  acceptCallBack, declineCallBack, displayAbout } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
@@ -169,6 +170,12 @@ const Header = (props) => {
               <AccountCircleIcon className="Header_menu_icon"/>
               <span>
                 Profile
+              </span>
+            </li>
+            <li onClick={() => handleClick(displayAbout)}>
+              <InfoIcon className="Header_menu_icon"/>
+              <span>
+                About
               </span>
             </li>
             <li onClick={() => handleClick(handleLogout)}>
