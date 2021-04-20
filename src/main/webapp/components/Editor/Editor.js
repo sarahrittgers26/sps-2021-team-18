@@ -3,10 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import Pane from './Pane.js';
 import Navbar from './Navbar.js';
 import './Editor.css';
+import './StopCollab.js';
+import html2canvas from 'html2canvas';
+import FormData from 'form-data'
 import { handleSave } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import { updateCanEdit } from '../../actions';
+import StopCollab from './StopCollab.js';
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
   const { html, css, js, title, activeProject, collaboratorId, 
@@ -29,6 +33,7 @@ const Editor = ({ history }) => {
   const [srcDoc, setSrcDoc] = useState("");
   const [projectName, setProjectName] = useState(title);
   const socket = SocketSingleton.getInstance();
+  const [displayExit, setDisplayExit] = useState(false);
   
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data);
@@ -46,16 +51,34 @@ const Editor = ({ history }) => {
 	setProjectName(message.data);
 	break;
       case ACTION.SEND_LEFT:
-        alert(`${message.data} left`)
-        console.log(message.data /*collaboratorName*/);
-        console.log(message.id /*collaborator username*/);
-        // Call function to render everything below the navbar greyed out/untouchable
-        // Can also leave a prompt instructing the user to save or leave
-	dispatch(updateCanEdit(false));
-	history.push('/projects');
-        break;
+        setDisplayExit(true);
+        dispatch(updateCanEdit(false));
+        save();
+        let timer = setTimeout(() => {
+          history.push('/projects');
+        }, 5000);
+        return () => clearTimeout(timer);
       default:
     }
+  }
+
+  const save = () => {
+    html2canvas(document.querySelector("#render_pane")).then(canvas => {
+      canvas.toBlob((blob) => {
+        let formData = new FormData();
+        formData.append("image", blob);
+        console.log(blob);
+
+        dispatch(handleSave({
+          html: projecthtml,
+          css: projectcss,
+          js: projectjs,
+          projectid: activeProject,
+          title: projectName,
+          image: formData,
+        }));
+      });
+    })
   }
 
   useEffect(() => {
@@ -83,7 +106,7 @@ const Editor = ({ history }) => {
         collaboratorName={collaboratorName}
         collaboratorAvatar={collaboratorAvatar}
         projectid={activeProject}
-        handleSave={handleSave}/>
+        handleSave={save}/>
 
       <div className="Editor_pane Editor_top_pane" id="render_pane">
         <Pane 
@@ -116,8 +139,11 @@ const Editor = ({ history }) => {
           sandbox="allow-scripts allow-same-origin"
           width="100%"
           height="100%"/>
-
       </div>
+
+      <StopCollab 
+        collaboratorName={collaboratorName}
+        open={displayExit}/>
     </div>
   );
 }
