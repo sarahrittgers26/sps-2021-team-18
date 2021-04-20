@@ -104,7 +104,7 @@ public class LoadProjectsServlet extends HttpServlet {
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
-		LocalDateTime now = LocalDateTime.now().minusSeconds(10);
+		LocalDateTime now = LocalDateTime.now().minusSeconds(2);
 		return loginTime.isAfter(now);
 	}
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 import './Projects.css';
@@ -34,7 +34,6 @@ const Projects = ({ history }) => {
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [timeout, changeTimeout] = useState(null);
 
   let socket = SocketSingleton.getInstance();
   socket.onopen = () => {
@@ -126,25 +125,21 @@ const Projects = ({ history }) => {
     }
   }
 
-  const wrapper = useCallback(() => {
-    clearInterval(timeout);
-  }, [timeout]);
 	
   // Update active status if online
   useEffect(() => {
     if (!user.isVisible) {
-      return () => wrapper();
+      return;
     } else {
       const interval = setInterval(() => {
         dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
           isProjectsPage: true }));
-      }, 10000);
+      }, 2000);
       return () => { 
-        changeTimeout(interval);
-	clearInterval(interval);
+	    clearInterval(interval);
       }
     }
-  }, [user.username, wrapper, user.isVisible, dispatch]);
+  }, [user.username, user.isVisible, dispatch]);
 
   // this displays the connection dialog for the user to confirm they want to send the invite
   const continueProject = (projectid, title, collaborator, collaboratorName, 
@@ -302,7 +297,7 @@ const Projects = ({ history }) => {
         title={project.title}
         image={project.image}
         collaboratorName={project.collaboratorName}
-        downloadProject={() => downloadProject(project.projectid)}
+        downloadProject={() => downloadProject(project.projectid, project.html, project.css, project.js)}
         continueProject={() => continueProject(
           project.projectid, project.title, project.collaborator, 
 	  project.collaboratorName, project.html, project.css, project.js
@@ -400,10 +395,10 @@ const Projects = ({ history }) => {
 
   useEffect(() => {
     let projects = allProjects.filter((project) => {
-      return project.title.includes(searchQuery);
+      return project.title.includes(searchQuery) || project.title.includes(searchQuery.toUpperCase());
     });
 
-    setDisplayedProjects([]);
+    // setDisplayedProjects([]);
     setDisplayedProjects(projects);
     
     return () => {

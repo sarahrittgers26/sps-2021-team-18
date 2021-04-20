@@ -5,6 +5,8 @@ import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
 import { createProject, loadUsers, selectCollab } from '../../actions';
 import { ACTION } from '../../actions/types.js'
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
@@ -90,7 +92,22 @@ const ConnectionDialog = (props) => {
             </button>
           </div>
         </div>
+
+        {!isActive && ( 
+          <div className="ConnectionDialog_options">
+
+            <div className="Icon_container">
+              <ErrorOutlineIcon style={{ fontSize: 40, color: "gray" }}/>
+            </div>
+            <span className="AlertDialog_message">You cannot collaborate with anyone when you are appearing offline.</span>      
+
+            <div className="AlertDialog_button_container">
+            <button className="AlertDialog_button" onClick={closeDialog}>CLOSE</button>
+          </div>
+          </div>       
+        )}
         
+        {isActive && (
         <div className="ConnectionDialog_options" ref={optionsRef}>
           <span className="ConnectionDialog_header">
             Invite to collaborate?
@@ -108,7 +125,7 @@ const ConnectionDialog = (props) => {
               NO
             </button>
           </div>
-        </div>
+        </div>)}
 	      
       </DialogContent>
     </Dialog>

@@ -6,7 +6,7 @@ import './Editor.css';
 import './StopCollab.js';
 import html2canvas from 'html2canvas';
 import FormData from 'form-data'
-import { handleSave } from '../../actions';
+import { handleSave, clearProject } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import StopCollab from './StopCollab.js';
@@ -35,6 +35,16 @@ const Editor = ({ history }) => {
   const [projectName, setProjectName] = useState(title);
   const socket = SocketSingleton.getInstance();
   const [displayExit, setDisplayExit] = useState(false);
+
+
+  window.onpopstate = e => {
+    console.log("Out");
+    dispatch(clearProject());
+    let msg = JSON.stringify({ id: collaboratorId, type: ACTION.SEND_LEFT, 
+	    data: collaboratorName });
+    socket.send(msg);
+    history.push('/projects');
+ }
   
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data);

@@ -145,7 +145,7 @@ public class GetUsersServlet extends HttpServlet {
 		// only when a user logs out does this stop so an active user is one
 		// still using the application
 		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
-		LocalDateTime now = LocalDateTime.now().minusSeconds(10);
+		LocalDateTime now = LocalDateTime.now().minusSeconds(2);
 		return loginTime.isAfter(now);
 	}
 
@@ -159,7 +159,7 @@ public class GetUsersServlet extends HttpServlet {
 		// Convert to LocalDateTime and check if within 1 minute
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 		LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
-		LocalDateTime now = LocalDateTime.now().minusSeconds(10);
+		LocalDateTime now = LocalDateTime.now().minusSeconds(2);
 		return loginTime.isAfter(now);
 	}
 }
