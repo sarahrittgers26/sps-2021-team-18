@@ -4,6 +4,7 @@ import axios from '../Api/Api';
 import { loadInitialProjects, loadUsers, signIn } from '../../actions';
 import './Auth.css';
 
+
 const Auth = ({ history }) => {
   // Dispatch for react-redux store
   const dispatch = useDispatch();
@@ -57,7 +58,6 @@ const Auth = ({ history }) => {
       signUpRef.current.classList.remove("hidden_sign_up");
     }
   }
-
 
   // Handles and checks keypress and calls the callback method
   const handleKeyPress = (e, callBack) => {
@@ -435,13 +435,13 @@ const Auth = ({ history }) => {
         <div className="Auth_content card">
           <div className="Auth_buttons_container">
             {displaySignIn ? (
-            <button className="Auth_button left_button" onClick={openSignIn}>
+            <span className="Auth_button left_button">
               SIGN IN
-            </button>) :
+            </span>) :
 
-            <button className="Auth_button left_button " onClick={openSignUp}>
+            <span className="Auth_button left_button ">
               SIGN UP
-            </button> }
+            </span> }
           </div>
 
           <div className="Signin_signup">

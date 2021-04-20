@@ -112,14 +112,10 @@ const Header = (props) => {
 
   }, [displayMenu]);
 
-  const reload = () => {
-    history.push("/projects");
-  }
-
   return (
     <div className="Header_container">
       <div className="Banner">
-        <img src={Banner} alt="Banner" className="main_icon" onClick={reload}/>
+        <img src={Banner} alt="Banner" className="main_icon"/>
       </div>
 
       <div className="Header_user">

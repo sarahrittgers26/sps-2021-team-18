@@ -79,11 +79,10 @@
   cursor: pointer;
   transform: translatey(3px);
   box-shadow: none;
-
-  /* buttons hover Animation */
-
+  text-decoration: none;
   animation: ani9 0.4s ease-in-out infinite alternate;
 }
+
 @keyframes ani9 {
   0% {
     transform: translateY(3px);
@@ -96,11 +95,19 @@
 .left_button {
   background: #fed6e3;
   margin-left: 12px;
+  cursor: default;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
 .right_button {
   margin-left: 12px;
   background: #b8f2e6;
+  transition: all 0.3s;
+}
+
+.right_button:hover {
+  background: rgb(140, 238, 218);
 }
 
 .Signin_signup {

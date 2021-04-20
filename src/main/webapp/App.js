@@ -1,11 +1,14 @@
 import React from 'react';
-import { HashRouter, Route } from 'react-router-dom';
+import { HashRouter, Route, Redirect } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { createHashHistory } from "history";
 import Auth from './components/Auth/Auth';
 import Editor from './components/Editor/Editor'
 import Projects from './components/Projects/Projects'
+import { useSelector } from 'react-redux';
+
+
 
 const history = createHashHistory();
 
@@ -29,12 +32,25 @@ const theme = createMuiTheme({
 });
 
 function App() {
+  const user = useSelector((state) => state.userReducer);
+  const isAuthenticated = () => {
+    return user.isSignedIn;
+  }
+
+  const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={(props) => (
+        isAuthenticated()
+        ? <Component {...props} />
+        : <Redirect to='/' />
+    )} />
+  )
+
   return (
     <ThemeProvider theme={theme}>
       <HashRouter history={history}>
-        <Route path="/" exact component={Auth} />
-        <Route path="/editor" exact component={Editor} />
-        <Route path="/projects" exact component={Projects} />
+        <Route  path="/" exact component={Auth} />
+        <PrivateRoute path="/editor" exact component={Editor} />
+        <PrivateRoute path="/projects" exact component={Projects} />
       </HashRouter>
     </ThemeProvider>
   );

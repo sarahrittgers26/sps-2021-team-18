@@ -28,7 +28,6 @@
 }
 
 .Banner:hover {
-  cursor: pointer;
   transform: scale(0.95);
 }
 

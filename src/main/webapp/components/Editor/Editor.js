@@ -38,13 +38,12 @@ const Editor = ({ history }) => {
 
 
   window.onpopstate = e => {
-    console.log("Out");
     dispatch(clearProject());
     let msg = JSON.stringify({ id: collaboratorId, type: ACTION.SEND_LEFT, 
 	    data: collaboratorName });
     socket.send(msg);
     history.push('/projects');
- }
+  }
   
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data);
