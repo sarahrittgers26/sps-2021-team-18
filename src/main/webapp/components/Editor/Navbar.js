@@ -30,7 +30,6 @@ const Navbar = (props) => {
 
 
   return (
-    <div>
       <div className="Navbar_container">
         <Profile
           name={collaboratorName}
@@ -63,7 +62,6 @@ const Navbar = (props) => {
 	        handleReturn={handleReturn}
           handleSave={handleSave}/>
       </div>
-    </div>
   );
 }
 

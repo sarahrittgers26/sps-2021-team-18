@@ -180,11 +180,11 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  margin: 16px 0;
+  margin-top: 40px;
   position: relative;
 }
 
-/* .placeholder {
+.placeholder {
   color: gray;
   font-size: 0.85em;
   display: inline-flex;
@@ -192,16 +192,25 @@
   top: 0;
   bottom: 0;
   left: 16px;
-  height: 100%;
   align-items: center;
-} */
+  transition: all 0.3s;
+  pointer-events: none;
+}
+
+.input input:focus ~ .placeholder,
+.input input:valid ~ .placeholder {
+  transform: translateY(-36px) translateX(-8px);
+}
 
 .error {
   color: red;
-  padding-top: 8px;
-  font-size: 0.9em;
+  padding-top: 4px;
+  font-size: 0.8em;
   font-style: italic;
   text-align: start;
+  display: inline-flex;
+  width: 100%;
+  text-align: left;
 }
 
 .Sign_in_button_container {
@@ -219,6 +228,7 @@
   padding: 8px 8px;
   outline: none;
   text-decoration: none;
+  margin-top: 16px;
   border: none;
   width: 25%;
   cursor: pointer;

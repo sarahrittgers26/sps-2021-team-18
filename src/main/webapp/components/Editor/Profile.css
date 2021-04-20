@@ -39,12 +39,12 @@
 }
 
 .Profile_activity {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   position: absolute;
   border-radius: 50%;
   background-color: black;
-  bottom: -4px;
+  bottom: -2px;
 }
 
 .left {

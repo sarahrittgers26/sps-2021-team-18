@@ -34,7 +34,7 @@ public class CreateProjectServlet extends HttpServlet {
 		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		String partner = Jsoup.clean(request.getParameter("partner"), Whitelist.none());
 		String title = Jsoup.clean(request.getParameter("title"), Whitelist.none());
-		String image = request.getParameter("image");
+		String image = "https://storage.googleapis.com/spring21-sps-18.appspot.com/css.jpg";
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		// Check that partner is a valid username

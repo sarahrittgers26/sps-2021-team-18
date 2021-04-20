@@ -256,8 +256,8 @@ const Auth = ({ history }) => {
           <input
             type="text"
             id="name_input"
+            required="required"
             label="name_input"
-            placeholder="Name"
             className="Auth_input"
             onChange={e => setName(e.target.value)}
             value={name}
@@ -269,15 +269,17 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {nameError && (
-            <span className="error">{nameErrorMsg}</span>)}
-          <div></div>
+          <span className="placeholder">
+            Name
+          </span>        
         </div>
+        {nameError && (
+            <span className="error">{nameErrorMsg}</span>)}
         <div className="input">
           <input
             type="text"
             label="username_input"
-            placeholder="Username"
+            required="required"
             className="Auth_input"
             value={username}
             onChange={e => setUsername(e.target.value)}
@@ -289,16 +291,17 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {usernameError && (
-            <span className="error">{usernameErrorMsg}</span>)}
-          <div></div>
-
+          <span className="placeholder">
+            Username
+          </span>
         </div>
+        {usernameError && (
+            <span className="error">{usernameErrorMsg}</span>)}
         <div className="input">
           <input
             type="password"
+            required="required"
             label="password_input"
-            placeholder="Password"
             className="Auth_input"
             value={password}
             onChange={e => setPassword(e.target.value)}
@@ -310,16 +313,18 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {passwordError && (
+          <span className="placeholder">
+            Password
+          </span>
+        </div>
+        {passwordError && (
             <span className="error">{passwordErrorMsg}</span>)}
 
-          <div></div>
-        </div>
         <div className="input">
           <input
             type="text"
+            required="required"
             label="email_input"
-            placeholder="Email"
             className="Auth_input"
             value={email}
             onChange={e => setEmail(e.target.value)}
@@ -331,11 +336,13 @@ const Auth = ({ history }) => {
               )
             }
           />
-          {emailError && (
-            <span className="error">{emailErrorMsg}</span>)}
-          <div></div>
-
+          <span className="placeholder">
+            Email
+          </span>
+          
         </div>
+        {emailError && (
+            <span className="error">{emailErrorMsg}</span>)}
         <div className="Sign_up_button_container">
           <button
             className="Sign_up_button"
@@ -355,14 +362,12 @@ const Auth = ({ history }) => {
 
       <div className="user_details">
         <div className="input">
-          <span className="placeholder">
-            Username
-          </span>
+        
           <input
             type="text"
             name="username_input"
-            placeholder="Username"
             className="Auth_input"
+            required="required"
             onChange={e => setUsername(e.target.value)}
             value={username}
             autoComplete="off"
@@ -372,17 +377,19 @@ const Auth = ({ history }) => {
                   () => handleSignIn(username, password))
               )
             } />
-
+          <span className="placeholder">
+          Username
+          </span>
+        </div>
           {usernameError && (
             <span className="error">{usernameErrorMsg}</span>
           )}
-        </div>
 
         <div className="input">
           <input
             type="password"
+            required="required"
             name="password_input"
-            placeholder="Password"
             className="Auth_input"
             onChange={e => setPassword(e.target.value)}
             value={password}
@@ -393,11 +400,13 @@ const Auth = ({ history }) => {
                   () => handleSignIn(username, password))
               )
             } />
-
-          {passwordError && (
+          <span className="placeholder">
+            Password
+          </span>
+        </div>
+        {passwordError && (
             <span className="error">{passwordErrorMsg}</span>
           )}
-        </div>
 
         <div className="Sign_in_button_container">
           <button
