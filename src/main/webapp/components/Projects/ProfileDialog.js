@@ -18,8 +18,6 @@ const ProfileDialog = (props) => {
   const [updatedPassword, setUpdatedPassword] = useState("");
   const [showOnlineStatus, setShowOnlineStatus] = useState(currentOnlineStatus);
   const [selectedAvatar, setSelectedAvatar] = useState(avatar);
-  const user = useSelector((state) => state.userReducer);
-  const dispatch = useDispatch();
 
   const updateName = elt => {
     setUpdatedName(elt.target.value)

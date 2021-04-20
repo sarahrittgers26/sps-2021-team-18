@@ -11,7 +11,7 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
   const { collaboratorId, collaboratorName, isOpen, closeDialog, fromProject, 
-	  message, socket, isActive, history } = props;
+	  message, socket, isActive, history, notifications } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
   const { activeProject, title } = useSelector((state) => state.projectReducer);
@@ -42,26 +42,34 @@ const ConnectionDialog = (props) => {
   }
 
   const displayConnectionStatus = () => {
-    if (isActive) {
-      optionsRef.current.classList.add("ConnectionDialog_hide_options");
-      if (fromProject) {
-        let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
-        let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
-        socket.send(msg)
-      } else {
-        let data = `create=${user.username}=${user.name}=${user.avatar}`;
-        let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
-        socket.send(msg)
+    optionsRef.current.classList.add("ConnectionDialog_hide_options");
+    if (fromProject) {
+      console.log(activeProject);
+      for (let notification of notifications) {
+        console.log(notification);
+        if (notification.projectid === activeProject) {
+          let data = `yes-${user.avatar}`;
+          let msg = JSON.stringify({ id: collaboratorId, type: ACTION.REC_CONTINUE_PING, data: data })
+          socket.send(msg);
+          history.push("/editor");
+          return;
+        }
       }
-    } else {
 
+      let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
+      let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+      socket.send(msg)
+
+    } else {
+      let data = `create=${user.username}=${user.name}=${user.avatar}`;
+      let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+      socket.send(msg)
     }
   }
 
   const newProject = () => {
-    const defaultImage = "https://storage.googleapis.com/spring21-sps-18.appspot.com/css.jpg";
     dispatch(createProject({ username: user.username, 
-	    collaborator: collaboratorId, title: "New Project", image: defaultImage }));
+	    collaborator: collaboratorId, title: "New Project"}));
     closeDialog();
     dispatch(loadUsers(user.username));
   }

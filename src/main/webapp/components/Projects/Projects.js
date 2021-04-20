@@ -75,7 +75,8 @@ const Projects = ({ history }) => {
     setNotifications([...notifications,
 		  { collaboratorName: collaboratorName,
 		    collaborator: collaboratorId,
-	            isNewProject: true,
+        projectid: "",
+	      isNewProject: true,
 		    projectTitle: "New Project",
 		    type: ping_type,
 		    proj: collaboratorId,
@@ -86,13 +87,13 @@ const Projects = ({ history }) => {
 	  let html = "";
 	  let css = "";
 	  let js = "";
-          for(var i = 0; i < onlineProjects.length; i++) {
-		if (onlineProjects[i].projectid === projectid) {
-			html = onlineProjects[i].html
-			css = onlineProjects[i].css
-			js = onlineProjects[i].js
-			break;
-		}
+    for(var i = 0; i < onlineProjects.length; i++) {
+      if (onlineProjects[i].projectid === projectid) {
+        html = onlineProjects[i].html
+        css = onlineProjects[i].css
+        js = onlineProjects[i].js
+        break;
+      }
 	  }
 	  let avatar = "0";
           for(var j = 0; j < contacts.length; i++) {
@@ -107,8 +108,9 @@ const Projects = ({ history }) => {
 	  avatar: avatar }
           setNotifications([...notifications,
 		  { collaboratorName: collaboratorName,
+        projectid: projectid,
 		    collaborator: collaboratorId,
-	            isNewProject: false,
+	      isNewProject: false,
 		    projectTitle: proj.title,
 		    type: ping_type,
 		    proj: proj,
@@ -144,6 +146,7 @@ const Projects = ({ history }) => {
   // this displays the connection dialog for the user to confirm they want to send the invite
   const continueProject = (projectid, title, collaborator, collaboratorName, 
 	  html, css, js) => {
+    
     if (isOnline(collaborator)) {
       setFromProject(true);
       setOpenConnectionDialog(true);
@@ -159,14 +162,15 @@ const Projects = ({ history }) => {
       setCurrentConnection({
         name: collaboratorName, 
         username: collaborator,
-	avatar: avatar,
-	isActive: isActive,
+        avatar: avatar,
+        isActive: isActive,
       });
       dispatch(selectCollab({ name: collaboratorName, username: collaborator,
 	      avatar: avatar }));
       dispatch(chooseProject({ projectid: projectid, 
 	      collaborator: collaborator, collaboratorName: collaboratorName, 
 	      html: html, css: css, js: js, title: title, collaboratorAvatar: avatar }));
+      
       setConnectionAlert(
         `This will send an invitation to ${collaboratorName} to continue working on ${title}`
         );
@@ -484,7 +488,8 @@ const Projects = ({ history }) => {
           closeDialog={() => closeConnectionDialog(fromProject)}
           message={connectionAlert}
           socket={socket}
-          history={history}/>
+          history={history}
+          notifications={notifications}/>
       )}
         
       {openAlertDialog && (

@@ -1,7 +1,7 @@
 const AppConfig = {
   PROTOCOL: "ws://",
-  HOST: 'localhost',
-//  HOST: "https://spring21-sps-18.appspot.com",
+  // HOST: 'localhost',
+  HOST: "https://spring21-sps-18.appspot.com",
   PORT: ":9000/"
 }
 
