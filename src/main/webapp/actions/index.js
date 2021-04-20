@@ -2,7 +2,9 @@ import axios from '../components/Api/Api';
 import SocketSingleton from '../middleware/socketMiddleware';
 import { ACTION } from './types';
 import html2canvas from 'html2canvas';
-import { uploadImage } from '../helpers/helpers.js'
+//import { uploadImage } from '../helpers/helpers.js'
+var fs = require('fs')
+var gcloud = require('@google-cloud/storage')
 
 
 // Return either online or offline projects
@@ -15,7 +17,7 @@ const projectSelector = (selector, projects) => {
         if (current.bothActive === selector) {
             let project = {
                 collaborator: current.collaborator,
-		        collaboratorName: current.collaboratorName,
+                collaboratorName: current.collaboratorName,
                 projectid: current.projectid,
                 title: current.title,
                 html: current.html,
@@ -34,7 +36,7 @@ const projectSelector = (selector, projects) => {
 const userSelector = (wantContact, users) => {
     const selection = [];
     for (var i = 0; i < users.length; i++) {
-        
+
         let current = users[i]
             // selector is true/false for online/offline projects
             // if selector is true then only add online projects otherwise add offline
@@ -67,8 +69,8 @@ export const signOut = () => ({
 
 // Clears state on sign out
 export const clearReducer = () => ({
-  type: ACTION.CLEAR_REDUCER,
-  payload: null
+    type: ACTION.CLEAR_REDUCER,
+    payload: null
 });
 
 
@@ -90,32 +92,50 @@ export const selectCollab = (collab) => {
 
 // Function to handle saving project to database
 export const handleSave = (proj) => async(dispatch) => {
-  const newHtml = encodeURIComponent(proj.html);
-  const newCss = encodeURIComponent(proj.css);
-  const newJs = encodeURIComponent(proj.js);
-  const newTitle = encodeURIComponent(proj.title);
-  const projectid = proj.projectid;
-  let image = "";
+    const newHtml = encodeURIComponent(proj.html);
+    const newCss = encodeURIComponent(proj.css);
+    const newJs = encodeURIComponent(proj.js);
+    const newTitle = encodeURIComponent(proj.title);
+    const projectid = proj.projectid;
+    let image = "";
 
-  html2canvas(document.querySelector("#render_pane")).then(canvas => {
-    canvas.toBlob( async (blob) => {
-        let img = `${projectid}.png`;
-        let file = new File([blob], img);
-        image = await uploadImage(file);
-        let imageUrl = `/save-image?projectid=${projectid}&image=${image}`;
-        await axios.get(imageUrl);
+    html2canvas(document.querySelector("#render_pane")).then(canvas => {
+        canvas.toBlob(async(blob) => {
+            // eslint-disable-next-line
+
+            const GOOGLE_CLOUD_PROJECT_ID = 'spring21-sps-18';
+            const GOOGLE_CLOUD_KEYFILE = '../../../../spring21-sps-18-38c4db8c1fec.json';
+
+            var gcs = gcloud.storage({
+                projectId: GOOGLE_CLOUD_PROJECT_ID,
+                keyFilename: GOOGLE_CLOUD_KEYFILE,
+            })
+
+            var bucket = gcs.bucket('spring21-sps-18.appspot.com');
+            let img = `${projectid}.png`;
+            let file = new File([blob], img);
+            let imageLink = `https://storage.googleapis.com/spring21-sps-18.appspot.com/${img}`
+            var localReadStream = fs.createReadStream(img)
+            var remoteWriteStream = bucket.file(img).createWriteStream();
+            localReadStream.pipe(remoteWriteStream)
+                .on('error', function(err) {})
+                .on('finish', function() {
+                    // The file upload is complete.
+                });
+            let imageUrl = `/save-image?projectid=${projectid}&image=${imageLink}`;
+            await axios.get(imageUrl);
+        })
     })
- })
 
 
-  let htmlUrl = `/save-html?projectid=${projectid}&html=${newHtml}`;
-  let cssUrl = `/save-css?projectid=${projectid}&css=${newCss}`;
-  let jsUrl = `/save-js?projectid=${projectid}&js=${newJs}`;
-  let titleUrl = `/update-title?projectid=${projectid}&title=${newTitle}`;
-  await axios.get(htmlUrl);
-  await axios.get(cssUrl);
-  await axios.get(jsUrl);
-  await axios.get(titleUrl);
+    let htmlUrl = `/save-html?projectid=${projectid}&html=${newHtml}`;
+    let cssUrl = `/save-css?projectid=${projectid}&css=${newCss}`;
+    let jsUrl = `/save-js?projectid=${projectid}&js=${newJs}`;
+    let titleUrl = `/update-title?projectid=${projectid}&title=${newTitle}`;
+    await axios.get(htmlUrl);
+    await axios.get(cssUrl);
+    await axios.get(jsUrl);
+    await axios.get(titleUrl);
 }
 
 // On project deselection
@@ -136,26 +156,26 @@ export const chooseUser = (username) => {
 
 // Update whether user can move to Editor page
 export const updateCanEdit = (canEdit) => {
-  return {
-    type: ACTION.CAN_EDIT,
-    payload: canEdit,
-  }
+    return {
+        type: ACTION.CAN_EDIT,
+        payload: canEdit,
+    }
 }
 
 // Update online status
 export const updateActive = (pageInfo) => async(dispatch) => {
-  const username = pageInfo.username;
-  const isVisible = pageInfo.isVisible;
-  const isProjectsPage = pageInfo.isProjectsPage;
-  if (isVisible) {
-    let url = `/update-active?username=${username}`;
-    await axios.get(url);
-  }
-  
-  if (isProjectsPage) {
-    dispatch(loadProjects(username));
-    dispatch(loadUsers(username));
-  }
+    const username = pageInfo.username;
+    const isVisible = pageInfo.isVisible;
+    const isProjectsPage = pageInfo.isProjectsPage;
+    if (isVisible) {
+        let url = `/update-active?username=${username}`;
+        await axios.get(url);
+    }
+
+    if (isProjectsPage) {
+        dispatch(loadProjects(username));
+        dispatch(loadUsers(username));
+    }
 };
 
 // On name change
@@ -215,20 +235,26 @@ export const updateTitle = (title) => {
 
 // Create project with user
 export const createProject = (details) => async(dispatch) => {
-  const username = details.username;
-  const partner = details.collaborator;
-  const title = details.title;
-  let url = `/create?username=${username}&partner=${partner}&title=${title}`;
-  const response = await axios.post(url);
-  let projectid = response.data;
-  const socket = SocketSingleton.getInstance();
-  let messageDto = JSON.stringify({ id: projectid, 
-	type: ACTION.LOAD_INIT_PROJECTS, data: "" })
-  socket.send(messageDto);
-  let collabMesg = JSON.stringify({ id: partner, 
-	type: ACTION.COLLAB_ADD_PROJECT, data: projectid })
-  socket.send(collabMesg);
-  dispatch(loadProjects(username));
+    const username = details.username;
+    const partner = details.collaborator;
+    const title = details.title;
+    let url = `/create?username=${username}&partner=${partner}&title=${title}`;
+    const response = await axios.post(url);
+    let projectid = response.data;
+    const socket = SocketSingleton.getInstance();
+    let messageDto = JSON.stringify({
+        id: projectid,
+        type: ACTION.LOAD_INIT_PROJECTS,
+        data: ""
+    })
+    socket.send(messageDto);
+    let collabMesg = JSON.stringify({
+        id: partner,
+        type: ACTION.COLLAB_ADD_PROJECT,
+        data: projectid
+    })
+    socket.send(collabMesg);
+    dispatch(loadProjects(username));
 };
 
 // Load users that are active and inactive 
@@ -237,8 +263,8 @@ export const loadUsers = (username) => async(dispatch) => {
         // Load users from backend
         let url = `/get-users?username=${username}`;
         const response = await axios.get(url);
-        dispatch({ 
-            type: ACTION.UPDATE_USERS, 
+        dispatch({
+            type: ACTION.UPDATE_USERS,
             payload: {
                 contacts: userSelector(true, response.data),
                 activeUsers: userSelector(false, response.data)
@@ -253,13 +279,13 @@ export const loadProjects = (username) => async(dispatch) => {
         // Load projects from backend
         let url = `/load?username=${username}`;
         const response = await axios.get(url);
-        dispatch({ 
-		type: ACTION.UPDATE_PROJECTS, 
-		payload: { 
-			onlineProjects: projectSelector(true, response.data), 
-			offlineProjects: projectSelector(false, response.data) 
-		}
-	});
+        dispatch({
+            type: ACTION.UPDATE_PROJECTS,
+            payload: {
+                onlineProjects: projectSelector(true, response.data),
+                offlineProjects: projectSelector(false, response.data)
+            }
+        });
     }
 };
 
@@ -269,12 +295,12 @@ export const loadInitialProjects = (username) => async(dispatch) => {
         // Load projects from backend
         let url = `/load?username=${username}`;
         const response = await axios.get(url);
-        dispatch({ 
-		type: ACTION.LOAD_INIT_PROJECTS, 
-		payload: { 
-			onlineProjects: projectSelector(true, response.data), 
-			offlineProjects: projectSelector(false, response.data) 
-		}
-	});
+        dispatch({
+            type: ACTION.LOAD_INIT_PROJECTS,
+            payload: {
+                onlineProjects: projectSelector(true, response.data),
+                offlineProjects: projectSelector(false, response.data)
+            }
+        });
     }
 };
