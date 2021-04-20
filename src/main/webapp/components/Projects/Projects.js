@@ -428,6 +428,7 @@ const Projects = ({ history }) => {
         declineCallBack={declineCallBack}
         decline={declineCollaboration}
         history={history}
+        isActive={user.isVisible}
         displayAbout={() => setDisplayAbout(true)}/>
 
       

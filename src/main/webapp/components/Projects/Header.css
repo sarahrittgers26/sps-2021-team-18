@@ -69,6 +69,31 @@
   transition: all 0.3s;
 }
 
+.activity {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  bottom: -2px;
+  left: -2px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 3px;
+}
+
+.active_user {
+  background: green;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+.inactive_user {
+  background-color: red;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
 .Header_user_icon:hover {
   padding: 2px;
   background-color: gray;

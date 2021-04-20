@@ -18,7 +18,7 @@ import Banner from "../../images/banner.png";
 
 const Header = (props) => {
   const { name, email, handleLogout, displayProfile, notifications, avatar, accept, decline,
-  acceptCallBack, declineCallBack, displayAbout } = props;
+  acceptCallBack, declineCallBack, displayAbout, isActive } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
@@ -139,6 +139,11 @@ const Header = (props) => {
           {avatar !== "0" ?
             (<img src={addAvatar()} className="current_icon" alt="Current avatar"/>) : 
             (<AccountCircleIcon style = {{fontSize: 40}} />)}
+              <div className="activity">
+              {isActive ?
+                <div className="active_user"></div> :
+                <div className="inactive_user"></div>}
+            </div>
         </div>
 
         <div className="Header_notifications menu" ref={notificationsRef}>
