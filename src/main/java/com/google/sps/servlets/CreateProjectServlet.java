@@ -34,6 +34,7 @@ public class CreateProjectServlet extends HttpServlet {
 		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
 		String partner = Jsoup.clean(request.getParameter("partner"), Whitelist.none());
 		String title = Jsoup.clean(request.getParameter("title"), Whitelist.none());
+		String image = request.getParameter("image");
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		// Check that partner is a valid username
@@ -47,8 +48,8 @@ public class CreateProjectServlet extends HttpServlet {
 			// Add project to datastore
 			Key projectKey = datastore.newKeyFactory().setKind("Project").newKey(projectid);
 			FullEntity project = Entity.newBuilder(projectKey).set("user1", username).set("user2", partner)
-					.set("projectid", projectid).set("title", title).set("html", "<h1>Hello World</h1>")
-					.set("css", "h1 {\n  font-size: 24px;\n}").set("js", "").set("image", "0").build();
+					.set("projectid", projectid).set("title", title).set("html", html).set("css", css).set("js", "")
+					.set("image", image).build();
 			datastore.put(project);
 		}
 

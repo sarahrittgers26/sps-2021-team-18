@@ -4,7 +4,6 @@ import Pane from './Pane.js';
 import Navbar from './Navbar.js';
 import './Editor.css';
 import { handleSave } from '../../actions';
-import html2canvas from 'html2canvas';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import { updateCanEdit } from '../../actions';
@@ -23,7 +22,7 @@ const Editor = ({ history }) => {
   // embded into the function and directly sending changes with stuff like OnKeyPress for each
   // editor component. Or we can disregard storing into in the react store entirely and just
   // send the current projecthtml, projectcss, projectjs to the backend whenever the user clicks
-  // save
+  // save 
   const [projecthtml, setProjectHtml] = useState(html);
   const [projectcss, setProjectCss] = useState(css);
   const [projectjs, setProjectJs] = useState(js);
@@ -58,7 +57,7 @@ const Editor = ({ history }) => {
       default:
     }
   }
-  
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`

@@ -74,10 +74,6 @@ const Profile = (props) => {
 
   }, [displayMenu]);
 
-  const saveProject = () => {
-    setDisplayMenu(false);
-    handleSave();
-  }
 
   return (
     <div className={`Profile_container ${side === "R" ? "Profile_flipped" : ""}`}>
@@ -102,7 +98,7 @@ const Profile = (props) => {
             Options
           </span>         
           <ul>
-            <li onClick={() => handleClick(saveProject)}>
+            <li onClick={() => handleClick(handleSave)}>
               <SaveIcon className="Editor_profile_menu_icon"/>
               <span>
                 Save project

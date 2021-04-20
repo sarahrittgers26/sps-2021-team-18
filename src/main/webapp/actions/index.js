@@ -1,6 +1,9 @@
 import axios from '../components/Api/Api';
 import SocketSingleton from '../middleware/socketMiddleware';
 import { ACTION } from './types';
+import html2canvas from 'html2canvas';
+import { uploadImage } from '../helpers/helpers.js'
+
 
 // Return either online or offline projects
 const projectSelector = (selector, projects) => {
@@ -92,17 +95,27 @@ export const handleSave = (proj) => async(dispatch) => {
   const newJs = encodeURIComponent(proj.js);
   const newTitle = encodeURIComponent(proj.title);
   const projectid = proj.projectid;
-  const image = proj.image;
+  let image = "";
+
+  html2canvas(document.querySelector("#render_pane")).then(canvas => {
+    canvas.toBlob( async (blob) => {
+        let img = `${projectid}.png`;
+        let file = new File([blob], img);
+        image = await uploadImage(file);
+        let imageUrl = `/save-image?projectid=${projectid}&image=${image}`;
+        await axios.get(imageUrl);
+    })
+ })
+
+
   let htmlUrl = `/save-html?projectid=${projectid}&html=${newHtml}`;
   let cssUrl = `/save-css?projectid=${projectid}&css=${newCss}`;
   let jsUrl = `/save-js?projectid=${projectid}&js=${newJs}`;
   let titleUrl = `/update-title?projectid=${projectid}&title=${newTitle}`;
-  let imageUrl = `/save-image?projectid=${projectid}&image=${image}`;
   await axios.get(htmlUrl);
   await axios.get(cssUrl);
   await axios.get(jsUrl);
   await axios.get(titleUrl);
-  await axios.get(imageUrl);
 }
 
 // On project deselection

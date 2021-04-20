@@ -13,7 +13,6 @@ const ConnectionDialog = (props) => {
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
   const { activeProject, title } = useSelector((state) => state.projectReducer);
-  const defaultImage = "https://storage.googleapis.com/spring21-sps-18.appspot.com/css.jpg";
 
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data)
@@ -54,8 +53,9 @@ const ConnectionDialog = (props) => {
   }
 
   const newProject = () => {
+    const defaultImage = "https://storage.googleapis.com/spring21-sps-18.appspot.com/css.jpg";
     dispatch(createProject({ username: user.username, 
-	    collaborator: collaboratorId, title: "New Project" }));
+	    collaborator: collaboratorId, title: "New Project", image: defaultImage }));
     closeDialog();
     dispatch(loadUsers(user.username));
   }

@@ -29,6 +29,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
     "save-as-js": "^1.0.0",
+    "util": "^0.11.1",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
