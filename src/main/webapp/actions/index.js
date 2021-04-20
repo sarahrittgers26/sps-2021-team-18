@@ -76,13 +76,20 @@ export const chooseProject = (project) => {
     }
 };
 
+export const selectCollab = (collab) => {
+    return {
+        type: ACTION.SELECT_COLLAB,
+        payload: collab
+    }
+};
+
 
 // Function to handle saving project to database
 export const handleSave = (proj) => async(dispatch) => {
-  const newHtml = proj.html;
-  const newCss = proj.css;
-  const newJs = proj.js;
-  const newTitle = proj.title;
+  const newHtml = encodeURIComponent(proj.html);
+  const newCss = encodeURIComponent(proj.css);
+  const newJs = encodeURIComponent(proj.js);
+  const newTitle = encodeURIComponent(proj.title);
   const projectid = proj.projectid;
   let htmlUrl = `/save-html?projectid=${projectid}&html=${newHtml}`;
   let cssUrl = `/save-css?projectid=${projectid}&css=${newCss}`;
@@ -133,30 +140,6 @@ export const updateActive = (pageInfo) => async(dispatch) => {
     dispatch(loadUsers(username));
   }
 };
-
-
-// Update which project user has selected
-export const updateProjectSelection = (info) => async(dispatch) => {
-  const username = info.username;
-  const projectid = info.projectid;
-  const isSelecting = info.isSelecting;
-  if (isSelecting) {
-    let url = `/select?username=${username}&projectid=${projectid}`;
-    await axios.get(url);
-    return;
-  } else {
-    let url = `/deselect?username=${username}&projectid=${projectid}`;
-    await axios.get(url);
-    return;
-  }
-}
-
-// Check if both users have selected a project
-export const checkProject = (projectid) => async(dispatch) => {
-  let url = `/check?projectid=${projectid}`;
-  const response = await axios.get(url);
-  dispatch(updateCanEdit(response.data));
-}
 
 // On name change
 export const changeName = (change) => async(dispatch) => {
@@ -221,16 +204,13 @@ export const createProject = (details) => async(dispatch) => {
   let url = `/create?username=${username}&partner=${partner}&title=${title}`;
   const response = await axios.post(url);
   let projectid = response.data;
-  const newPaneIDS = [`${projectid}-html`,`${projectid}-css`,`${projectid}-js`,
-  `${projectid}-title`]
   const socket = SocketSingleton.getInstance();
-  socket.onmessage = () => {
-    newPaneIDS.forEach(paneID => {
-      let messageDto = JSON.stringify({ id: paneID, 
+  let messageDto = JSON.stringify({ id: projectid, 
 	type: ACTION.LOAD_INIT_PROJECTS, data: "" })
-      socket.send(messageDto);
-    });
-  }
+  socket.send(messageDto);
+  let collabMesg = JSON.stringify({ id: partner, 
+	type: ACTION.COLLAB_ADD_PROJECT, data: projectid })
+  socket.send(collabMesg);
   dispatch(loadProjects(username));
 };
 

@@ -1,9 +1,7 @@
-//import baseUrl from '../components/Api/Api';
-
 const AppConfig = {
   PROTOCOL: "ws://",
   HOST: 'localhost',
-//HOST: baseUrl,
+//  HOST: "https://spring21-sps-18.appspot.com",
   PORT: ":9000/"
 }
 

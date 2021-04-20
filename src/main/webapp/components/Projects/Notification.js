@@ -11,8 +11,8 @@ import Icon_7 from "../../images/avatar-7.png";
 import Icon_8 from "../../images/avatar-8.png";
 
 
-function Notification(props) {
-  const {collaboratorName, accept, decline, isNewProject, projectTitle, collaboratorAvatar } = props;
+const Notification = (props) => {
+  const { collaboratorName, accept, decline, isNewProject, projectTitle, collaboratorAvatar } = props;
 
   const addAvatar = () => {
     switch (collaboratorAvatar) {
@@ -45,11 +45,11 @@ function Notification(props) {
     }   
   } 
 
-  const getMessage = () => {
-    if (isNewProject) {
-      return `${collaboratorName} is inviting you to collaborate on a new project`
+  const getMessage = (create) => {
+    if (create) {
+      return `${collaboratorName} is inviting you to CREATE a new project`
     } else {
-      return `${collaboratorName} is inviting you to continue working on ${projectTitle}`
+      return `${collaboratorName} is inviting you to CONTINUTE working on ${projectTitle}`
     }
   }
   
@@ -63,7 +63,7 @@ function Notification(props) {
 
       <div className="Notification_side">     
         <span className="Notification_title">
-          {getMessage()}
+          {getMessage(isNewProject)}
         </span>
 
         <div className="Notification_buttons">

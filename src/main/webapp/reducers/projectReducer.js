@@ -8,7 +8,7 @@ const initialState = {
   title: '',
   collaboratorId: '',
   collaboratorName: '',
-  collaboratorAvatar: "0",
+  collaboratorAvatar: '0',
   onlineProjects: [],
   offlineProjects: [],
   activeUsers: [], 
@@ -23,7 +23,7 @@ export const projectReducer = (state = initialState, action) => {
 	      html: action.payload.html, css: action.payload.css,
       js: action.payload.js, collaboratorName: action.payload.collaboratorName,
       title: action.payload.title, collaboratorId: action.payload.collaborator, 
-      collaboratorAvatar: action.payload.collaboratorAvatar };
+      collaboratorAvatar: action.payload.avatar };
 
     case ACTION.CLEAR_PROJECT:
       return { ...state, html: "", css: "", js: "", collaboratorName: "",
@@ -32,6 +32,10 @@ export const projectReducer = (state = initialState, action) => {
     case ACTION.CHOOSE_USER:
       return { ...state, collaboratorId: action.payload };
 
+    case ACTION.SELECT_COLLAB:
+      return { ...state, collaboratorId: action.payload.username, 
+      collaboratorName: action.payload.name, collaboratorAvatar: action.payload.avatar };
+    
     case ACTION.LOAD_INIT_PROJECTS:
       return { ...state, onlineProjects: action.payload.onlineProjects,
       offlineProjects: action.payload.offlineProjects };

@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 		
-@WebServlet("/save-html")
-public class SaveHtmlServlet extends HttpServlet {
+@WebServlet("/save-image")
+public class SaveImageServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -28,7 +28,7 @@ public class SaveHtmlServlet extends HttpServlet {
 		 
 		 // Get the projectid and html text from user
 		 String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
-		 String html = request.getParameter("html");
+		 String image = request.getParameter("image");
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 
@@ -37,7 +37,7 @@ public class SaveHtmlServlet extends HttpServlet {
 			.setKind("Project")
 			.newKey(projectid);
 		 Entity project = Entity.newBuilder(datastore.get(thisProject))
-			 .set("html", html).build(); 
+			 .set("image", image).build(); 
 		 datastore.update(project);
 	}
 }

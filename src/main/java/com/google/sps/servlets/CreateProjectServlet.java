@@ -42,13 +42,17 @@ public class CreateProjectServlet extends HttpServlet {
 		if (partnerExists) {
 			// Generate projectid for project
 			projectid = generateProjectID(datastore);
-
+			String html = "<h1>Hello World</h1>";
+			String css = "h1 {\n  font-size: 24px;\n}";
 			// Add project to datastore
 			Key projectKey = datastore.newKeyFactory().setKind("Project").newKey(projectid);
 			FullEntity project = Entity.newBuilder(projectKey).set("user1", username).set("user2", partner)
-					.set("projectid", projectid).set("title", title).set("html", "<h1>Hello World</h1>")
-					.set("css", "h1 {\n  font-size: 24px;\n}").set("js", "").set("user1Selected", false)
-					.set("user2Selected", false).build();
+					.set("projectid", projectid)
+					.set("title", title)
+					.set("html", html)
+					.set("css", css)
+					.set("js", "")
+					.build();
 			datastore.put(project);
 		}
 

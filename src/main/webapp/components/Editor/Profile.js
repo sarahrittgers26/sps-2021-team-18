@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import SaveIcon from '@material-ui/icons/Save';
 import './Profile.css';
-import { clearProject, updateCanEdit, updateProjectSelection } from '../../actions';
 import Icon_1 from "../../images/avatar-1.png";
 import Icon_2 from "../../images/avatar-2.png";
 import Icon_3 from "../../images/avatar-3.png";
@@ -18,11 +16,9 @@ import Icon_8 from "../../images/avatar-8.png";
 // Change email to some other parameter later, don't want to expose
 // people's emails unnecessarily
 const Profile = (props) => {
-  const {name, avatar, email, side, active, isUser, handleSave, history} = props;
+  const {name, avatar, email, side, active, isUser, handleSave, 
+	  handleReturn} = props;
   const [displayMenu, setDisplayMenu] = useState(false);
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.userReducer);
-  const { activeProject } = useSelector((state) => state.projectReducer);
   const menuRef = useRef();
   const iconRef = useRef();
 
@@ -62,15 +58,6 @@ const Profile = (props) => {
     }   
   } 
  
-  // called when user clicks on Profile
-  const handleReturn = () => {
-    dispatch(updateProjectSelection({ username: user.username, 
-		projectid: activeProject, isSelecting: false }));
-    dispatch(updateCanEdit(false));
-    dispatch(clearProject());
-    history.push('/projects');
-  }
-
   useEffect(() => {
     displayMenu ? menuRef.current.style.display = "flex" : menuRef.current.style.display = "none";
      const handleClickOutside = (event) => {

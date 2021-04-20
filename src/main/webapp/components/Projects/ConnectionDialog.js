@@ -3,18 +3,53 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadUsers } from '../../actions';
+import { createProject, loadUsers, selectCollab, updateCanEdit } from '../../actions';
+import { ACTION } from '../../actions/types.js'
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
-  const { collaboratorId, collaboratorName, isOpen, closeDialog, 
-	  message, sendInvite } = props;
+  const { collaboratorId, collaboratorName, isOpen, closeDialog, fromProject, 
+	  message, socket } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
+  const { activeProject, title } = useSelector((state) => state.projectReducer);
+
+  socket.onmessage = (response) => {
+    let message = JSON.parse(response.data)
+    let type = message.data.split("-")
+    let answer = type[0];
+    switch (message.type) {
+      case "REC_CREATE_PING":
+        if(answer === "yes"){
+	   newProject();
+        } else {
+          closeDialog();
+        }
+	break;
+      case "REC_CONTINUE_PING":
+        if(answer === "yes"){
+	  dispatch(selectCollab({ username: collaboratorId, name: collaboratorName, 
+		  avatar: type[1] }));
+	  dispatch(updateCanEdit(true)); 
+        } else {
+          closeDialog();
+        }
+	break;
+      default:
+    }
+  }
 
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    sendInvite(collaboratorId);
+    let msg = {};
+    if (fromProject) {
+      let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
+      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    } else {
+      let data = `create=${user.username}=${user.name}=${user.avatar}`;
+      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    }
+    socket.send(msg)
   }
 
   const newProject = () => {

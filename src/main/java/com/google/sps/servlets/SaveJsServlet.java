@@ -1,15 +1,11 @@
 package com.google.sps.servlets;
 
 import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.gson.Gson;
-import com.google.sps.data.User;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +28,7 @@ public class SaveJsServlet extends HttpServlet {
 		 
 		 // Get the projectid and html text from user
 		 String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
-		 String js = Jsoup.clean(request.getParameter("js"), Whitelist.none());
+		 String js = request.getParameter("js");
 
 		 Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		 

@@ -25,7 +25,7 @@ public class UpdateTitleServlet extends HttpServlet {
 
 		// Get the projectid from user
 		String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
-		String title = Jsoup.clean(request.getParameter("title"), Whitelist.none());
+		String title = request.getParameter("title");
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 

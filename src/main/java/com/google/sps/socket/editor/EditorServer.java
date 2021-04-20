@@ -42,18 +42,13 @@ public class EditorServer extends WebSocketServer {
     @OnOpen
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
         conns.add(webSocket);
-
-        logger.info("Connection established from: " + webSocket.getRemoteSocketAddress().getHostString());
-        System.out.println("New connection from " + webSocket.getRemoteSocketAddress());
     }
 
     @OnClose
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         conns.remove(conn);
         // When connection is closed, remove the project.
-        // projects.remove(conn)
-        logger.info("Connection closed to: " + conn.getRemoteSocketAddress().getHostString());
-        System.out.println("Closed connection to " + conn.getRemoteSocketAddress());
+        projects.remove(conn);
     }
 
     @OnMessage
@@ -61,39 +56,45 @@ public class EditorServer extends WebSocketServer {
         ObjectMapper mapper = new ObjectMapper();
         try {
             Message msg = mapper.readValue(message, Message.class);
-
             switch (msg.getType()) {
-            case "LOAD_INIT_PROJECTS":
-                addProject(msg.getType(), msg.getId(), conn);
-                break;
-            case "SIGN_IN":
-                addProject(msg.getType(), msg.getId(), conn);
-                break;
-            case "SIGN_OUT":
-                removeProject(conn);
-                break;
-            case "PING_USER":
-                pingUser(msg);
-                break;
-            case "SEND_HTML":
-                broadcastMessage(msg);
-                break;
-            case "SEND_CSS":
-                broadcastMessage(msg);
-                break;
-            case "SEND_JS":
-                broadcastMessage(msg);
-                break;
-            case "SEND_TITLE":
-                broadcastMessage(msg);
-                break;
+		    case "LOAD_INIT_PROJECTS":
+			addProject(msg.getType(), msg.getId(), conn);
+			break;
+		    case "SIGN_IN":
+			addProject(msg.getType(), msg.getId(), conn);
+			break;
+		    case "SIGN_OUT":
+			removeProject(conn);
+			break;
+		    case "PING_USER":
+			pingUser(msg);
+			break;
+		    case "REC_CREATE_PING":
+			pingUser(msg);
+			break;
+		    case "REC_CONTINUE_PING":
+			pingUser(msg);
+			break;
+		    case "SEND_LEFT":
+			pingUser(msg);
+			break;
+		    case "SEND_HTML":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_CSS":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_JS":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_TITLE":
+			broadcastMessage(msg);
+			break;
+		    default:
             }
-
-            System.out.println("From " + msg.getType() + ": " + msg.getId() + ": " + msg.getData());
-            logger.info("Message from project: " + msg.getId() + ", text: " + msg.getData());
         } catch (IOException e) {
-            logger.error("Wrong message format.");
             // return error message to project
+            logger.error("Error receiving message from client");
         }
     }
 
@@ -104,7 +105,6 @@ public class EditorServer extends WebSocketServer {
             conns.remove(conn);
         }
         assert conn != null;
-        System.out.println("ERROR from " + conn.getRemoteSocketAddress());
         ex.printStackTrace();
     }
 
@@ -116,12 +116,9 @@ public class EditorServer extends WebSocketServer {
             for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
                 if (entry.getValue().checkProjectId(projectid)) {
                     entry.getKey().send(messageJson);
-                    System.out.println(entry.getKey().getRemoteSocketAddress());
-                    System.out.println(msg.getType() + ": " + msg.getId() + ": " + msg.getData());
                 }
             }
         } catch (JsonProcessingException e) {
-            logger.error("Cannot convert message to json.");
         }
     }
 
@@ -151,6 +148,8 @@ public class EditorServer extends WebSocketServer {
     }
 
     private void removeProject(WebSocket conn) throws JsonProcessingException {
+        conns.remove(conn);
+        // When connection is closed, remove the project.
         projects.remove(conn);
     }
 
