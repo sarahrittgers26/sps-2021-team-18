@@ -474,7 +474,8 @@ const Projects = ({ history }) => {
         accept={acceptCollaboration}
         acceptCallBack={acceptCallBack}
         declineCallBack={declineCallBack}
-        decline={declineCollaboration}/>
+        decline={declineCollaboration}
+        history={history}/>
 
       
       <div className="Projects_main">

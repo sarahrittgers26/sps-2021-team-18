@@ -11,6 +11,8 @@ import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import { updateCanEdit } from '../../actions';
 import StopCollab from './StopCollab.js';
+
+
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
   const { html, css, js, title, activeProject, collaboratorId, 
@@ -56,7 +58,7 @@ const Editor = ({ history }) => {
         save();
         let timer = setTimeout(() => {
           history.push('/projects');
-        }, 5000);
+        }, 4000);
         return () => clearTimeout(timer);
       default:
     }

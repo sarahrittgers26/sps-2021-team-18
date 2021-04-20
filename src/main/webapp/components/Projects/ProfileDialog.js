@@ -98,7 +98,6 @@ const ProfileDialog = (props) => {
                 name="name_input"
                 value={updatedName}
                 onChange={updateName}
-                placeholder="Change name"
                 className="Profile_input"/>
             </label>
             
@@ -110,7 +109,6 @@ const ProfileDialog = (props) => {
                 type="password"
                 name="username_input"
                 onChange={updatePassword}
-                placeholder="Change password"
                 className="Profile_input"/>
             </label>       
           </div> 
