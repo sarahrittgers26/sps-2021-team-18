@@ -80,6 +80,7 @@ public class LoadProjectsServlet extends HttpServlet {
 			String html = project.getString("html");
 			String css = project.getString("css");
 			String js = project.getString("js");
+			String image = project.getString("image");
 
 			// Determine whether collaborator is stored as user1 or user2
 			String collaborator = user1.equals(username) ? user2 : user1;
@@ -88,11 +89,10 @@ public class LoadProjectsServlet extends HttpServlet {
 			Key key = datastore.newKeyFactory().setKind("User").newKey(collaborator);
 			Entity partner = datastore.get(key);
 			String cname = partner.getString("name");
-			String collaboratorAvatar = partner.getString("avatar");
+			String avatar = partner.getString("avatar");
 			boolean bothActive = userIsActive(collaborator, datastore);
-
 			projectResults.add(
-					new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js, collaboratorAvatar));
+					new FormattedProject(collaborator, cname, projectid, title, bothActive, html, css, js, avatar, image));
 		}
 		return projectResults;
 	}

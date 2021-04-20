@@ -16,6 +16,7 @@ const Navbar = (props) => {
     let msg = JSON.stringify({ type: ACTION.SEND_TITLE, id: projectid, 
 	    data: elt.target.value })
     socket.send(msg);
+    console.log(msg);
   }
 
   // called when user clicks on Profile
@@ -25,6 +26,7 @@ const Navbar = (props) => {
     let msg = JSON.stringify({ id: collaborator, type: ACTION.SEND_LEFT, 
 	    data: collaboratorName });
     socket.send(msg);
+    console.log(msg);
     history.push('/projects');
   }
 

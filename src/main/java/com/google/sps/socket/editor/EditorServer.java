@@ -63,9 +63,6 @@ public class EditorServer extends WebSocketServer {
 		    case "SIGN_IN":
 			addProject(msg.getType(), msg.getId(), conn);
 			break;
-		    case "SIGN_OUT":
-			removeProject(conn);
-			break;
 		    case "PING_USER":
 			pingUser(msg);
 			break;
@@ -146,11 +143,4 @@ public class EditorServer extends WebSocketServer {
             usersProject.addProjectId(id);
         }
     }
-
-    private void removeProject(WebSocket conn) throws JsonProcessingException {
-        conns.remove(conn);
-        // When connection is closed, remove the project.
-        projects.remove(conn);
-    }
-
 }

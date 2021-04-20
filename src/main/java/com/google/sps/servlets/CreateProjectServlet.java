@@ -44,6 +44,7 @@ public class CreateProjectServlet extends HttpServlet {
 			projectid = generateProjectID(datastore);
 			String html = "<h1>Hello World</h1>";
 			String css = "h1 {\n  font-size: 24px;\n}";
+			String image = "https://storage.googleapis.com/spring21-sps-18.appspot.com/css.jpg";
 			// Add project to datastore
 			Key projectKey = datastore.newKeyFactory().setKind("Project").newKey(projectid);
 			FullEntity project = Entity.newBuilder(projectKey).set("user1", username).set("user2", partner)
@@ -51,6 +52,7 @@ public class CreateProjectServlet extends HttpServlet {
 					.set("title", title)
 					.set("html", html)
 					.set("css", css)
+					.set("image", image)
 					.set("js", "")
 					.build();
 			datastore.put(project);

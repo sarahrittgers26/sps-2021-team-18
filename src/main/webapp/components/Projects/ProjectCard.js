@@ -5,11 +5,15 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 const ProjectCard = (props) => {
-  const { title, collaboratorName, downloadProject, continueProject } = props;
+  const { title, collaboratorName, downloadProject, continueProject, image } = props;
 
   return (
     <div className="Project_container card">
-      {AspectRatio(<div className="Project_icon"></div>)}    
+      {AspectRatio(
+        <div className="Project_icon">
+          <img src={image} alt="Project Icon" className="Project_image"/>
+        </div>
+      )}    
       <span className="Project_title">
         {title}
       </span>

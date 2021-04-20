@@ -7,6 +7,9 @@ import { handleSave } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import { updateCanEdit } from '../../actions';
+import html2canvas from 'html2canvas';
+import FormData from 'form-data'
+
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
   const { html, css, js, title, activeProject, collaboratorId, 
@@ -58,6 +61,25 @@ const Editor = ({ history }) => {
     }
   }
 
+  const save = () => {  
+    html2canvas(document.querySelector("#render_pane")).then(canvas => {
+      canvas.toBlob((blob) => {
+        let formData = new FormData();
+        formData.append("image", blob);
+        console.log(blob);
+        
+        dispatch(handleSave({
+          html: projecthtml, 
+          css: projectcss,
+          js: projectjs, 
+          projectid: activeProject, 
+          title: projectName,
+          image: formData,
+        }));
+      });  
+    })
+      
+  }
   
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -84,8 +106,7 @@ const Editor = ({ history }) => {
 	collaboratorName={collaboratorName}
 	collaboratorAvatar={collaboratorAvatar}
         projectid={activeProject}
-        handleSave={() => dispatch(handleSave({ html: projecthtml, css: projectcss,
-		    js: projectjs, projectid: activeProject, title: projectName }))}/>
+        handleSave={save}/>
 
       <div className="Editor_pane Editor_top_pane">
         <Pane 
@@ -111,7 +132,7 @@ const Editor = ({ history }) => {
 
       </div>
 
-      <div className="Editor_pane Editor_bottom_pane">
+      <div id="render_pane" className="Editor_pane Editor_bottom_pane">
         <iframe 
           title="output"
           srcDoc={srcDoc}

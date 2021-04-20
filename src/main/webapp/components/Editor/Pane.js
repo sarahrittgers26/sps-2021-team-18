@@ -15,6 +15,7 @@ const Pane = (props) => {
     let type = "SEND_" + displayName;
     let msg = JSON.stringify({ id: projectid, type: type, data: value })
     socket.send(msg);
+    console.log(msg);
   } 
 
   return (

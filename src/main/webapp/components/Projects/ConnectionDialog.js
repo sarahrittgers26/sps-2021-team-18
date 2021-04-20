@@ -9,7 +9,7 @@ import { ACTION } from '../../actions/types.js'
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
   const { collaboratorId, collaboratorName, isOpen, closeDialog, fromProject, 
-	  message, socket } = props;
+	  message, socket, isActive } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
   const { activeProject, title } = useSelector((state) => state.projectReducer);
@@ -41,15 +41,21 @@ const ConnectionDialog = (props) => {
 
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    let msg = {};
-    if (fromProject) {
-      let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
-      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    if (isActive) {
+      if (fromProject) {
+        let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
+        let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+        socket.send(msg)
+        console.log(msg);
+      } else {
+        let data = `create=${user.username}=${user.name}=${user.avatar}`;
+        let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+        socket.send(msg)
+        console.log(msg);
+      }
     } else {
-      let data = `create=${user.username}=${user.name}=${user.avatar}`;
-      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+
     }
-    socket.send(msg)
   }
 
   const newProject = () => {

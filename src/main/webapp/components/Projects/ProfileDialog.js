@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Dialog, DialogContent } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import './ProfileDialog.css'
@@ -17,6 +18,8 @@ const ProfileDialog = (props) => {
   const [updatedPassword, setUpdatedPassword] = useState("");
   const [showOnlineStatus, setShowOnlineStatus] = useState(currentOnlineStatus);
   const [selectedAvatar, setSelectedAvatar] = useState(avatar);
+  const user = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
 
   const updateName = elt => {
     setUpdatedName(elt.target.value)
