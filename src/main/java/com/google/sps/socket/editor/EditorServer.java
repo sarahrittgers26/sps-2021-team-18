@@ -57,6 +57,9 @@ public class EditorServer extends WebSocketServer {
             case "LOAD_INIT_PROJECTS":
                 addProject(msg.getType(), msg.getId(), conn);
                 break;
+            case "COLLAB_ADD_PROJECT":
+                addForeign(msg);
+                break;
             case "SIGN_IN":
                 addProject(msg.getType(), msg.getId(), conn);
                 break;
@@ -123,6 +126,24 @@ public class EditorServer extends WebSocketServer {
             String username = msg.getId();
             for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
                 if (entry.getValue().getUsername().equals(username)) {
+                    entry.getKey().send(messageJson);
+                    break;
+                }
+            }
+        } catch (JsonProcessingException e) {
+            logger.error("Cannot convert message to json.");
+        }
+    }
+
+    private void addForeign(Message msg) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String messageJson = mapper.writeValueAsString(msg);
+            String username = msg.getId();
+            for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
+                if (entry.getValue().getUsername().equals(username)) {
+                    SocketProject usersProject = projects.get(entry.getKey());
+                    usersProject.addProjectId(msg.getData());
                     entry.getKey().send(messageJson);
                     break;
                 }

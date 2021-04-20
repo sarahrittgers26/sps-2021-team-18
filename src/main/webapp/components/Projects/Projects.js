@@ -61,18 +61,18 @@ const Projects = ({ history }) => {
     let msg = JSON.parse(response.data);
     switch (msg.type) {
       case ACTION.PING_USER:
-	let info_arr = msg.data.split("=");
-	let ping_type = info_arr[0];
-	let collaboratorId = info_arr[1];
-	let collaboratorName = info_arr[2];
-	let collabAvatar = info_arr[3];
-  if (ping_type === "cancel") {
-    const updatedNotifications = notifications.filter((notification) => {
-      return notification.collaboratorId === collaboratorId;
-    })
-    setNotifications(updatedNotifications);
-  }
-
+        let info_arr = msg.data.split("=");
+        let ping_type = info_arr[0];
+        let collaboratorId = info_arr[1];
+        let collaboratorName = info_arr[2];
+        let collabAvatar = info_arr[3];
+        if (ping_type === "cancel") {
+          const updatedNotifications = notifications.filter((notification) => {
+            return notification.collaboratorId === collaboratorId;
+          })
+          setNotifications(updatedNotifications);
+        }
+        
 	else if (ping_type === "create") {
     setNotifications([...notifications,
 		  { collaboratorName: collaboratorName,
@@ -84,44 +84,49 @@ const Projects = ({ history }) => {
 		    proj: collaboratorId,
 		    collaboratorAvatar: collabAvatar,
 		  }]);
-	} else {
-	  let projectid = info_arr[4];
-	  let html = "";
-	  let css = "";
-	  let js = "";
-    for(var i = 0; i < onlineProjects.length; i++) {
-      if (onlineProjects[i].projectid === projectid) {
-        html = onlineProjects[i].html
-        css = onlineProjects[i].css
-        js = onlineProjects[i].js
-        break;
+      
+      } else {
+        let projectid = info_arr[4];
+        let html = "";
+        let css = "";
+        let js = "";
+        for(var i = 0; i < onlineProjects.length; i++) {
+          if (onlineProjects[i].projectid === projectid) {
+            html = onlineProjects[i].html
+            css = onlineProjects[i].css
+            js = onlineProjects[i].js
+            break;
+          }
+        }
+        let avatar = "0";
+              for(var j = 0; j < contacts.length; i++) {
+        if (contacts[j].username === collaboratorId) {
+          avatar = contacts[j].avatar
+          break;
+        }
+        }
+        let title = info_arr[5];
+        let proj = { collaborator: collaboratorId, collaboratorName: collaboratorName,
+          title: title, projectid: projectid, html: html, css: css, js: js,
+        avatar: avatar }
+              setNotifications([...notifications,
+          { collaboratorName: collaboratorName,
+            projectid: projectid,
+            collaborator: collaboratorId,
+            isNewProject: false,
+            projectTitle: proj.title,
+            type: ping_type,
+            proj: proj,
+            collaboratorAvatar: collabAvatar,
+          }]);
       }
-	  }
-	  let avatar = "0";
-          for(var j = 0; j < contacts.length; i++) {
-		if (contacts[j].username === collaboratorId) {
-			avatar = contacts[j].avatar
-			break;
-		}
-	  }
-	  let title = info_arr[5];
-	  let proj = { collaborator: collaboratorId, collaboratorName: collaboratorName,
-		  title: title, projectid: projectid, html: html, css: css, js: js,
-	  avatar: avatar }
-          setNotifications([...notifications,
-		  { collaboratorName: collaboratorName,
-        projectid: projectid,
-		    collaborator: collaboratorId,
-	      isNewProject: false,
-		    projectTitle: proj.title,
-		    type: ping_type,
-		    proj: proj,
-		    collaboratorAvatar: collabAvatar,
-		  }]);
-	}
-	break;
-      default:
-    }
+      break;
+    case ACTION.COLLAB_ADD_PROJECT:
+      loadProjects(user.username);
+      break;
+
+    default:
+  }
   }
  
   window.onbeforeunload = () => {
@@ -380,19 +385,19 @@ const Projects = ({ history }) => {
     setAllProjects([]);
     let allUsersReloaded = contacts.concat(activeUsers);
     let allProjectsReloaded = onlineProjects.concat(offlineProjects);
-    let allPaneIDS = []
+    // let allPaneIDS = []
     
-    allProjectsReloaded.forEach((project) => {
-      // Setup socket for each editor pane with specified project 
-      let projectid = project.projectid;
-      allPaneIDS.push(projectid);
-    });
+    // allProjectsReloaded.forEach((project) => {
+    //   // Setup socket for each editor pane with specified project 
+    //   let projectid = project.projectid;
+    //   allPaneIDS.push(projectid);
+    // });
 
-    allPaneIDS.forEach(paneID => {
-      let messageDto = JSON.stringify({ id: paneID, 
-	  type: ACTION.LOAD_INIT_PROJECTS, data: "" })
-      socket.send(messageDto);
-    });
+    // allPaneIDS.forEach(paneID => {
+    //   let messageDto = JSON.stringify({ id: paneID, 
+	  // type: ACTION.LOAD_INIT_PROJECTS, data: "" })
+    //   socket.send(messageDto);
+    // });
 
     setAllUsers(allUsersReloaded);
     setAllProjects(allProjectsReloaded);

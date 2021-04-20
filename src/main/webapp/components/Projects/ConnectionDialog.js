@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadUsers, selectCollab } from '../../actions';
+import { createProject, loadProjects, selectCollab } from '../../actions';
 import { ACTION } from '../../actions/types.js'
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
@@ -71,7 +71,7 @@ const ConnectionDialog = (props) => {
     dispatch(createProject({ username: user.username, 
 	    collaborator: collaboratorId, title: "New Project"}));
     closeDialog();
-    dispatch(loadUsers(user.username));
+    dispatch(loadProjects(user.username));
   }
 
   const cancelInvite = () => {
