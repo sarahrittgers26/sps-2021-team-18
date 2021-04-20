@@ -103,13 +103,14 @@ export const handleSave = (proj) => async(dispatch) => {
     await axios.get(jsUrl);
     await axios.get(titleUrl);
     await axios.post(imageUrl, image, {
-        headers: {
+      headers: {
         'accept': 'application/json',
         'Accept-Language': 'en-US,en;q=0.8',
         'Content-Type': `multipart/form-data`,
-        }
-  })
-}
+      }
+    })
+  }
+  
 
 // On project deselection
 export const clearProject = () => {
@@ -119,6 +120,7 @@ export const clearProject = () => {
     }
 };
 
+
 // On user selection
 export const chooseUser = (username) => {
     return {
@@ -126,14 +128,6 @@ export const chooseUser = (username) => {
         payload: username
     }
 };
-
-// Update whether user can move to Editor page
-export const updateCanEdit = (canEdit) => {
-    return {
-        type: ACTION.CAN_EDIT,
-        payload: canEdit,
-    }
-}
 
 // Update online status
 export const updateActive = (pageInfo) => async(dispatch) => {
@@ -187,17 +181,22 @@ export const changePassword = (change) => async(dispatch) => {
     })
 };
 
+export const changeVis = (vis) => {
+    return {
+        type: ACTION.CHANGE_VISIBILITY,
+        payload: vis
+    }
+};
+
 // On visibility change
 export const changeVisibility = (visInfo) => async(dispatch) => {
     const username = visInfo.username;
     const vis = visInfo.visibility;
     let url = `/change-vis?username=${username}&visibility=${vis}`;
     await axios.get(url);
-    dispatch({
-        type: ACTION.CHANGE_VISIBILITY,
-        payload: vis
-    })
+    dispatch(changeVis(vis));
 };
+
 
 export const updateTitle = (title) => {
     return {

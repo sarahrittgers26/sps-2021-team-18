@@ -19,7 +19,7 @@
     "gloud": "*",
     "hash-stream-validation": "^0.2.4",
     "history": "^5.0.0",
-    "html2canvas": "*",
+    "html2canvas": "^1.0.0-rc.7",
     "iframe2image": "^0.2.1",
     "jszip": "^3.6.0",
     "maven": "^5.0.0",

@@ -12,8 +12,6 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,7 +21,6 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.OnError;
-import javax.websocket.Session;
 
 @ServerEndpoint(value = "/")
 public class EditorServer extends WebSocketServer {
@@ -57,40 +54,37 @@ public class EditorServer extends WebSocketServer {
         try {
             Message msg = mapper.readValue(message, Message.class);
             switch (msg.getType()) {
-		    case "LOAD_INIT_PROJECTS":
-			addProject(msg.getType(), msg.getId(), conn);
-			break;
-		    case "SIGN_IN":
-			addProject(msg.getType(), msg.getId(), conn);
-			break;
-		    case "SIGN_OUT":
-			removeProject(conn);
-			break;
-		    case "PING_USER":
-			pingUser(msg);
-			break;
-		    case "REC_CREATE_PING":
-			pingUser(msg);
-			break;
-		    case "REC_CONTINUE_PING":
-			pingUser(msg);
-			break;
-		    case "SEND_LEFT":
-			pingUser(msg);
-			break;
-		    case "SEND_HTML":
-			broadcastMessage(msg);
-			break;
-		    case "SEND_CSS":
-			broadcastMessage(msg);
-			break;
-		    case "SEND_JS":
-			broadcastMessage(msg);
-			break;
-		    case "SEND_TITLE":
-			broadcastMessage(msg);
-			break;
-		    default:
+            case "LOAD_INIT_PROJECTS":
+                addProject(msg.getType(), msg.getId(), conn);
+                break;
+            case "SIGN_IN":
+                addProject(msg.getType(), msg.getId(), conn);
+                break;
+            case "PING_USER":
+                pingUser(msg);
+                break;
+            case "REC_CREATE_PING":
+                pingUser(msg);
+                break;
+            case "REC_CONTINUE_PING":
+                pingUser(msg);
+                break;
+            case "SEND_LEFT":
+                pingUser(msg);
+                break;
+            case "SEND_HTML":
+                broadcastMessage(msg);
+                break;
+            case "SEND_CSS":
+                broadcastMessage(msg);
+                break;
+            case "SEND_JS":
+                broadcastMessage(msg);
+                break;
+            case "SEND_TITLE":
+                broadcastMessage(msg);
+                break;
+            default:
             }
         } catch (IOException e) {
             // return error message to project
@@ -146,11 +140,4 @@ public class EditorServer extends WebSocketServer {
             usersProject.addProjectId(id);
         }
     }
-
-    private void removeProject(WebSocket conn) throws JsonProcessingException {
-        conns.remove(conn);
-        // When connection is closed, remove the project.
-        projects.remove(conn);
-    }
-
 }

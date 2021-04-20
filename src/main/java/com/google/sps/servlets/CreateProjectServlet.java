@@ -48,8 +48,8 @@ public class CreateProjectServlet extends HttpServlet {
 			// Add project to datastore
 			Key projectKey = datastore.newKeyFactory().setKind("Project").newKey(projectid);
 			FullEntity project = Entity.newBuilder(projectKey).set("user1", username).set("user2", partner)
-					.set("projectid", projectid).set("title", title).set("html", html).set("css", css).set("js", "")
-					.set("image", image).build();
+					.set("projectid", projectid).set("title", title).set("html", html).set("css", css).set("image", image)
+					.set("js", "").build();
 			datastore.put(project);
 		}
 

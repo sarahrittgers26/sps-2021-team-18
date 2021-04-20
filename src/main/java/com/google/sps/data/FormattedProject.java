@@ -9,8 +9,8 @@ public class FormattedProject {
 	private final String html;
 	private final String css;
 	private final String js;
-	private final String collaboratorAvatar;
 	private final String image;
+	private final String collaboratorAvatar;
 
 	public FormattedProject(String collaborator, String collaboratorName, String projectid, String title,
 			boolean bothActive, String html, String css, String js, String collaboratorAvatar, String image) {

@@ -13,7 +13,6 @@ const initialState = {
   offlineProjects: [],
   activeUsers: [], 
   contacts: [],
-  canEdit: false,
 }
 
 export const projectReducer = (state = initialState, action) => {
@@ -48,12 +47,10 @@ export const projectReducer = (state = initialState, action) => {
       return { ...state, contacts: action.payload.contacts,
 	      activeUsers: action.payload.activeUsers };
 
-    case ACTION.CAN_EDIT:
-      return { ...state, canEdit: action.payload };
     case ACTION.CLEAR_REDUCER:
       return { ...state, activeProject: '', onlineProjects: [], title: '',
       offlineProjects: [], activeUsers: [], contacts: [], html: '',
-      css: '', js: '', canEdit: false, collaboratorId: '', 
+      css: '', js: '', collaboratorId: '', 
 	      collaboratorName: '', collaboratorAvatar: "0" };
 
     default:

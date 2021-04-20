@@ -3,13 +3,13 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadUsers, selectCollab, updateCanEdit } from '../../actions';
+import { createProject, loadUsers, selectCollab } from '../../actions';
 import { ACTION } from '../../actions/types.js'
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
   const { collaboratorId, collaboratorName, isOpen, closeDialog, fromProject, 
-	  message, socket } = props;
+	  message, socket, isActive, history } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
   const { activeProject, title } = useSelector((state) => state.projectReducer);
@@ -30,7 +30,7 @@ const ConnectionDialog = (props) => {
         if(answer === "yes"){
 	  dispatch(selectCollab({ username: collaboratorId, name: collaboratorName, 
 		  avatar: type[1] }));
-	  dispatch(updateCanEdit(true)); 
+    history.push("/editor");
         } else {
           closeDialog();
         }
@@ -40,16 +40,20 @@ const ConnectionDialog = (props) => {
   }
 
   const displayConnectionStatus = () => {
-    optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    let msg = {};
-    if (fromProject) {
-      let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
-      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    if (isActive) {
+      optionsRef.current.classList.add("ConnectionDialog_hide_options");
+      if (fromProject) {
+        let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
+        let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+        socket.send(msg)
+      } else {
+        let data = `create=${user.username}=${user.name}=${user.avatar}`;
+        let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+        socket.send(msg)
+      }
     } else {
-      let data = `create=${user.username}=${user.name}=${user.avatar}`;
-      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+
     }
-    socket.send(msg)
   }
 
   const newProject = () => {

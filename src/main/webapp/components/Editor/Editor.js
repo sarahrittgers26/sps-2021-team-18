@@ -9,7 +9,6 @@ import FormData from 'form-data'
 import { handleSave } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
-import { updateCanEdit } from '../../actions';
 import StopCollab from './StopCollab.js';
 
 
@@ -54,7 +53,6 @@ const Editor = ({ history }) => {
 	break;
       case ACTION.SEND_LEFT:
         setDisplayExit(true);
-        dispatch(updateCanEdit(false));
         save();
         let timer = setTimeout(() => {
           history.push('/projects');
@@ -69,7 +67,6 @@ const Editor = ({ history }) => {
       canvas.toBlob((blob) => {
         let formData = new FormData();
         formData.append("image", blob);
-        console.log(blob);
 
         dispatch(handleSave({
           html: projecthtml,
@@ -82,7 +79,7 @@ const Editor = ({ history }) => {
       });
     })
   }
-
+  
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`
@@ -134,7 +131,7 @@ const Editor = ({ history }) => {
 
       </div>
 
-      <div className="Editor_pane Editor_bottom_pane">
+      <div id="render_pane" className="Editor_pane Editor_bottom_pane">
         <iframe 
           title="output"
           srcDoc={srcDoc}

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import './Navbar.css';
 import Profile from './Profile.js';
 import { ACTION } from '../../actions/types.js';
-import { updateCanEdit, clearProject } from '../../actions';
+import { clearProject } from '../../actions';
 
 const Navbar = (props) => {
   const { title, projectName, handleSave, 
@@ -20,7 +20,6 @@ const Navbar = (props) => {
 
   // called when user clicks on Profile
   const handleReturn = () => {
-    dispatch(updateCanEdit(false));
     dispatch(clearProject());
     let msg = JSON.stringify({ id: collaborator, type: ACTION.SEND_LEFT, 
 	    data: collaboratorName });

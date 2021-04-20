@@ -10,7 +10,7 @@ import ConnectionDialog from './ConnectionDialog.js';
 import AlertDialog from './AlertDialog.js';
 import ProfileDialog from './ProfileDialog.js';
 import { changeName, chooseProject, clearReducer, updateActive, signOut, 
-	loadProjects, clearProject, updateCanEdit, changeAvatar, 
+	loadProjects, clearProject, changeAvatar, 
 	changeVisibility, changePassword, selectCollab } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware.js';
 import { ACTION } from '../../actions/types.js';
@@ -19,7 +19,7 @@ const Projects = ({ history }) => {
   // Get user from store
   const user = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  const { activeUsers, contacts, onlineProjects, canEdit,
+  const { activeUsers, contacts, onlineProjects,
 	  offlineProjects } = useSelector((state) => state.projectReducer);
   const [searchQuery, setSearchQuery] = useState("");
   const [openConnectionDialog, setOpenConnectionDialog] = useState(false);
@@ -34,7 +34,8 @@ const Projects = ({ history }) => {
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [fromProject, setFromProject] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  
+  const [timeout, changeTimeout] = useState(null);
+
   let socket = SocketSingleton.getInstance();
   socket.onopen = () => {
     let mes = JSON.stringify({ id: user.username, type: ACTION.SIGN_IN,
@@ -125,78 +126,26 @@ const Projects = ({ history }) => {
     }
   }
 
-
-  // Updates active status, users and projects
-  const activeStatusWrapper = useCallback(() => {
-    const updateActiveStatus = () => {
-      dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
-      isProjectsPage: true }));
-      dispatch(loadProjects(user.username));
-      setTimeout(updateActiveStatus, 1 * 10000);
-    };
-    updateActiveStatus();
-  }, [dispatch, user.username, user.isVisible]);
-
-  // Ping server every minute to update our active status and retrieve info
+  const wrapper = useCallback(() => {
+    clearInterval(timeout);
+  }, [timeout]);
+	
+  // Update active status if online
   useEffect(() => {
-    if (user.isSignedIn) {
-      activeStatusWrapper();
-    }
-  }, [activeStatusWrapper, user.isSignedIn]);
-/*
-  const closeConnectionWrapper = useCallback(() => {
-    const closeDialogInTimeout = () => {
-      setOpenConnectionDialog(false);
-      dispatch(clearProject());
-      setConnectionAlert("");
-      setCurrentConnection({});
-    }
-    closeDialogInTimeout();
-  }, [dispatch]);
-*/
-  // Ping server every second for a minute to see if both users
-  // selected the same project. If not stop backend call. If both
-  // users
-  /*
-  useEffect(() => {
-    // Check if activeProject is empty (nothing selected) or if
-    // user can already edit
-    if (activeProject.length === 0) {
-      return;
-    }
-    if (!canEdit) {
-      const checkProjectActivity = setInterval(() => {
-        dispatch(checkProject(activeProject));
-      }, 1000);
-
-      const timeout = setTimeout(() => { 
-        clearInterval(checkProjectActivity);
-        dispatch(updateProjectSelection({ username: user.username, 
-		projectid: activeProject, isSelecting: false }));
-        closeConnectionWrapper();
-      }, 29000);
-
-      return () => {
-        clearInterval(checkProjectActivity);
-        clearTimeout(timeout);
+    if (!user.isVisible) {
+      return () => wrapper();
+    } else {
+      const interval = setInterval(() => {
+        dispatch(updateActive({ username: user.username, isVisible: user.isVisible, 
+          isProjectsPage: true }));
+      }, 10000);
+      return () => { 
+        changeTimeout(interval);
+	clearInterval(interval);
       }
-    } else {
-      history.push('/editor');
-      return;
     }
+  }, [user.username, wrapper, user.isVisible, dispatch]);
 
-  }, [dispatch, activeProject, canEdit, closeConnectionWrapper, history, 
-	  user.username]);
-  */
-
-  useEffect(() => {
-    if (!canEdit) {
-      return;
-    } else {
-      history.push('/editor');
-      return;
-    }
-  }, [canEdit, history]);
   // this displays the connection dialog for the user to confirm they want to send the invite
   const continueProject = (projectid, title, collaborator, collaboratorName, 
 	  html, css, js) => {
@@ -204,16 +153,19 @@ const Projects = ({ history }) => {
       setFromProject(true);
       setOpenConnectionDialog(true);
       let avatar = "0";
+      let isActive = true;
       for(var i = 0; i < contacts.length; i++) {
-	if (contacts[i].username === collaborator) {
-		avatar = contacts[i].avatar
-		break;
+      if (contacts[i].username === collaborator) {
+        avatar = contacts[i].avatar
+        isActive = contacts[i].isActive
+        break;
 	}
       }
       setCurrentConnection({
         name: collaboratorName, 
         username: collaborator,
-	avatar: avatar
+	avatar: avatar,
+	isActive: isActive,
       });
       dispatch(selectCollab({ name: collaboratorName, username: collaborator,
 	      avatar: avatar }));
@@ -240,7 +192,8 @@ const Projects = ({ history }) => {
     setCurrentConnection({
       name: name, 
       username: username,
-      avatar: avatar
+      avatar: avatar,
+      isActive: true
     });
     dispatch(selectCollab({ name: name, username: username, avatar: avatar }));
     setConnectionAlert(
@@ -265,8 +218,6 @@ const Projects = ({ history }) => {
   const handleLogout = () => {
     dispatch(signOut());
     dispatch(clearReducer());
-    let msg = JSON.stringify({ id: user.username, type: ACTION.SIGN_OUT, data: "" })
-    socket.send(msg);
     history.push('/');
   }
 
@@ -384,7 +335,7 @@ const Projects = ({ history }) => {
       dispatch(chooseProject({ projectid: info.projectid, 
 	  collaborator: info.collaborator, collaboratorName: info.collaboratorName, 
 	  html: info.html, css: info.css, js: info.js, title: info.title, collaboratorAvatar: info.avatar }));
-      dispatch(updateCanEdit(true));
+      history.push("/editor");
     }
   }
 
@@ -532,11 +483,13 @@ const Projects = ({ history }) => {
         <ConnectionDialog
           collaboratorName={currentConnection.name}
           collaboratorId={currentConnection.username}
+          isActive={user.isVisible}
           isOpen={openConnectionDialog}
           fromProject={fromProject}
           closeDialog={() => closeConnectionDialog(fromProject)}
           message={connectionAlert}
-          socket={socket}/>
+          socket={socket}
+          history={history}/>
       )}
         
       {openAlertDialog && (
@@ -554,11 +507,8 @@ const Projects = ({ history }) => {
           closeDialog={() => setOpenProfileDialog(false)}
           saveProfile={saveProfile}
           avatar={user.avatar}/>
-      )}
-      
+      )}      
     </div>
   );
 }
-
-      /*closeConnectionDialog(fromProject)*/
 export default Projects;
