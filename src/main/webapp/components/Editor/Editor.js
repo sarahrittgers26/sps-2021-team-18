@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import FormData from 'form-data'
+import iframe2image from "iframe2image";
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
@@ -54,21 +55,23 @@ const Editor = ({ history }) => {
   const save = () => {
     
     html2canvas(document.querySelector("#render_pane")).then(canvas => {
-      let formData = new FormData();
-      let image = canvas.toDataURL("image/png");
-      formData.append("image", image);
-      
-      dispatch(handleSave({
-        html: projecthtml, 
-        css: projectcss,
-        js: projectjs, 
-        projectid: activeProject, 
-        title: projectName,
-        image: formData,
+
+      canvas.toBlob((blob) => {
+        let formData = new FormData();
+        formData.append("image", blob);
+        console.log(formData);
+        
+        dispatch(handleSave({
+          html: projecthtml, 
+          css: projectcss,
+          js: projectjs, 
+          projectid: activeProject, 
+          title: projectName,
+          image: formData,
         }));
-    });  
-    // dispatch(handleSave({ html: projecthtml, css: projectcss,
-    //   js: projectjs, projectid: activeProject, title: projectName }))
+      });  
+    })
+      
   }
 
   
@@ -97,7 +100,7 @@ const Editor = ({ history }) => {
         projectid={activeProject}
         handleSave={save}/>
 
-      <div className="Editor_pane Editor_top_pane">
+      <div className="Editor_pane Editor_top_pane" id="render_pane">
         <Pane 
          language="xml"
          displayName="HTML"
@@ -123,7 +126,7 @@ const Editor = ({ history }) => {
 	       projectid={activeProject}/>
       </div>
 
-      <div className="Editor_pane Editor_bottom_pane" id="render_pane">
+      <div className="Editor_pane Editor_bottom_pane">
         <iframe 
           title="output"
           srcDoc={srcDoc}

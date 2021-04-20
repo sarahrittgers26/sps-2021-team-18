@@ -22,4 +22,8 @@
   .ConnectedUsers_label {
     display: none;
   }
+
+  .no_users {
+    display: none;
+  }
 }

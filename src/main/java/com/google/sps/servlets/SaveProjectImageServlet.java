@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import com.google.gson.Gson;
 import java.io.PrintWriter;
+import java.util.Base64;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -49,7 +50,7 @@ public class SaveProjectImageServlet extends HttpServlet {
     String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
     Part filePart = request.getPart("image");
     InputStream fileInputStream = filePart.getInputStream();
-    String link = uploadToCloudStorage(projectid, fileInputStream);
+    String link = uploadToCloudStorage(projectid + ".png", fileInputStream);
 
     // upload link to datastore
     Datastore datastore = DatastoreOptions.getDefaultInstance().getService();

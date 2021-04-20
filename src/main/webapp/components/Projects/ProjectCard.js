@@ -9,11 +9,12 @@ const ProjectCard = (props) => {
   const { title, collaboratorName, downloadProject, continueProject, image } = props;
 
   const getImageSrc = () => {
-    if (image === "0") {
-      return Default;
-    } else {
-      return image;
-    }
+    // if (image === "0") {
+    //   return Default;
+    // } else {
+    //   return image;
+    // }
+    return Default;
   }
 
   return (

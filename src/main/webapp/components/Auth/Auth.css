@@ -49,12 +49,12 @@
 
 .Auth_content {
   max-width: 450px;
-  padding: 24px;
+  padding: 24px 40px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 500px;
+  min-height: 550px;
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
@@ -181,13 +181,27 @@
   align-items: flex-start;
   justify-content: center;
   margin: 16px 0;
+  position: relative;
 }
+
+/* .placeholder {
+  color: gray;
+  font-size: 0.85em;
+  display: inline-flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 16px;
+  height: 100%;
+  align-items: center;
+} */
 
 .error {
   color: red;
   padding-top: 8px;
   font-size: 0.9em;
   font-style: italic;
+  text-align: start;
 }
 
 .Sign_in_button_container {
