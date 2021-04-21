@@ -11,7 +11,6 @@ import Icon_8 from "../../images/avatar-8.png";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const User = (props) => {
-
   const { name, isActive, onClick, avatar } = props;
   const nameRef = useRef();
 

@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadUsers, selectCollab } from '../../actions';
+import { updateEdit, createProject, loadProjects, selectCollab } from '../../actions';
 import { ACTION } from '../../actions/types.js'
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
@@ -11,7 +11,7 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
   const { collaboratorId, collaboratorName, isOpen, closeDialog, fromProject, 
-	  message, socket, isActive, history, notifications } = props;
+	  message, socket, isActive, /*history,*/ notifications } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
   const { activeProject, title } = useSelector((state) => state.projectReducer);
@@ -21,18 +21,19 @@ const ConnectionDialog = (props) => {
     let type = message.data.split("-")
     let answer = type[0];
     switch (message.type) {
-      case "REC_CREATE_PING":
+      case ACTION.REC_CREATE_PING:
         if(answer === "yes"){
 	   newProject();
         } else {
           closeDialog();
         }
 	break;
-      case "REC_CONTINUE_PING":
+      case ACTION.REC_CONTINUE_PING:
         if(answer === "yes"){
 	  dispatch(selectCollab({ username: collaboratorId, name: collaboratorName, 
 		  avatar: type[1] }));
-    history.push("/editor");
+	  dispatch(updateEdit(true));
+          //history.push("/editor");
         } else {
           closeDialog();
         }
@@ -44,34 +45,31 @@ const ConnectionDialog = (props) => {
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
     if (fromProject) {
-      console.log(activeProject);
       for (let notification of notifications) {
-        console.log(notification);
         if (notification.projectid === activeProject) {
           let data = `yes-${user.avatar}`;
           let msg = JSON.stringify({ id: collaboratorId, type: ACTION.REC_CONTINUE_PING, data: data })
           socket.send(msg);
-          history.push("/editor");
+	  dispatch(updateEdit(true));
           return;
         }
       }
 
       let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
       let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
-      socket.send(msg)
-
+      socket.send(msg);
     } else {
       let data = `create=${user.username}=${user.name}=${user.avatar}`;
       let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
-      socket.send(msg)
+      socket.send(msg);
     }
   }
 
   const newProject = () => {
     dispatch(createProject({ username: user.username, 
-	    collaborator: collaboratorId, title: "New Project"}));
+	    collaborator: collaboratorId, title: "New Project" }));
     closeDialog();
-    dispatch(loadUsers(user.username));
+    dispatch(loadProjects(user.username));
   }
 
   const cancelInvite = () => {

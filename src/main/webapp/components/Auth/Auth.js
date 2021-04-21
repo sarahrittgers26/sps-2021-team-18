@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import axios from '../Api/Api';
-import { loadInitialProjects, loadUsers, signIn } from '../../actions';
+import { loadProjects, loadUsers, signIn } from '../../actions';
+import SocketSingleton from '../../middleware/socketMiddleware.js';
 import './Auth.css';
 
 const Auth = ({ history }) => {
@@ -27,6 +28,9 @@ const Auth = ({ history }) => {
   const [displaySignUp, setDisplaySignUp] = useState(false);
   const signInRef = useRef();
   const signUpRef = useRef();
+
+  let socket = SocketSingleton.getInstance();
+  socket.onopen = () => { return; }
 
   const openSignIn = () => {
     if (!displaySignIn) {
@@ -150,7 +154,6 @@ const Auth = ({ history }) => {
       // Encode username, password & email they may have special symbols
       username = encodeURIComponent(username);
       password = encodeURIComponent(password);
-      email = encodeURIComponent(email);
       name = encodeURIComponent(name);
 
       // Check if username is taken and email is valid then add to Datastore
@@ -186,10 +189,11 @@ const Auth = ({ history }) => {
       }
       if (usernameExists || emailExists) return;
       dispatch(signIn({
-        username: username, email: email, name: name, avatar: "0"
+        username: username, email: email, name: name, avatar: "0",
+	      isVisible: true
       }));
       dispatch(loadUsers(username));
-      dispatch(loadInitialProjects(username));
+      dispatch(loadProjects(username));
       history.push('/projects');
     } catch (err) {
       // If error occurs notify user
@@ -229,7 +233,7 @@ const Auth = ({ history }) => {
             name: errorAndInfo[2], isVisible: isVisible, avatar: errorAndInfo[4]
           }));
           dispatch(loadUsers(username));
-          dispatch(loadInitialProjects(username));
+          dispatch(loadProjects(username));
           history.push('/projects');
         }
       } else {

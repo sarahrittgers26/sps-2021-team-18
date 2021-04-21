@@ -23,9 +23,11 @@ public class UserOnlineServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Allow CORS so frontend can access it
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		response.addHeader("Access-Control-Allow-Methods", 
+				"GET,POST,PUT,DELETE,OPTIONS,HEAD");
 
 		// Get the username from user
 		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
@@ -41,7 +43,9 @@ public class UserOnlineServlet extends HttpServlet {
 	// Check if user is active
 	private boolean userIsActive(String username, Datastore datastore) throws DatastoreException {
 		// Get key using username
-		Key key = datastore.newKeyFactory().setKind("User").newKey(username);
+		Key key = datastore.newKeyFactory()
+			.setKind("User")
+			.newKey(username);
 		Entity user = datastore.get(key);
 
 		// Check if user wants to appear online
@@ -52,7 +56,7 @@ public class UserOnlineServlet extends HttpServlet {
 			// Convert to LocalDateTime and check if within 1 minute
 			DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 			LocalDateTime loginTime = LocalDateTime.parse(lastActive, formatter);
-			LocalDateTime now = LocalDateTime.now().minusSeconds(2);
+			LocalDateTime now = LocalDateTime.now().minusSeconds(4);
 			return loginTime.isAfter(now);
 		} else {
 			return isActive;

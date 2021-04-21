@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Dialog, DialogContent } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import './ProfileDialog.css'

@@ -54,37 +54,43 @@ public class EditorServer extends WebSocketServer {
         try {
             Message msg = mapper.readValue(message, Message.class);
             switch (msg.getType()) {
-            case "LOAD_INIT_PROJECTS":
-                addProject(msg.getType(), msg.getId(), conn);
-                break;
-            case "SIGN_IN":
-                addProject(msg.getType(), msg.getId(), conn);
-                break;
-            case "PING_USER":
-                pingUser(msg);
-                break;
-            case "REC_CREATE_PING":
-                pingUser(msg);
-                break;
-            case "REC_CONTINUE_PING":
-                pingUser(msg);
-                break;
-            case "SEND_LEFT":
-                pingUser(msg);
-                break;
-            case "SEND_HTML":
-                broadcastMessage(msg);
-                break;
-            case "SEND_CSS":
-                broadcastMessage(msg);
-                break;
-            case "SEND_JS":
-                broadcastMessage(msg);
-                break;
-            case "SEND_TITLE":
-                broadcastMessage(msg);
-                break;
-            default:
+		    case "LOAD_INIT_PROJECTS":
+			addProject(msg.getType(), msg.getId(), conn);
+			break;
+		    case "COLLAB_ADD_PROJECT":
+			addForeign(msg);
+			break;
+		    case "SIGN_IN":
+			addProject(msg.getType(), msg.getId(), conn);
+			break;
+		    case "SIGN_OUT":
+			projects.remove(conn);
+			break;
+		    case "PING_USER":
+			pingUser(msg);
+			break;
+		    case "REC_CREATE_PING":
+			pingUser(msg);
+			break;
+		    case "REC_CONTINUE_PING":
+			pingUser(msg);
+			break;
+		    case "SEND_LEFT":
+			pingUser(msg);
+			break;
+		    case "SEND_HTML":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_CSS":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_JS":
+			broadcastMessage(msg);
+			break;
+		    case "SEND_TITLE":
+			broadcastMessage(msg);
+			break;
+		    default:
             }
         } catch (IOException e) {
             // return error message to project
@@ -96,6 +102,7 @@ public class EditorServer extends WebSocketServer {
     public void onError(WebSocket conn, Exception ex) {
 
         if (conn != null) {
+            projects.remove(conn);
             conns.remove(conn);
         }
         assert conn != null;
@@ -108,8 +115,10 @@ public class EditorServer extends WebSocketServer {
             String messageJson = mapper.writeValueAsString(msg);
             String projectid = msg.getId();
             for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
-                if (entry.getValue().checkProjectId(projectid)) {
-                    entry.getKey().send(messageJson);
+		WebSocket userSocket = entry.getKey();
+		SocketProject projectInformation = entry.getValue();
+                if (projectInformation.checkProjectId(projectid)) {
+                    userSocket.send(messageJson);
                 }
             }
         } catch (JsonProcessingException e) {
@@ -122,8 +131,10 @@ public class EditorServer extends WebSocketServer {
             String messageJson = mapper.writeValueAsString(msg);
             String username = msg.getId();
             for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
-                if (entry.getValue().getUsername().equals(username)) {
-                    entry.getKey().send(messageJson);
+		WebSocket userSocket = entry.getKey();
+		SocketProject projectInformation = entry.getValue();
+                if (projectInformation.getUsername().equals(username)) {
+                    userSocket.send(messageJson);
                     break;
                 }
             }
@@ -138,6 +149,25 @@ public class EditorServer extends WebSocketServer {
         } else {
             SocketProject usersProject = projects.get(conn);
             usersProject.addProjectId(id);
+        }
+    }
+
+    private void addForeign(Message msg) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String messageJson = mapper.writeValueAsString(msg);
+            String username = msg.getId();
+            for (Map.Entry<WebSocket, SocketProject> entry : projects.entrySet()) {
+		WebSocket userSocket = entry.getKey();
+		SocketProject projectInformation = entry.getValue();
+                if (projectInformation.getUsername().equals(username)) {
+                    projectInformation.addProjectId(msg.getData());
+                    userSocket.send(messageJson);
+                    break;
+                }
+            }
+        } catch (JsonProcessingException e) {
+            logger.error("Cannot convert message to json.");
         }
     }
 }

@@ -1,0 +1,69 @@
+.About_container {
+  background-color: var(--profile_background);
+  box-sizing: border-box;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  width: 650px;
+  max-height: 600px;
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+}
+
+.About_button_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.About_button {
+  outline: none;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  font-weight: bold;
+  transition: all 0.3s;
+  background-color: rgba(202, 213, 218, 0.308);
+}
+
+.About_button:hover {
+  background-color: rgba(161, 170, 179, 0.6);
+  cursor: pointer;
+}
+
+.About_header {
+  font-size: 2em;
+  font-weight: bold;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.About_content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.About_message {
+  margin-bottom: 24px;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  line-height: 2em;
+  font-size: 1.2em;
+  color: gray;
+}
+
+.below {
+  margin-top: 24px;
+}

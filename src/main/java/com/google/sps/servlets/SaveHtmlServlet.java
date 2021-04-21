@@ -19,19 +19,26 @@ public class SaveHtmlServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Allow CORS so frontend can access it
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		response.addHeader("Access-Control-Allow-Methods", 
+				"GET,POST,PUT,DELETE,OPTIONS,HEAD");
 
 		// Get the projectid and html text from user
-		String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
+		String projectid = Jsoup.clean(request.getParameter("projectid"), 
+				Whitelist.none());
 		String html = request.getParameter("html");
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
 		// Update stored html to new string
-		Key thisProject = datastore.newKeyFactory().setKind("Project").newKey(projectid);
-		Entity project = Entity.newBuilder(datastore.get(thisProject)).set("html", html).build();
+		Key thisProject = datastore.newKeyFactory()
+			.setKind("Project")
+			.newKey(projectid);
+		Entity project = Entity.newBuilder(datastore.get(thisProject))
+			.set("html", html)
+			.build();
 		datastore.update(project);
 	}
 }

@@ -28,9 +28,11 @@ public class SignUpServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Allow CORS so frontend can access it
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		response.addHeader("Access-Control-Allow-Methods", 
+				"GET,POST,PUT,DELETE,OPTIONS,HEAD");
 
 		// Get the username, password and email from user
 		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
@@ -52,10 +54,18 @@ public class SignUpServlet extends HttpServlet {
 			LocalDateTime now = LocalDateTime.now();
 			DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 			String newLogin = now.format(formatter);
-			Key userKey = datastore.newKeyFactory().setKind("User").newKey(username);
-			FullEntity user = Entity.newBuilder(userKey).set("username", username).set("password", password)
-					.set("email", email).set("lastActive", newLogin).set("name", name).set("isVisible", true).set("avatar", "0")
-					.build();
+			Key userKey = datastore.newKeyFactory()
+				.setKind("User")
+				.newKey(username);
+			FullEntity user = Entity.newBuilder(userKey)
+				.set("username", username)
+				.set("password", password)
+				.set("email", email)
+				.set("lastActive", newLogin)
+				.set("name", name)
+				.set("isVisible", true)
+				.set("avatar", "0")
+				.build();
 			datastore.put(user);
 		}
 		// Print that user was added successfully
@@ -69,8 +79,10 @@ public class SignUpServlet extends HttpServlet {
 	// Check if user with specified field exists
 	private boolean checkIfFieldExists(String field, String value, Datastore datastore) throws DatastoreException {
 		// Check if value already exists within Datastore
-		Query<Entity> fieldQuery = Query.newEntityQueryBuilder().setKind("User").setFilter(PropertyFilter.eq(field, value))
-				.build();
+		Query<Entity> fieldQuery = Query.newEntityQueryBuilder()
+			.setKind("User")
+			.setFilter(PropertyFilter.eq(field, value))
+			.build();
 		QueryResults<Entity> entities = datastore.run(fieldQuery);
 		return entities.hasNext();
 	}

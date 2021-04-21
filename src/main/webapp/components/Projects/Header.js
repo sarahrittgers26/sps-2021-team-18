@@ -17,7 +17,7 @@ import Banner from "../../images/banner.png";
 
 const Header = (props) => {
   const { name, email, handleLogout, displayProfile, notifications, avatar, accept, decline,
-  acceptCallBack, declineCallBack, history } = props;
+  acceptCallBack, declineCallBack/*, history*/ } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
@@ -112,14 +112,14 @@ const Header = (props) => {
 
   }, [displayMenu]);
 
-  const reload = () => {
+/*  const reload = () => {
     history.push("/projects");
   }
-
+*/
   return (
     <div className="Header_container">
       <div className="Banner">
-        <img src={Banner} alt="Banner" className="main_icon" onClick={reload}/>
+        <img src={Banner} alt="Banner" className="main_icon" /*onClick={reload}*//>
       </div>
 
       <div className="Header_user">

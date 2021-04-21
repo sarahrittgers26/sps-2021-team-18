@@ -77,6 +77,13 @@ export const chooseProject = (project) => {
     }
 };
 
+export const updateLocation = (locale) => {
+    return {
+        type: ACTION.UPDATE_LOCATION,
+        payload: locale
+    }
+};
+
 export const selectCollab = (collab) => {
     return {
         type: ACTION.SELECT_COLLAB,
@@ -84,6 +91,12 @@ export const selectCollab = (collab) => {
     }
 };
 
+export const updateEdit = (canEdit) => {
+    return {
+        type: ACTION.UPDATE_EDIT,
+        payload: canEdit
+    }
+};
 
 // Function to handle saving project to database
 export const handleSave = (proj) => async(dispatch) => {
@@ -119,7 +132,6 @@ export const clearProject = () => {
         payload: null
     }
 };
-
 
 // On user selection
 export const chooseUser = (username) => {
@@ -222,7 +234,7 @@ export const createProject = (details) => async(dispatch) => {
     socket.send(messageDto);
     let collabMesg = JSON.stringify({
         id: partner,
-        type: ACTION.COLLAB_ADD_PROJECT,
+        type: ACTION.COLLAB,
         data: projectid
     })
     socket.send(collabMesg);
@@ -261,18 +273,3 @@ export const loadProjects = (username) => async(dispatch) => {
     }
 };
 
-// Load projects that are online or offline
-export const loadInitialProjects = (username) => async(dispatch) => {
-    if (username !== '') {
-        // Load projects from backend
-        let url = `/load?username=${username}`;
-        const response = await axios.get(url);
-        dispatch({
-            type: ACTION.LOAD_INIT_PROJECTS,
-            payload: {
-                onlineProjects: projectSelector(true, response.data),
-                offlineProjects: projectSelector(false, response.data)
-            }
-        });
-    }
-};

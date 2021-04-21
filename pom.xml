@@ -27,13 +27,6 @@
       <version>4.0.1</version>
     </dependency>
 
-    <!-- Cloud storage -->
-    <dependency>
-      <groupId>com.google.cloud</groupId>
-      <artifactId>google-cloud-storage</artifactId>
-      <version>1.113.0</version>
-    </dependency>
-
     <!-- Jetty -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
@@ -117,7 +110,7 @@
                 ${project.build.directory}/classes/META-INF/resources
               </outputDirectory>
               <resources>
-                <resource><directory>./src/main/webapp</directory></resource>
+		<resource><directory>./src/main/webapp/</directory></resource>
               </resources>
             </configuration>
           </execution>

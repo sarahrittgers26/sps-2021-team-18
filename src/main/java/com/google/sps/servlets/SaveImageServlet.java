@@ -29,12 +29,15 @@ public class SaveImageServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     // Allow CORS so frontend can access it
     response.addHeader("Access-Control-Allow-Origin", "*");
-    response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    response.addHeader("Access-Control-Allow-Headers", 
+		    "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     response.addHeader("Access-Control-Allow-Credentials", "true");
-    response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+    response.addHeader("Access-Control-Allow-Methods", 
+		    "GET,POST,PUT,DELETE,OPTIONS,HEAD");
     response.addHeader("Content-Type", "multipart/form-data");
 
-    String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
+    String projectid = Jsoup.clean(request.getParameter("projectid"), 
+		    Whitelist.none());
     Part filePart = request.getPart("image");
     InputStream fileInputStream = filePart.getInputStream();
     String link = uploadToCloudStorage(projectid + ".png", fileInputStream);
@@ -50,7 +53,10 @@ public class SaveImageServlet extends HttpServlet {
   private static String uploadToCloudStorage(String fileName, InputStream fileInputStream) {
     String projectId = "spring21-sps-18";
     String bucketName = "spring21-sps-18.appspot.com";
-    Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+    Storage storage = StorageOptions.newBuilder()
+	    .setProjectId(projectId)
+	    .build()
+	    .getService();
     BlobId blobId = BlobId.of(bucketName, fileName);
     BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
     Blob blob = storage.create(blobInfo, fileInputStream);

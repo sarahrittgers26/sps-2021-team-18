@@ -6,69 +6,51 @@ import './Editor.css';
 import './StopCollab.js';
 import html2canvas from 'html2canvas';
 import FormData from 'form-data'
-import { handleSave, clearProject } from '../../actions';
+import { handleSave, clearProject, updateEdit } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
 import { ACTION } from '../../actions/types.js';
 import StopCollab from './StopCollab.js';
-
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
   const { html, css, js, title, activeProject, collaboratorId, 
 	  collaboratorName, collaboratorAvatar } = 
 		useSelector((state) => state.projectReducer);
-  
-  // I don't think we can use the "projecthtml" useState variables
-  // For the sockets we need a way to update text changes within the text editors themselves
-  // when the user types, but also store those changes to the "html", "css", "js" variables
-  // in the React Store for database saving. We also have to figure out a way to send updates
-  // to each editor through sockets and have them update on the collaborator's end
-  // We can either add a JQuery function to each editor component that has the socket actions
-  // embded into the function and directly sending changes with stuff like OnKeyPress for each
-  // editor component. Or we can disregard storing into in the react store entirely and just
-  // send the current projecthtml, projectcss, projectjs to the backend whenever the user clicks
-  // save 
   const [projecthtml, setProjectHtml] = useState(html);
   const [projectcss, setProjectCss] = useState(css);
   const [projectjs, setProjectJs] = useState(js);
+  const [curProject, setCurProject] = useState(activeProject);
   const [srcDoc, setSrcDoc] = useState("");
   const [projectName, setProjectName] = useState(title);
-  const socket = SocketSingleton.getInstance();
   const [displayExit, setDisplayExit] = useState(false);
+  const socket = SocketSingleton.getInstance();
 
-
-  window.onpopstate = e => {
-    console.log("Out");
-    dispatch(clearProject());
-    let msg = JSON.stringify({ id: collaboratorId, type: ACTION.SEND_LEFT, 
-	    data: collaboratorName });
-    socket.send(msg);
-    history.push('/projects');
- }
-  
   socket.onmessage = (response) => {
     let message = JSON.parse(response.data);
     switch (message.type) {
       case ACTION.SEND_HTML:
-	setProjectHtml(message.data)
+	setProjectHtml(message.data);
 	break;
       case ACTION.SEND_CSS:
-	setProjectCss(message.data)
+	setProjectCss(message.data);
 	break;
       case ACTION.SEND_JS:
-	setProjectJs(message.data)
+	setProjectJs(message.data);
 	break;
       case ACTION.SEND_TITLE:
 	setProjectName(message.data);
 	break;
       case ACTION.SEND_LEFT:
-        setDisplayExit(true);
         save();
-        let timer = setTimeout(() => {
+        setDisplayExit(true);
+        setTimeout(() => {
+	  dispatch(updateEdit(false));
+	  dispatch(clearProject());
           history.push('/projects');
-        }, 4000);
-        return () => clearTimeout(timer);
+	}, 2000);
+	break;
       default:
+        //return () => clearTimeout(timer);
     }
   }
 
@@ -77,12 +59,11 @@ const Editor = ({ history }) => {
       canvas.toBlob((blob) => {
         let formData = new FormData();
         formData.append("image", blob);
-
         dispatch(handleSave({
           html: projecthtml,
           css: projectcss,
           js: projectjs,
-          projectid: activeProject,
+          projectid: curProject,
           title: projectName,
           image: formData,
         }));
@@ -136,7 +117,7 @@ const Editor = ({ history }) => {
          language="javascript"
          displayName="JS"
          value={projectjs}
-	       socket={socket}
+	 socket={socket}
        	 projectid={activeProject}/>
 
       </div>

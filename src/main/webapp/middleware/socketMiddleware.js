@@ -1,15 +1,15 @@
+import { baseUrl } from '../components/Api/Api';
+const LOCAL = 'ws://localhost:9000/';
+const PRODUCTION = 'wss://https://spring21-sps-18.appspot.com:9000/';
 const AppConfig = {
-  PROTOCOL: "ws://",
-  // HOST: 'localhost',
-  HOST: "https://spring21-sps-18.appspot.com",
-  PORT: ":9000/"
+  SOCKET: baseUrl === 'https://spring21-sps-18.appspot.com' ? PRODUCTION : LOCAL,
 }
-
+console.log(AppConfig.SOCKET);
 const SocketSingleton = (() => {
   let instance;
 
   const createInstance = () => {
-    return new WebSocket(AppConfig.PROTOCOL + AppConfig.HOST + AppConfig.PORT);
+    return new WebSocket(AppConfig.SOCKET);
   }
   
   return {

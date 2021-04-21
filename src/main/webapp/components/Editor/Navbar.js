@@ -1,9 +1,8 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './Navbar.css';
 import Profile from './Profile.js';
 import { ACTION } from '../../actions/types.js';
-import { clearProject } from '../../actions';
+import { clearProject, updateEdit } from '../../actions';
 
 const Navbar = (props) => {
   const { title, projectName, handleSave, 
@@ -20,11 +19,13 @@ const Navbar = (props) => {
 
   // called when user clicks on Profile
   const handleReturn = () => {
-    dispatch(clearProject());
+    handleSave();
     let msg = JSON.stringify({ id: collaborator, type: ACTION.SEND_LEFT, 
 	    data: collaboratorName });
     socket.send(msg);
+    dispatch(updateEdit(false));
     history.push('/projects');
+    dispatch(clearProject())
   }
 
 

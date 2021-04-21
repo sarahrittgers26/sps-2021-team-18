@@ -5,7 +5,7 @@ import './StaticProgressBar.js';
 import InfoIcon from '@material-ui/icons/Info';
 import StaticProgressBar from './StaticProgressBar.js';
 
-function StopCollab(props) {
+const StopCollab = (props) => {
   const { collaboratorName, open } = props; 
   return (
     <Dialog open={open}>
