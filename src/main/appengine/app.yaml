@@ -1,1 +1,9 @@
 runtime: java11
+#env: 
+
+#network:
+        #session_affinity: true
+        #forwarded_ports: ["9000"]
+        #handlers:
+        #$- url: /.*
+  #  script: this field is required, but ignored

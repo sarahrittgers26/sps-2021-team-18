@@ -1,14 +1,21 @@
 import React, { useState, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import axios from '../Api/Api';
+import SocketSingleton from '../../middleware/socketMiddleware';
 import { loadProjects, loadUsers, signIn } from '../../actions';
-import SocketSingleton from '../../middleware/socketMiddleware.js';
 import './Auth.css';
+/*
+const sendMail = () => async(dispatch) => {
+  let test = "/mail?username=mdprodigy&collaborator=othermichael&title=NewProject&newProject=true";
+  console.log(test);
+  const response = await axios.get(test);
+  console.log(test);
+}*/
 
 const Auth = ({ history }) => {
   // Dispatch for react-redux store
   const dispatch = useDispatch();
-
+  //dispatch(sendMail())
   // Store user's information in React state
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState(false);
@@ -30,7 +37,9 @@ const Auth = ({ history }) => {
   const signUpRef = useRef();
 
   let socket = SocketSingleton.getInstance();
-  socket.onopen = () => { return; }
+  socket.onopen = () => {  
+    console.log('connection successful');
+  }
 
   const openSignIn = () => {
     if (!displaySignIn) {
