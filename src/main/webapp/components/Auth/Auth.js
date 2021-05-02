@@ -166,7 +166,7 @@ const Auth = ({ history }) => {
       name = encodeURIComponent(name);
 
       // Check if username is taken and email is valid then add to Datastore
-      const response = await axios.post(
+      const response = await axios.get(
         `/sign-up?username=${username}
               &password=${password}&email=${email}&name=${name}`);
 
@@ -222,7 +222,7 @@ const Auth = ({ history }) => {
     password = encodeURIComponent(password);
 
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         `/sign-in?username=${username}
               &password=${password}`);
 

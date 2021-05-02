@@ -96,6 +96,13 @@ const Header = (props) => {
 
   }, [displayNotifications]);
 
+  useEffect(() => {
+    if (notifications.length == 0) {
+      document.title = "COLLABCODE";
+    } else {
+      document.title = `(${notifications.length}) COLLABCODE`;
+    }
+  }, [notifications]);
 
   useEffect(() => {
     displayMenu ? menuRef.current.style.display = "flex" : menuRef.current.style.display = "none";
@@ -120,7 +127,7 @@ const Header = (props) => {
   return (
     <div className="Header_container">
       <div className="Banner">
-        <img src={Banner} alt="Banner" className="main_icon" onClick={() => handleClick(displayAbout)}/>
+        <img src={Banner} alt="Banner" className="main_icon" onClick={displayAbout}/>
       </div>
 
       <div className="Header_user">
