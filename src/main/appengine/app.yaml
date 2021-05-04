@@ -1,9 +1,1 @@
-runtime: java
-env: flex
-
-network:
-        session_affinity: true
-
-        #handlers:
-        #- url: /.*
-        #script: this field is required, but ignored
+runtime: java11

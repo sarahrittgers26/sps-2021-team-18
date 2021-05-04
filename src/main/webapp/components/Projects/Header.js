@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import InfoIcon from '@material-ui/icons/Info';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Notification from './Notification.js';
@@ -17,7 +18,7 @@ import Banner from "../../images/banner.png";
 
 const Header = (props) => {
   const { name, email, handleLogout, displayProfile, notifications, avatar, accept, decline,
-  acceptCallBack, declineCallBack/*, history*/ } = props;
+  acceptCallBack, declineCallBack, displayAbout } = props;
   const [displayMenu, setDisplayMenu] = useState(false);
   const [displayNotifications, setDisplayNotifications] = useState(false);
   const menuRef = useRef();
@@ -95,6 +96,13 @@ const Header = (props) => {
 
   }, [displayNotifications]);
 
+  useEffect(() => {
+    if (notifications.length == 0) {
+      document.title = "COLLABCODE";
+    } else {
+      document.title = `(${notifications.length}) COLLABCODE`;
+    }
+  }, [notifications]);
 
   useEffect(() => {
     displayMenu ? menuRef.current.style.display = "flex" : menuRef.current.style.display = "none";
@@ -119,7 +127,7 @@ const Header = (props) => {
   return (
     <div className="Header_container">
       <div className="Banner">
-        <img src={Banner} alt="Banner" className="main_icon" /*onClick={reload}*//>
+        <img src={Banner} alt="Banner" className="main_icon" onClick={displayAbout}/>
       </div>
 
       <div className="Header_user">
@@ -170,7 +178,7 @@ const Header = (props) => {
           </div>
           <ul>
             <li onClick={() => handleClick(displayProfile)}>
-              <AccountCircleIcon className="Header_menu_icon"/>
+              <InfoIcon className="Header_menu_icon"/>
               <span>
                 Profile
               </span>
