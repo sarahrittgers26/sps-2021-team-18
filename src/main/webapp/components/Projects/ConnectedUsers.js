@@ -3,7 +3,6 @@ import './ConnectedUsers.css';
 import User from './User.js';
 
 const ConnectedUsers = (props) => {
-  
   const { activeUsers, contacts, onActiveUserClick, onRecentUserClick, isVisible } = props;
   const actives = activeUsers.map((user) => (
    <User

@@ -49,7 +49,7 @@ const Notification = (props) => {
     if (create) {
       return `${collaboratorName} is inviting you to CREATE a new project`
     } else {
-      return `${collaboratorName} is inviting you to CONTINUTE working on ${projectTitle}`
+      return `${collaboratorName} is inviting you to CONTINUE working on ${projectTitle}`
     }
   }
   

@@ -23,39 +23,31 @@ export const projectReducer = (state = initialState, action) => {
 	      html: action.payload.html, css: action.payload.css,
       js: action.payload.js, collaboratorName: action.payload.collaboratorName,
       title: action.payload.title, collaboratorId: action.payload.collaborator, 
-      collaboratorAvatar: action.payload.avatar };
-
+      collaboratorAvatar: action.payload.collaboratorAvatar };
     case ACTION.CLEAR_PROJECT:
       return { ...state, html: "", css: "", js: "", collaboratorName: "",
       title: "", activeProject: "", collaboratorId: "", collaboratorAvatar: "0" };
-
     case ACTION.CHOOSE_USER:
       return { ...state, collaboratorId: action.payload };
-
+    case ACTION.UPDATE_EDIT:
+      return { ...state, canEdit: action.payload };
     case ACTION.SELECT_COLLAB:
       return { ...state, collaboratorId: action.payload.username, 
       collaboratorName: action.payload.name, collaboratorAvatar: action.payload.avatar };
-    
-    case ACTION.LOAD_INIT_PROJECTS:
+    case ACTION.LOAD_INIT_PROJECTS: 
       return { ...state, onlineProjects: action.payload.onlineProjects,
       offlineProjects: action.payload.offlineProjects };
-
     case ACTION.UPDATE_PROJECTS:
       return { ...state, onlineProjects: action.payload.onlineProjects,
       offlineProjects: action.payload.offlineProjects };
-
     case ACTION.UPDATE_USERS:
       return { ...state, contacts: action.payload.contacts,
 	      activeUsers: action.payload.activeUsers };
-
-    case ACTION.CAN_EDIT:
-      return { ...state, canEdit: action.payload };
     case ACTION.CLEAR_REDUCER:
       return { ...state, activeProject: '', onlineProjects: [], title: '',
       offlineProjects: [], activeUsers: [], contacts: [], html: '',
-      css: '', js: '', canEdit: false, collaboratorId: '', 
-	      collaboratorName: '', collaboratorAvatar: "0"};
-
+      css: '', js: '', collaboratorId: '', 
+	      collaboratorName: '', collaboratorAvatar: "0" };
     default:
       return state;
   }

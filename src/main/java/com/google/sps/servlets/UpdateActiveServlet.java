@@ -21,9 +21,11 @@ public class UpdateActiveServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Allow CORS so frontend can access it
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		response.addHeader("Access-Control-Allow-Methods", 
+				"GET,POST,PUT,DELETE,OPTIONS,HEAD");
 
 		// Get the username from user
 		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
@@ -35,8 +37,12 @@ public class UpdateActiveServlet extends HttpServlet {
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 		String active = now.format(formatter);
 
-		Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
-		Entity activeUser = Entity.newBuilder(datastore.get(thisUser)).set("lastActive", active).build();
+		Key thisUser = datastore.newKeyFactory()
+			.setKind("User")
+			.newKey(username);
+		Entity activeUser = Entity.newBuilder(datastore.get(thisUser))
+			.set("lastActive", active)
+			.build();
 		datastore.update(activeUser);
 	}
 }

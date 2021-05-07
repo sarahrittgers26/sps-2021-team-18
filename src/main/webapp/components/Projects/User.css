@@ -29,6 +29,7 @@
   background-color: var(--profile_background);
   position: relative;
   display: flex;
+  color: gray;
 }
 
 .User_name {
@@ -71,4 +72,25 @@
   text-align: center;
   margin-left: 48px;
   animation: scroll_out 2.5s linear, scroll-left 5s linear infinite 2.5s;
+}
+
+@media screen and (max-width: 750px) {
+  .User_name {
+    display: none;
+  }
+
+  .User_image_container {
+    padding-left: 0;
+  }
+
+  .User_container {
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    margin-top: 8px;
+  }
+
+  .User_container:first-of-type {
+    margin-top: 0;
+  }
 }

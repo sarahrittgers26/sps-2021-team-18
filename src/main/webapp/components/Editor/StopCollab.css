@@ -1,0 +1,25 @@
+.StopCollab_container {
+  background-color: var(--profile_background);
+  box-sizing: border-box;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  width: 400px;
+  position: relative;
+}
+
+.dialog_icon {
+  color: gray;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.StopCollab_header {
+  font-weight: bold;
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 24px;
+}

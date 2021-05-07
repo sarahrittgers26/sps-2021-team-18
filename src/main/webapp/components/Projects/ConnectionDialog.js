@@ -3,13 +3,15 @@ import { Dialog, DialogContent } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectionDialog.css';
 import ProgressSpinner from './ProgressSpinner.js';
-import { createProject, loadUsers, selectCollab, updateCanEdit } from '../../actions';
+import { updateEdit, createProject, loadProjects, selectCollab } from '../../actions';
 import { ACTION } from '../../actions/types.js'
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+
 
 const ConnectionDialog = (props) => {
   const dispatch = useDispatch();
   const { collaboratorId, collaboratorName, isOpen, closeDialog, fromProject, 
-	  message, socket } = props;
+	  message, socket, isActive, /*history,*/ notifications } = props;
   const optionsRef = useRef();
   const user = useSelector((state) => state.userReducer);
   const { activeProject, title } = useSelector((state) => state.projectReducer);
@@ -19,44 +21,63 @@ const ConnectionDialog = (props) => {
     let type = message.data.split("-")
     let answer = type[0];
     switch (message.type) {
-      case "REC_CREATE_PING":
+      case ACTION.REC_CREATE_PING:
         if(answer === "yes"){
 	   newProject();
         } else {
           closeDialog();
         }
 	break;
-      case "REC_CONTINUE_PING":
+      case ACTION.REC_CONTINUE_PING:
         if(answer === "yes"){
 	  dispatch(selectCollab({ username: collaboratorId, name: collaboratorName, 
 		  avatar: type[1] }));
-	  dispatch(updateCanEdit(true)); 
+	  dispatch(updateEdit(true));
+          //history.push("/editor");
         } else {
           closeDialog();
         }
-	break;
+	    break;
       default:
     }
   }
 
   const displayConnectionStatus = () => {
     optionsRef.current.classList.add("ConnectionDialog_hide_options");
-    let msg = {};
     if (fromProject) {
+      for (let notification of notifications) {
+        if (notification.projectid === activeProject) {
+          let data = `yes-${user.avatar}`;
+          let msg = JSON.stringify({ id: collaboratorId, type: ACTION.REC_CONTINUE_PING, data: data })
+          socket.send(msg);
+	  dispatch(updateEdit(true));
+          return;
+        }
+      }
+
       let data = `continue=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
-      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+      let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+      socket.send(msg);
     } else {
       let data = `create=${user.username}=${user.name}=${user.avatar}`;
-      msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+      let msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+      socket.send(msg);
     }
-    socket.send(msg)
   }
 
   const newProject = () => {
     dispatch(createProject({ username: user.username, 
 	    collaborator: collaboratorId, title: "New Project" }));
     closeDialog();
-    dispatch(loadUsers(user.username));
+    dispatch(loadProjects(user.username));
+  }
+
+  const cancelInvite = () => {
+    let msg = {};
+    let data = `cancel=${user.username}=${user.name}=${user.avatar}=${activeProject}=${title}`;
+    msg = JSON.stringify({ id: collaboratorId, type: ACTION.PING_USER, data: data })
+    socket.send(msg);
+    closeDialog();
   }
 
   return (
@@ -72,12 +93,27 @@ const ConnectionDialog = (props) => {
           </span>
           <ProgressSpinner />
           <div className="ConnectionDialog_button_container">
-            <button className="ConnectionDialog_button" onClick={closeDialog}>
+            <button className="ConnectionDialog_button" onClick={cancelInvite}>
               CANCEL
             </button>
           </div>
         </div>
+
+        {!isActive && ( 
+          <div className="ConnectionDialog_options">
+
+            <div className="Icon_container">
+              <ErrorOutlineIcon style={{ fontSize: 40, color: "gray" }}/>
+            </div>
+            <span className="AlertDialog_message">You cannot collaborate with anyone when you are appearing offline.</span>      
+
+            <div className="AlertDialog_button_container">
+            <button className="AlertDialog_button" onClick={closeDialog}>CLOSE</button>
+          </div>
+          </div>       
+        )}
         
+        {isActive && (
         <div className="ConnectionDialog_options" ref={optionsRef}>
           <span className="ConnectionDialog_header">
             Invite to collaborate?
@@ -95,7 +131,7 @@ const ConnectionDialog = (props) => {
               NO
             </button>
           </div>
-        </div>
+        </div>)}
 	      
       </DialogContent>
     </Dialog>

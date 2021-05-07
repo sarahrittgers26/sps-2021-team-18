@@ -19,9 +19,11 @@ public class UpdateTitleServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Allow CORS so frontend can access it
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		response.addHeader("Access-Control-Allow-Methods", 
+				"GET,POST,PUT,DELETE,OPTIONS,HEAD");
 
 		// Get the projectid from user
 		String projectid = Jsoup.clean(request.getParameter("projectid"), Whitelist.none());
@@ -29,8 +31,12 @@ public class UpdateTitleServlet extends HttpServlet {
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
-		Key thisProject = datastore.newKeyFactory().setKind("Project").newKey(projectid);
-		Entity currentProject = Entity.newBuilder(datastore.get(thisProject)).set("title", title).build();
+		Key thisProject = datastore.newKeyFactory()
+			.setKind("Project")
+			.newKey(projectid);
+		Entity currentProject = Entity.newBuilder(datastore.get(thisProject))
+			.set("title", title)
+			.build();
 		datastore.update(currentProject);
 	}
 }

@@ -4,7 +4,6 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
@@ -25,23 +24,28 @@ import org.jsoup.safety.Whitelist;
 public class SignInServlet extends HttpServlet {
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Allow CORS so frontend can access it
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,HEAD");
+		response.addHeader("Access-Control-Allow-Methods", 
+				"GET,POST,PUT,DELETE,OPTIONS,HEAD");
 
 		// Get the username and password from user
-		String username = Jsoup.clean(request.getParameter("username"), Whitelist.none());
-		String password = Jsoup.clean(request.getParameter("password"), Whitelist.none());
+		String username = Jsoup.clean(request.getParameter("username"), 
+				Whitelist.none());
+		String password = Jsoup.clean(request.getParameter("password"), 
+				Whitelist.none());
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
 		// Get user email from server
 		String userEmail = getStringField(username, password, datastore, "email");
 		String name = getStringField(username, password, datastore, "name");
-		String isVisible = getBooleanField(username, password, datastore, "isVisible") ? "true" : "false";
+		String isVisible = getBooleanField(username, password, datastore, "isVisible") 
+					? "true" : "false";
 		String avatar = getStringField(username, password, datastore, "avatar");
 
 		// If user exists than userEmail should be an address otherwise empty
@@ -65,8 +69,9 @@ public class SignInServlet extends HttpServlet {
 
 		// Check if username/password combination is correct
 		Query<Entity> usernameQuery = Query.newEntityQueryBuilder().setKind("User")
-				.setFilter(
-						CompositeFilter.and(PropertyFilter.eq("username", username), PropertyFilter.eq("password", password)))
+				.setFilter(CompositeFilter.and(
+					PropertyFilter.eq("username", username), 
+					PropertyFilter.eq("password", password)))
 				.build();
 
 		// Run query and retrieve user from datastore
@@ -83,8 +88,12 @@ public class SignInServlet extends HttpServlet {
 			DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 			String login = now.format(formatter);
 
-			Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
-			Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("lastActive", login).build();
+			Key thisUser = datastore.newKeyFactory()
+				.setKind("User")
+				.newKey(username);
+			Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
+				.set("lastActive", login)
+				.build();
 			datastore.update(loggedInUser);
 		}
 
@@ -99,8 +108,9 @@ public class SignInServlet extends HttpServlet {
 
 		// Check if username/password combination is correct
 		Query<Entity> usernameQuery = Query.newEntityQueryBuilder().setKind("User")
-				.setFilter(
-						CompositeFilter.and(PropertyFilter.eq("username", username), PropertyFilter.eq("password", password)))
+				.setFilter(CompositeFilter.and(
+					PropertyFilter.eq("username", username), 
+					PropertyFilter.eq("password", password)))
 				.build();
 
 		// Run query and retrieve user from datastore
@@ -117,8 +127,12 @@ public class SignInServlet extends HttpServlet {
 			DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 			String login = now.format(formatter);
 
-			Key thisUser = datastore.newKeyFactory().setKind("User").newKey(username);
-			Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser)).set("lastActive", login).build();
+			Key thisUser = datastore.newKeyFactory()
+				.setKind("User")
+				.newKey(username);
+			Entity loggedInUser = Entity.newBuilder(datastore.get(thisUser))
+				.set("lastActive", login)
+				.build();
 			datastore.update(loggedInUser);
 		}
 

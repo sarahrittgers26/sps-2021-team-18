@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 /.pnp
-target
+target/
 .pnp.js
 
 # testing
@@ -22,3 +22,7 @@ target
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+*.*~
+*.orig
+spring21-sps-18-bc56b7c79a89.json

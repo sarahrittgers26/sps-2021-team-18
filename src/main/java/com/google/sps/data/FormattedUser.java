@@ -7,7 +7,8 @@ public class FormattedUser {
 	private final boolean isContact;
 	private final String avatar;
 
-	public FormattedUser(String username, String name, boolean isActive, boolean isContact, String avatar) {
+	public FormattedUser(String username, String name, boolean isActive, 
+			boolean isContact, String avatar) {
 		this.username = username;
 		this.name = name;
 		this.isActive = isActive;
