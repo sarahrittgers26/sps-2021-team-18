@@ -44,8 +44,11 @@ const Projects = ({ history }) => {
     socket.send(msg);
   }
 
+  socket.onopen = () => {  
   socket.onmessage = (response) => {
-    let msg = JSON.parse(response.data);
+    console.log(`Received message in Projects: ${response}`)
+    let msg = JSON.parse(response.data)
+    console.log(`Message says: ${msg}`);
     switch (msg.type) {
       case ACTION.PING_USER:
 	let info_arr = msg.data.split("=");
@@ -111,6 +114,7 @@ const Projects = ({ history }) => {
 	break;
       default:
     }
+  }
   }
  
   window.onbeforeunload = () => {

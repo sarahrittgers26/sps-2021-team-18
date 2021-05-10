@@ -38,7 +38,10 @@ const Auth = ({ history }) => {
 
   let socket = SocketSingleton.getInstance();
   socket.onopen = () => {  
-    console.log('connection successful');
+    console.log('Successful connection to server');
+    socket.onmessage = (response) => {
+      console.log(response.data);
+    }
   }
 
   const openSignIn = () => {

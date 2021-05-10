@@ -17,7 +17,9 @@ const ConnectionDialog = (props) => {
   const { activeProject, title } = useSelector((state) => state.projectReducer);
 
   socket.onmessage = (response) => {
+    console.log(`Received message in ConnectionDialog: ${response}`)
     let message = JSON.parse(response.data)
+    console.log(`Message says: ${message}`);
     let type = message.data.split("-")
     let answer = type[0];
     switch (message.type) {
@@ -33,7 +35,6 @@ const ConnectionDialog = (props) => {
 	  dispatch(selectCollab({ username: collaboratorId, name: collaboratorName, 
 		  avatar: type[1] }));
 	  dispatch(updateEdit(true));
-          //history.push("/editor");
         } else {
           closeDialog();
         }

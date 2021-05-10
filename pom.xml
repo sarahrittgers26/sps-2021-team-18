@@ -12,7 +12,9 @@
     <maven.compiler.source>1.8<!--11--></maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jetty.version><!--9.4.31.v20200723-->9.4.40.v20210413</jetty.version>
+    <!--<jetty.version><9.4.31.v20200723  9.4.40.v20210413 9.3.2.v20150730</jetty.version>-->
+    <!--<failOnMissingWebXml>false</failOnMissingWebXml> REQUIRED -->
+    <jetty.version><!--9.2.11.v20150529-->9.4.40.v20210413</jetty.version>
 
     <!-- Project-specific properties -->
     <exec.mainClass>com.google.sps.ServerMain</exec.mainClass>
@@ -20,7 +22,46 @@
   </properties>
 
   <dependencies>
-	<dependency>
+    <!-- Jetty -->
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+    <dependency>
+       <groupId>org.eclipse.jetty</groupId>
+       <artifactId>jetty-servlet</artifactId>
+       <version>${jetty.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-annotations</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+    <!--Jetty dependencies end here -->
+
+    <!--<dependency>
+    <groupId>org.eclipse.jetty.websocket</groupId>
+    <artifactId>websocket-servlet</artifactId>
+    <version>${jetty.version}9.4.28.v20200408</version>
+    </dependency>-->
+
+    <!-- Jetty Websocket API dependencies -->
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-servlet</artifactId>
+      <version>${jetty.version}</version>
+	      <!--<scope>provided</scope>-->
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-server</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+    <!-- Jetty Websocket API dependencies end here -->
+
+    <!-- GCP jetty-websocket example dependencies -->
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>30.1.1-jre</version>
@@ -31,23 +72,9 @@
       <artifactId>javax.servlet-api</artifactId>
       <version>4.0.1</version>
     </dependency>
+    <!-- GCP jetty-websocket example dependencies end here -->
 
-    <!-- Jetty -->
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-      <version>${jetty.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-annotations</artifactId>
-      <version>${jetty.version}</version>
-    </dependency>
-    <dependency>
-    <groupId>org.eclipse.jetty.websocket</groupId>
-    <artifactId>websocket-servlet</artifactId>
-    <version>${jetty.version}<!--9.4.28.v20200408--></version>
-</dependency>
+
     <!-- gson -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -76,7 +103,7 @@
       <version>1.8.3</version>
     </dependency>
   
-  <!-- https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket -->
+    <!-- https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket-->
     <dependency>
       <groupId>org.java-websocket</groupId>
       <artifactId>Java-WebSocket</artifactId>
@@ -87,18 +114,6 @@
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>2.9.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.9.1</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>7.0</version>
     </dependency>
   </dependencies>
 
@@ -156,6 +171,12 @@
           <projectId>${googleCloudProjectId}</projectId>
           <version>2</version>
         </configuration>
+      </plugin>
+<!-- for local testing of web application -->
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty.version}</version>
       </plugin>
     </plugins>
   </build>

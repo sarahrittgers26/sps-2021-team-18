@@ -1,6 +1,7 @@
 package com.google.sps.socket.editor;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -16,15 +17,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.sps.socket.message.Message;
 import com.google.sps.socket.project.SocketProject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-//import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+@WebSocket
 public class EditorServer {
 
-    private Logger logger = LogManager.getLogger(EditorServer.class);
+    private Logger logger = Logger.getLogger(EditorServer.class.getName());
 
     private HashMap<Session, SocketProject> projects;
     private Set<Session> sessions;
@@ -32,11 +31,14 @@ public class EditorServer {
     public EditorServer() {
         sessions = new HashSet<>();
         projects = new HashMap<>();
-	System.out.println("Successfully created WebSocket listener on /chat");
     }
+
     @OnWebSocketConnect
     public void onWebSocketConnect(Session session) {
       sessions.add(session);
+      System.out.println("Successful connection from new session: " 
+		      + session.getRemoteAddress() + " to /chat");
+      ensure(session);
     }
 
     @OnWebSocketClose
@@ -44,10 +46,14 @@ public class EditorServer {
         sessions.remove(session);
         // When connection is closed, remove the project.
         projects.remove(session);
+        System.out.println("Successful disconnection from session: " 
+		      + session.getRemoteAddress() + " from /chat");
     }
 
     @OnWebSocketMessage
     public void onWebSocketText(Session session, String text) {
+        System.out.println(session.getRemoteAddress() + " sucessfully sent: " 
+			+ text + " to server");
         ObjectMapper mapper = new ObjectMapper();
         try {
             Message msg = mapper.readValue(text, Message.class);
@@ -95,9 +101,123 @@ public class EditorServer {
             }
         } catch (IOException e) {
             // return error message to project
-            logger.error("Error receiving message from client");
+            logger.severe("Error receiving message from client");
         }
     }
+
+    @OnWebSocketError
+    public void onWebSocketError(Session session, Throwable cause) {
+	if (session != null) {
+            sessions.remove(session);
+        }
+        assert session != null;
+        cause.printStackTrace();
+    }
+
+    private void broadcastMessage(Message msg) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String messageJson = mapper.writeValueAsString(msg);
+            String projectid = msg.getId();
+            for (Map.Entry<Session, SocketProject> entry : projects.entrySet()) {
+		Session userSocket = entry.getKey();
+		SocketProject projectInformation = entry.getValue();
+                if (projectInformation.checkProjectId(projectid)) {
+                    //userSocket.send(messageJson);
+		    try {
+		      // echo message back to client
+		      userSocket.getRemote().sendString(messageJson);
+		      System.out.println("Successfully sent: " + messageJson + " to " 
+				      + userSocket.getRemoteAddress());
+		    } catch (IOException e) {
+		      logger.severe("Error broadcasting message: " + e.getMessage());
+		    }
+                }
+            }
+        } catch (JsonProcessingException e) {
+		logger.severe("Cannot convert message to json.");
+        }
+    }
+
+    private void pingUser(Message msg) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String messageJson = mapper.writeValueAsString(msg);
+            String username = msg.getId();
+            for (Map.Entry<Session, SocketProject> entry : projects.entrySet()) {
+		Session userSocket = entry.getKey();
+		SocketProject projectInformation = entry.getValue();
+                if (projectInformation.getUsername().equals(username)) {
+                    //userSocket.send(messageJson);
+		    try {
+		      // echo message back to client
+		      userSocket.getRemote().sendString(messageJson);
+		      System.out.println("Successfully sent: " + messageJson + " to " 
+				      + userSocket.getRemoteAddress());
+		      break;
+		    } catch (IOException e) {
+		      logger.severe("Error broadcasting message: " + e.getMessage());
+		    }
+                }
+            }
+        } catch (JsonProcessingException e) {
+            logger.severe("Cannot convert message to json.");
+        }
+    }
+
+    private void addProject(String type, String id, Session session) throws JsonProcessingException {
+        if (type.equals("SIGN_IN")) {
+            projects.put(session, new SocketProject(id));
+	    System.out.println("Successfully added " + session.getRemoteAddress());
+        } else {
+            SocketProject usersProject = projects.get(session);
+            usersProject.addProjectId(id);
+	    System.out.println("Successfully added " + id + " to " 
+			    + session.getRemoteAddress());
+        }
+    }
+
+    private void addForeign(Message msg) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String messageJson = mapper.writeValueAsString(msg);
+            String username = msg.getId();
+            for (Map.Entry<Session, SocketProject> entry : projects.entrySet()) {
+		Session userSocket = entry.getKey();
+		SocketProject projectInformation = entry.getValue();
+                if (projectInformation.getUsername().equals(username)) {
+                    projectInformation.addProjectId(msg.getData());
+	    	    System.out.println("Successfully added " + msg.getData() + " to " 
+			    + userSocket.getRemoteAddress());
+                    //userSocket.send(messageJson);
+		    try {
+		      // echo message back to client
+		      userSocket.getRemote().sendString(messageJson);
+		      System.out.println("Successfully sent: " + messageJson + " to " 
+				      + userSocket.getRemoteAddress());
+		      break;
+		    } catch (IOException e) {
+		      logger.severe("Error broadcasting message: " + e.getMessage());
+		    }
+                }
+            }
+        } catch (JsonProcessingException e) {
+            logger.severe("Cannot convert message to json.");
+        }
+    }
+    
+    private void ensure(Session session) {
+	try {
+            session.getRemote().sendString("Ensuring connection from server");
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+    }
+
+}
+
+
+
 
    /* @OnMessage
     public void onMessage(WebSocket session, String message) {
@@ -148,7 +268,7 @@ public class EditorServer {
             }
         } catch (IOException e) {
             // return error message to project
-            logger.error("Error receiving message from client");
+            logger.severe("Error receiving message from client");
         }
     }
 
@@ -163,96 +283,3 @@ public class EditorServer {
         ex.printStackTrace();
     }
 */
-    private void broadcastMessage(Message msg) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String messageJson = mapper.writeValueAsString(msg);
-            String projectid = msg.getId();
-            for (Map.Entry<Session, SocketProject> entry : projects.entrySet()) {
-		Session userSocket = entry.getKey();
-		SocketProject projectInformation = entry.getValue();
-                if (projectInformation.checkProjectId(projectid)) {
-                    //userSocket.send(messageJson);
-		    try {
-		      // echo message back to client
-		      userSocket.getRemote().sendString(messageJson);
-		    } catch (IOException e) {
-		      logger.error("Error broadcasting message: " + e.getMessage());
-		    }
-                }
-            }
-        } catch (JsonProcessingException e) {
-		logger.error("Cannot convert message to json.");
-        }
-    }
-
-    private void pingUser(Message msg) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String messageJson = mapper.writeValueAsString(msg);
-            String username = msg.getId();
-            for (Map.Entry<Session, SocketProject> entry : projects.entrySet()) {
-		Session userSocket = entry.getKey();
-		SocketProject projectInformation = entry.getValue();
-                if (projectInformation.getUsername().equals(username)) {
-                    //userSocket.send(messageJson);
-		    try {
-		      // echo message back to client
-		      userSocket.getRemote().sendString(messageJson);
-		      break;
-		    } catch (IOException e) {
-		      logger.error("Error broadcasting message: " + e.getMessage());
-		    }
-                }
-            }
-        } catch (JsonProcessingException e) {
-            logger.error("Cannot convert message to json.");
-        }
-    }
-
-    private void addProject(String type, String id, Session session) throws JsonProcessingException {
-        if (type.equals("SIGN_IN")) {
-            projects.put(session, new SocketProject(id));
-        } else {
-            SocketProject usersProject = projects.get(session);
-            usersProject.addProjectId(id);
-        }
-    }
-
-    private void addForeign(Message msg) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String messageJson = mapper.writeValueAsString(msg);
-            String username = msg.getId();
-            for (Map.Entry<Session, SocketProject> entry : projects.entrySet()) {
-		Session userSocket = entry.getKey();
-		SocketProject projectInformation = entry.getValue();
-                if (projectInformation.getUsername().equals(username)) {
-                    projectInformation.addProjectId(msg.getData());
-                    //userSocket.send(messageJson);
-		    try {
-		      // echo message back to client
-		      userSocket.getRemote().sendString(messageJson);
-		      break;
-		    } catch (IOException e) {
-		      logger.error("Error broadcasting message: " + e.getMessage());
-		    }
-                }
-            }
-        } catch (JsonProcessingException e) {
-            logger.error("Cannot convert message to json.");
-        }
-    }
-    
-    @OnWebSocketError
-    public void onWebSocketError(Session session, Throwable cause) {
-	if (session != null) {
-            sessions.remove(session);
-        }
-        assert session != null;
-        cause.printStackTrace();
-    }
-}
-
-
-
