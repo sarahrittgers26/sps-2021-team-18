@@ -1,7 +1,6 @@
 package com.google.sps;
 
 import java.net.URL;
-import com.google.sps.socket.editor.EditorServer;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -16,12 +15,10 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
 public class ServerMain {
 
   static Server server;
-  static EditorServer socket;
   
   public static void main(String[] args) throws Exception {
 
     // Create a server that listens on port 8080.
-    socket = new EditorServer(9000);
     server = new Server(8080);
     WebAppContext webAppContext = new WebAppContext();
     server.setHandler(webAppContext);
@@ -46,9 +43,7 @@ public class ServerMain {
 
     // Start the server! ??
     server.start();
-    socket.start();
 
-    System.out.println("Socket server on port 9000");
     System.out.println("Server started on port 8080 ");
 
     // Keep the main thread alive while the server is running.

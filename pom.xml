@@ -12,7 +12,7 @@
     <maven.compiler.source>1.8<!--11--></maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jetty.version>9.4.31.v20200723</jetty.version>
+    <jetty.version><!--9.4.31.v20200723-->9.4.40.v20210413</jetty.version>
 
     <!-- Project-specific properties -->
     <exec.mainClass>com.google.sps.ServerMain</exec.mainClass>
@@ -20,6 +20,11 @@
   </properties>
 
   <dependencies>
+	<dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>30.1.1-jre</version>
+    </dependency>
     <!-- Java Servlets API -->
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -38,7 +43,11 @@
       <artifactId>jetty-annotations</artifactId>
       <version>${jetty.version}</version>
     </dependency>
-
+    <dependency>
+    <groupId>org.eclipse.jetty.websocket</groupId>
+    <artifactId>websocket-servlet</artifactId>
+    <version>${jetty.version}<!--9.4.28.v20200408--></version>
+</dependency>
     <!-- gson -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -91,13 +100,6 @@
       <artifactId>javaee-api</artifactId>
       <version>7.0</version>
     </dependency>
-    <!--Maven commit plugin 
-    <dependency>
-      <groupId>pl.project13.maven</groupId>
-      <artifactId>git-commit-id-plugin</artifactId>
-      <version>4.0.4</version>
-      <type>maven-plugin</type>
-    </dependency>-->
   </dependencies>
 
   <build>
@@ -140,16 +142,6 @@
                   <mainClass>${exec.mainClass}</mainClass>
                 </transformer>
 	      </transformers>
-	      <!--<filters>
-                <filter>
-                  <artifact>*:*</artifact>
-                    <excludes>
-                      <exclude>META-INF/*.SF</exclude>
-                      <exclude>META-INF/*.DSA</exclude>
-                      <exclude>META-INF/*.RSA</exclude>
-                    </excludes>
-                </filter>
-              </filters>-->
             </configuration>
           </execution>
         </executions>

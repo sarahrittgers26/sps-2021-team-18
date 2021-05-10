@@ -97,7 +97,7 @@ const Header = (props) => {
   }, [displayNotifications]);
 
   useEffect(() => {
-    if (notifications.length == 0) {
+    if (notifications.length === 0) {
       document.title = "COLLABCODE";
     } else {
       document.title = `(${notifications.length}) COLLABCODE`;
