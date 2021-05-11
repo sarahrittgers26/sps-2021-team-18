@@ -8,8 +8,8 @@ import html2canvas from 'html2canvas';
 import FormData from 'form-data'
 import { handleSave, clearProject, updateEdit } from '../../actions';
 import SocketSingleton from '../../middleware/socketMiddleware';
-import { ACTION } from '../../actions/types.js';
 import StopCollab from './StopCollab.js';
+import { ACTION } from '../../actions/types';
 
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,28 +29,27 @@ const Editor = ({ history }) => {
     let message = JSON.parse(response.data);
     switch (message.type) {
       case ACTION.SEND_HTML:
-	setProjectHtml(message.data);
-	break;
+        setProjectHtml(message.data);
+        break;
       case ACTION.SEND_CSS:
-	setProjectCss(message.data);
-	break;
+        setProjectCss(message.data);
+        break;
       case ACTION.SEND_JS:
-	setProjectJs(message.data);
-	break;
+        setProjectJs(message.data);
+        break;
       case ACTION.SEND_TITLE:
-	setProjectName(message.data);
-	break;
+        setProjectName(message.data);
+        break;
       case ACTION.SEND_LEFT:
         save();
         setDisplayExit(true);
         setTimeout(() => {
-	  dispatch(updateEdit(false));
-	  dispatch(clearProject());
+          dispatch(updateEdit(false));
+          dispatch(clearProject());
           history.push('/projects');
-	}, 2000);
-	break;
+        }, 3000);
+        break;
       default:
-        //return () => clearTimeout(timer);
     }
   }
 
@@ -84,6 +83,13 @@ const Editor = ({ history }) => {
 
     return () => clearTimeout(timeout);
   }, [projecthtml, projectcss, projectjs]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+        socket.send(JSON.stringify({ type: "STILL_ALIVE", id: "", data: "" }))
+    }, 295000);
+    return () => clearInterval(interval);
+  }, [socket]);
 
   return (
     <div className="Editor_container">

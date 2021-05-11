@@ -116,14 +116,14 @@ export const handleSave = (proj) => async(dispatch) => {
     await axios.get(jsUrl);
     await axios.get(titleUrl);
     await axios.post(imageUrl, image, {
-      headers: {
-        'accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Content-Type': `multipart/form-data`,
-      }
+        headers: {
+            'accept': 'application/json',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Content-Type': `multipart/form-data`,
+        }
     })
-  }
-  
+}
+
 
 // On project deselection
 export const clearProject = () => {
@@ -273,3 +273,7 @@ export const loadProjects = (username) => async(dispatch) => {
     }
 };
 
+export const deleteProject = (projectid) => async(dispatch) => {
+    let url = `/del-project?projectid=${projectid}`;
+    await axios.get(url);
+}

@@ -21,6 +21,10 @@ public class SocketProject implements Serializable {
         projects.add(projectid);
     }
 
+    public void removeProjectId(String projectid) {
+        projects.remove(projectid);
+    }
+
     public boolean checkProjectId(String projectid) {
         return projects.contains(projectid);
     }

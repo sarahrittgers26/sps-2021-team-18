@@ -74,6 +74,7 @@ const Header = (props) => {
         decline={() => decline(notification, 
 		      () => declineCallBack(notification.collaborator, notification.type))}
         isNewProject={notification.isNewProject}
+        isDeletion={notification.isDeletion}
         projectTitle={notification.projectTitle}
         collaboratorAvatar={notification.collaboratorAvatar}/>
      ));
@@ -120,10 +121,6 @@ const Header = (props) => {
 
   }, [displayMenu]);
 
-/*  const reload = () => {
-    history.push("/projects");
-  }
-*/
   return (
     <div className="Header_container">
       <div className="Banner">

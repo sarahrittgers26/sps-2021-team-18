@@ -1,16 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import axios from '../Api/Api';
-import SocketSingleton from '../../middleware/socketMiddleware';
+import SocketSingleton from '../../middleware/socketMiddleware'
 import { loadProjects, loadUsers, signIn } from '../../actions';
 import './Auth.css';
-/*
-const sendMail = () => async(dispatch) => {
-  let test = "/mail?username=mdprodigy&collaborator=othermichael&title=NewProject&newProject=true";
-  console.log(test);
-  const response = await axios.get(test);
-  console.log(test);
-}*/
 
 const Auth = ({ history }) => {
   // Dispatch for react-redux store
@@ -37,12 +30,6 @@ const Auth = ({ history }) => {
   const signUpRef = useRef();
 
   let socket = SocketSingleton.getInstance();
-  socket.onopen = () => {  
-    console.log('Successful connection to server');
-    socket.onmessage = (response) => {
-      console.log(response.data);
-    }
-  }
 
   const openSignIn = () => {
     if (!displaySignIn) {
@@ -263,6 +250,14 @@ const Auth = ({ history }) => {
       };
     };
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+        let socket = SocketSingleton.getInstance();
+        socket.send(JSON.stringify({ type: "STILL_ALIVE", id: "", data: "" }))
+    }, 295000);
+    return () => clearInterval(interval);
+  }, [socket]);
 
   //Render signup modal with input fields for user
   const renderSignUp = () => {
