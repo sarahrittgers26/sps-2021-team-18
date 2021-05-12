@@ -1,7 +1,6 @@
 package com.google.sps.socket.editor;
 
 import java.io.IOException;
-import java.rmi.Remote;
 import java.util.logging.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -86,8 +85,6 @@ public class EditorServer {
                 case "SEND_TITLE":
                     broadcastMessage(msg);
                     break;
-                case "STILL_ALIVE":
-                    break;
 		        default:
             }
         } catch (IOException e) {
@@ -101,6 +98,7 @@ public class EditorServer {
 	    if (session != null) {
             sessions.remove(session);
             projects.remove(session);
+            session.close();
         }
         assert session != null;
         logger.severe(cause.getMessage());

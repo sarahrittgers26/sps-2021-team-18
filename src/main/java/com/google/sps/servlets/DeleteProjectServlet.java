@@ -42,7 +42,6 @@ public class DeleteProjectServlet extends HttpServlet {
 				.setKind("Project")
 				.newKey(projectid);
     datastore.delete(projectKey);
-		System.out.println("Successfully deleted project entity");
     String gcpProjectId = "spring21-sps-18";
     String bucketName = "spring21-sps-18.appspot.com";
     Storage storage = StorageOptions.newBuilder()
@@ -50,6 +49,5 @@ public class DeleteProjectServlet extends HttpServlet {
 	    .build()
 	    .getService();
     storage.delete(bucketName, projectid);
-		System.out.println("Successfully deleted project image");
 	}
 }

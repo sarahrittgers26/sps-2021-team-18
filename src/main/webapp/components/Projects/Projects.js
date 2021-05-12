@@ -66,8 +66,35 @@ const Projects = ({ history }) => {
     }
 
     window.onbeforeunload = () => {
-        socket.close();
+        socket.onclose = () => {}
     }
+
+    socket.onclose = () => {
+        let sock = SocketSingleton.nullifyInstance();
+        sock.onopen = () => {
+            let msg = JSON.stringify({
+                id: user.username,
+                type: ACTION.SIGN_IN,
+                data: ""
+            });
+            sock.send(msg);
+            let allProjectsReloaded = onlineProjects.concat(offlineProjects);
+            let allPaneIDS = []
+            allProjectsReloaded.forEach((project) => {
+                // Setup socket for each editor pane with specified project 
+                let projectid = project.projectid;
+                allPaneIDS.push(projectid);
+            });
+            allPaneIDS.forEach(paneID => {
+                let msg = JSON.stringify({
+                    id: paneID,
+                    type: ACTION.LOAD_INIT_PROJECTS,
+                    data: ""
+                })
+                sock.send(msg);
+            });
+        }
+      }
 
     socket.onmessage = (response) => {
         let msg = JSON.parse(response.data)
@@ -483,7 +510,6 @@ const Projects = ({ history }) => {
             return project.title.includes(searchQuery) || project.title.includes(searchQuery.toUpperCase());
         });
 
-        // setDisplayedProjects([]);
         setDisplayedProjects(projects);
 
         return () => {
@@ -515,13 +541,6 @@ const Projects = ({ history }) => {
             return () => clearInterval(interval);
         }
     }, [user.username, user.isVisible, dispatch]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            socket.send(JSON.stringify({ type: "STILL_ALIVE", id: "", data: "" }))
-        }, 295000);
-        return () => clearInterval(interval);
-    }, [socket]);
 
     return ( <
         div className = "Projects_container" >

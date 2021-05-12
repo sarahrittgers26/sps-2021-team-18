@@ -31,6 +31,10 @@ const Auth = ({ history }) => {
 
   let socket = SocketSingleton.getInstance();
 
+  window.onbeforeunload = () => {
+    socket.onclose = () => {}
+  }
+
   const openSignIn = () => {
     if (!displaySignIn) {
       setDisplaySignIn(true);
@@ -250,14 +254,14 @@ const Auth = ({ history }) => {
       };
     };
   };
-
+/*
   useEffect(() => {
     const interval = setInterval(() => {
         let socket = SocketSingleton.getInstance();
         socket.send(JSON.stringify({ type: "STILL_ALIVE", id: "", data: "" }))
     }, 295000);
     return () => clearInterval(interval);
-  }, [socket]);
+  }, [socket]);*/
 
   //Render signup modal with input fields for user
   const renderSignUp = () => {

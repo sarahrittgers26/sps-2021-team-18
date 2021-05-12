@@ -17,12 +17,23 @@ const SocketSingleton = (() => {
       if (!instance) {
 	      instance = createInstance();  
         instance.onopen = () => {  
-          console.log("Connected successfully to socket server")
+        }
+        instance.onclose = () => {
+          let sock = SocketSingleton.nullifyInstance();
+          sock.onopen = () => {
+          }
         }
         return;
       } else {
         return instance;
       } 
+    },
+    nullifyInstance: () => {
+      instance = createInstance();
+      return instance;
+    },
+    accessInstance: () => {
+
     }
   };
 })();

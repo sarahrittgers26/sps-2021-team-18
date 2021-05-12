@@ -14,8 +14,9 @@ import { ACTION } from '../../actions/types';
 const Editor = ({ history }) => {
   const dispatch = useDispatch();
   const { html, css, js, title, activeProject, collaboratorId, 
-	  collaboratorName, collaboratorAvatar } = 
+	  collaboratorName, collaboratorAvatar, onlineProjects, offlineProjects } = 
 		useSelector((state) => state.projectReducer);
+  const user = useSelector((state) => state.userReducer);
   const [projecthtml, setProjectHtml] = useState(html);
   const [projectcss, setProjectCss] = useState(css);
   const [projectjs, setProjectJs] = useState(js);
@@ -23,9 +24,9 @@ const Editor = ({ history }) => {
   const [srcDoc, setSrcDoc] = useState("");
   const [projectName, setProjectName] = useState(title);
   const [displayExit, setDisplayExit] = useState(false);
-  const socket = SocketSingleton.getInstance();
+  const [sock, setCurSock] = useState(SocketSingleton.getInstance());
 
-  socket.onmessage = (response) => {
+  sock.onmessage = (response) => {
     let message = JSON.parse(response.data);
     switch (message.type) {
       case ACTION.SEND_HTML:
@@ -84,19 +85,44 @@ const Editor = ({ history }) => {
     return () => clearTimeout(timeout);
   }, [projecthtml, projectcss, projectjs]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-        socket.send(JSON.stringify({ type: "STILL_ALIVE", id: "", data: "" }))
-    }, 295000);
-    return () => clearInterval(interval);
-  }, [socket]);
+  window.onbeforeunload = () => {
+    sock.onclose = () => {}
+  }
+
+  sock.onclose = () => {
+    let sock = SocketSingleton.nullifyInstance();
+    sock.onopen = () => {
+      let msg = JSON.stringify({
+          id: user.username,
+          type: ACTION.SIGN_IN,
+          data: ""
+      });
+      sock.send(msg);
+      let allProjectsReloaded = onlineProjects.concat(offlineProjects);
+      let allPaneIDS = []
+      allProjectsReloaded.forEach((project) => {
+          // Setup socket for each editor pane with specified project 
+          let projectid = project.projectid;
+          allPaneIDS.push(projectid);
+      });
+      allPaneIDS.forEach(paneID => {
+          let msg = JSON.stringify({
+              id: paneID,
+              type: ACTION.LOAD_INIT_PROJECTS,
+              data: ""
+          })
+          sock.send(msg);
+      });
+    }
+    setCurSock(sock);
+  }
 
   return (
     <div className="Editor_container">
       <Navbar
         history={history}
         projectName={projectName}
-        socket={socket}
+        socket={sock}
         title={title}
         collaborator={collaboratorId}
         collaboratorName={collaboratorName}
@@ -109,21 +135,21 @@ const Editor = ({ history }) => {
          language="xml"
          displayName="HTML"
          value={projecthtml}
-         socket={socket}
+         socket={sock}
          projectid={activeProject}/>
 
         <Pane 
          language="css"
          displayName="CSS"
          value={projectcss}
-         socket={socket}
+         socket={sock}
          projectid={activeProject}/>
 
         <Pane 
          language="javascript"
          displayName="JS"
          value={projectjs}
-	 socket={socket}
+	       socket={sock}
        	 projectid={activeProject}/>
 
       </div>
